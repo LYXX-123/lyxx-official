@@ -5,23 +5,25 @@ const app = express();
 
 const PORT = process.env.PORT || 3000;
 
+// ✅ 모든 접속을 허용하도록 설정 (회원가입/로그인 에러 방지)
 app.use(cors());
 app.use(express.json());
 
-// 🔗 Ryushun님의 실제 MongoDB 주소 연결
+// 🔗 MongoDB 연결
 const MONGO_URI = "mongodb+srv://admin:lyxx1234@cluster0.ouxd6dx.mongodb.net/LYXX_DB?retryWrites=true&w=majority";
-
 mongoose.connect(MONGO_URI)
   .then(() => console.log("✅ MongoDB Atlas 연결 성공!"))
   .catch(err => console.log("❌ DB 연결 에러:", err));
 
-// 사용자 스키마 설정
 const userSchema = new mongoose.Schema({
     username: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     name: { type: String, required: true }
 });
 const User = mongoose.model('User', userSchema);
+
+// 기본 경로 확인용
+app.get('/', (req, res) => res.send('SERVER IS RUNNING!'));
 
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
@@ -43,6 +45,4 @@ app.post('/signup', async (req, res) => {
     } catch (e) { res.status(500).json({ success: false }); }
 });
 
-app.listen(PORT, () => {
-    console.log(`🚀 서버가 포트 ${PORT}에서 가동 중입니다!`);
-});
+app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
