@@ -33,24 +33,26 @@
         nav a:hover, .nav-btn:hover, .cart-trigger-btn:hover { opacity: 1; }
         .cart-nav { border: 1px solid rgba(255,255,255,0.3); padding: 5px 12px; border-radius: 20px; }
 
-        /* 3. 로고 중앙 정렬 및 빛나는 효과 */
+        /* 3. 로고 정중앙 정렬 (완벽 수정) */
         #home { 
-            width: 100%; height: 100vh; display: flex; flex-direction: column; 
+            width: 100vw; height: 100vh; display: flex; flex-direction: column; 
             justify-content: center; align-items: center; text-align: center; 
+            position: relative;
         }
         .main-logo { 
             font-size: 15vw; font-weight: 900; letter-spacing: -5px; text-transform: uppercase; 
             background: linear-gradient(145deg, #fff, #bbb, #fff); 
             -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
             filter: drop-shadow(0 0 8px rgba(255,255,255,0.4)); 
-            transition: 0.4s; user-select: none; display: inline-block; padding: 0 0.1em;
-            pointer-events: auto; margin: 0 auto;
+            transition: 0.4s; user-select: none; display: inline-block; 
+            padding: 0 0.1em; pointer-events: auto;
+            margin: 0; line-height: 1;
         }
         .main-logo:hover { 
             filter: drop-shadow(0 0 25px rgba(255,255,255,0.9)); 
             transform: scale(1.02); 
         }
-        .slogan { font-size: 14px; font-weight: 300; text-transform: uppercase; letter-spacing: 5px; margin-top: -10px; opacity: 0.6; width: 100%; text-align: center; }
+        .slogan { font-size: 14px; font-weight: 300; text-transform: uppercase; letter-spacing: 5px; margin-top: 20px; opacity: 0.6; }
 
         /* 4. 모달 */
         .auth-modal {
@@ -81,11 +83,7 @@
         .cart-item { display: flex; gap: 15px; margin-bottom: 25px; align-items: center; }
         .cart-item-img { width: 60px; height: 60px; background: #222; object-fit: cover; border: 1px solid #333; }
         .qty-control { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
-        .qty-btn { 
-            background: none; border: 1px solid #444; color: #eee; 
-            width: 22px; height: 22px; display: flex; align-items: center; 
-            justify-content: center; font-size: 12px; pointer-events: auto;
-        }
+        .qty-btn { background: none; border: 1px solid #444; color: #eee; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 12px; pointer-events: auto; }
 
         /* 6. 상품 그리드 */
         #shop { padding: 150px 5% 100px; width: 100%; }
@@ -122,7 +120,12 @@
     <div class="cart-sidebar" id="cartSidebar">
         <div class="cart-header"><h3>CART</h3><button class="close-cart" onclick="toggleCart()">×</button></div>
         <div class="cart-items-container" id="cartItemsList"></div>
-        <div class="cart-footer"><div style="display:flex; justify-content:space-between; margin-bottom:20px; font-weight:700;"><span>TOTAL</span><span id="cartTotalText">₩0</span></div><button class="checkout-btn">CHECKOUT</button></div>
+        <div class="cart-footer">
+            <div style="display:flex; justify-content:space-between; margin-bottom:20px; font-weight:700;">
+                <span>TOTAL</span><span id="cartTotalText">₩0</span>
+            </div>
+            <button class="checkout-btn">CHECKOUT</button>
+        </div>
     </div>
 
     <header>
@@ -177,7 +180,6 @@
         const openFindPw = () => { closeModals(); document.getElementById('findPwModal').style.display = 'flex'; };
         const toggleCart = () => document.getElementById('cartSidebar').classList.toggle('active');
 
-        // ✅ 로그인 UI 업데이트 함수 (가장 중요)
         function updateNavUI() {
             const navUl = document.getElementById('main-nav');
             const common = `<li><a href="#home" class="nav-link">HOME</a></li><li><a href="#shop" class="nav-link">SHOP</a></li>`;
@@ -204,11 +206,8 @@
                 const res = await fetch(`${API_URL}/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: id, password: pw }) });
                 const data = await res.json();
                 if (data.success) { 
-                    isLoggedIn = true; 
-                    currentUser = data.name; 
-                    updateNavUI(); // 로그인 성공 시 즉시 UI 갱신
-                    closeModals(); 
-                    alert(`Welcome, ${data.name}!`); 
+                    isLoggedIn = true; currentUser = data.name; 
+                    updateNavUI(); closeModals(); alert(`Welcome!`); 
                 } else alert(data.message);
             } catch(e) { alert("Server Error"); }
         }
@@ -243,19 +242,7 @@
             cart.forEach((item, i) => {
                 total += item.price * item.quantity;
                 const imgSrc = item.img ? item.img : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
-                list.innerHTML += `
-                    <div class="cart-item">
-                        <img src="${imgSrc}" class="cart-item-img">
-                        <div style="flex:1;">
-                            <p style="font-size:13px;">${item.name}</p>
-                            <p style="font-size:12px; opacity:0.5;">₩${(item.price * item.quantity).toLocaleString()}</p>
-                            <div class="qty-control">
-                                <button class="qty-btn" onclick="changeQty(${i},-1)">-</button>
-                                <span style="font-size:12px;">${item.quantity}</span>
-                                <button class="qty-btn" onclick="changeQty(${i},1)">+</button>
-                            </div>
-                        </div>
-                    </div>`;
+                list.innerHTML += `<div class="cart-item"><img src="${imgSrc}" class="cart-item-img"><div style="flex:1;"><p>${item.name}</p><p>₩${(item.price * item.quantity).toLocaleString()}</p><div class="qty-control"><button class="qty-btn" onclick="changeQty(${i},-1)">-</button><span>${item.quantity}</span><button class="qty-btn" onclick="changeQty(${i},1)">+</button></div></div></div>`;
             });
             totalText.innerText = `₩${total.toLocaleString()}`; updateNavUI();
         }
