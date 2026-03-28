@@ -151,6 +151,7 @@
 
     <div id="main-view">
         <section id="home"><h1 class="main-logo">LYXX</h1><p class="slogan">WANT TO LYXX ME?</p></section>
+        
         <section id="shop">
             <h2>SHOP</h2>
             <div class="product-grid">
@@ -159,8 +160,19 @@
                     <p style="font-size:18px; margin-bottom:5px;">LYXX Crop tee</p>
                     <p style="opacity:0.6;">₩69,000</p>
                 </div>
+                <div class="product-card" onclick="openProduct('hoodie')">
+                    <div class="img-box"><p style="opacity:0.2;">IMAGE</p></div>
+                    <p style="font-size:18px; margin-bottom:5px;">CONCRETE HOODIE</p>
+                    <p style="opacity:0.6;">₩129,000</p>
+                </div>
+                <div class="product-card" onclick="openProduct('belt')">
+                    <div class="img-box"><p style="opacity:0.2;">IMAGE</p></div>
+                    <p style="font-size:18px; margin-bottom:5px;">STAR BELT</p>
+                    <p style="opacity:0.6;">₩79,000</p>
+                </div>
             </div>
         </section>
+        
         <footer>&copy; 2026 LYXX.</footer>
     </div>
 
@@ -187,8 +199,11 @@
 
         const API_URL = 'https://lyxx-official.onrender.com';
 
+        // ✅ 데이터에 상품 3개 모두 복구
         const products = {
-            'tee': { id: 'tee', name: 'LYXX Crop tee', price: 69000, img: './반팔티.jpg', desc: 'PREMIUM COTTON FABRIC.<br>SIGNATURE CROPPED FIT.' }
+            'tee': { id: 'tee', name: 'LYXX Crop tee', price: 69000, img: './반팔티.jpg', desc: 'PREMIUM COTTON FABRIC.<br>SIGNATURE CROPPED FIT.' },
+            'hoodie': { id: 'hoodie', name: 'CONCRETE HOODIE', price: 129000, img: '', desc: 'HEAVYWEIGHT OVERSIZED FIT.<br>CONCRETE GREY COLORWAY.' },
+            'belt': { id: 'belt', name: 'STAR BELT', price: 79000, img: '', desc: 'GENUINE LEATHER.<br>STAR BUCKLE DETAIL.' }
         };
 
         const closeModals = () => { 
@@ -240,7 +255,6 @@
             const id = document.getElementById('findId').value;
             const email = document.getElementById('findEmail').value;
             if(!id || !email) return alert("정보를 모두 입력해주세요.");
-            
             try {
                 const res = await fetch(`${API_URL}/find-password`, {
                     method: 'POST',
