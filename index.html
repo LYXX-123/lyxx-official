@@ -14,7 +14,7 @@
             background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4WsUAAAABlBMVEUAAAAAAAClZ7nPAAAAAXRSTlMAQObYZgAAADRJREFUeNoNglESwCAMwjr//7vG6b3XQJ4gAgj7A6VqI5iI4P6u4nQ80y4gB16oAn6l2mYvPgD2A/c5h64NAAAAAElFTkSuQmCC');
         }
 
-        /* ✨ [추가] 인트로 애니메이션 레이어 */
+        /* 인트로 애니메이션 레이어 */
         #intro-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: #000; z-index: 9999;
@@ -22,18 +22,18 @@
             transition: opacity 1s ease-in-out;
         }
         .intro-logo {
-            font-size: 8vw; font-weight: 900; letter-spacing: 50px; /* 처음엔 아주 넓게 시작 */
+            font-size: 8vw; font-weight: 900; letter-spacing: 50px;
             color: #fff; opacity: 0;
             animation: introAnim 2.5s cubic-bezier(0.19, 1, 0.22, 1) forwards;
         }
         @keyframes introAnim {
             0% { opacity: 0; letter-spacing: 50px; filter: blur(10px); }
             50% { opacity: 1; filter: blur(0); }
-            100% { opacity: 1; letter-spacing: 10px; } /* 서서히 좁혀짐 */
+            100% { opacity: 1; letter-spacing: 10px; }
         }
         .fade-out { opacity: 0 !important; pointer-events: none; }
 
-        /* 2. 헤더 */
+        /* 헤더 */
         header {
             width: 100%; height: 80px; display: flex; justify-content: space-between; align-items: center;
             padding: 0 5%; position: fixed; top: 0; left: 0; z-index: 1000;
@@ -49,7 +49,7 @@
         nav a:hover, .nav-btn:hover, .cart-trigger-btn:hover { opacity: 1; }
         .cart-nav { border: 1px solid rgba(255,255,255,0.3); padding: 5px 12px; border-radius: 20px; }
 
-        /* 3. 로고 정중앙 정렬 & 호버 효과 */
+        /* 메인 홈 섹션 */
         #home { width: 100vw; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; }
         .main-logo { 
             font-size: 15vw; font-weight: 900; letter-spacing: -5px; text-transform: uppercase; 
@@ -59,11 +59,27 @@
         .main-logo:hover { 
             filter: drop-shadow(0 0 25px rgba(255,255,255,0.9)); 
             transform: scale(1.05);
-            letter-spacing: 15px; /* 호버 시에도 웅장하게 벌어짐 */
+            letter-spacing: 15px; 
         }
-        .slogan { font-size: 14px; font-weight: 300; text-transform: uppercase; letter-spacing: 5px; margin-top: 20px; opacity: 0.6; }
+        .slogan { 
+            font-size: 14px; font-weight: 300; text-transform: uppercase; letter-spacing: 5px; 
+            margin-top: 20px; opacity: 0.6; 
+            transition: transform 0.5s ease-out; /* 스크롤 반응용 */
+        }
 
-        /* 4. 모달 & 장바구니 (기존 동일) */
+        /* ✨ [수정] 상품 카드 애니메이션 준비 */
+        .product-card { 
+            background-color: #1a1a1a; border: 1px solid #222; padding: 20px; 
+            text-align: left; cursor: pointer;
+            opacity: 0; transform: translateY(60px); /* 처음에 숨겨짐 */
+            transition: all 1s cubic-bezier(0.23, 1, 0.32, 1); /* 부드러운 리빌 */
+        }
+        .product-card.visible { 
+            opacity: 1; transform: translateY(0); 
+        }
+        .product-card:hover { border-color: #eee; transform: translateY(-10px) !important; }
+
+        /* 모달 & 장바구니 */
         .auth-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 5000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(10px); }
         .auth-box { width: 400px; padding: 60px 40px; border: 1px solid #222; background: #111; text-align: center; position: relative; }
         .auth-box h2 { font-size: 22px; font-weight: 900; margin-bottom: 35px; letter-spacing: 2px; text-transform: uppercase; }
@@ -84,12 +100,10 @@
         .cart-footer { border-top: 1px solid #222; padding-top: 20px; }
         .checkout-btn { width: 100%; padding: 15px; background: #eee; color: #111; border: none; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; transition: 0.3s; cursor: pointer; }
 
-        /* 5. 상품 그리드 */
+        /* 상품 그리드 섹션 */
         #shop { padding: 150px 5% 100px; width: 100%; }
-        #shop h2 { font-size: 40px; font-weight: 700; text-transform: uppercase; margin-bottom: 60px; text-align: center; }
+        #shop h2 { font-size: 40px; font-weight: 700; text-transform: uppercase; margin-bottom: 80px; text-align: center; letter-spacing: 10px; }
         .product-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; max-width: 1200px; margin: 0 auto; }
-        .product-card { background-color: #1a1a1a; border: 1px solid #222; padding: 20px; transition: 0.3s; text-align: left; cursor: pointer; }
-        .product-card:hover { border-color: #eee; transform: translateY(-5px); }
         .img-box { width: 100%; aspect-ratio: 1/1; background-color: #222; display: flex; justify-content: center; align-items: center; overflow: hidden; margin-bottom: 20px; border: 1px solid #333; }
         .img-box img { width: 100%; height: 100%; object-fit: cover; }
 
@@ -109,46 +123,15 @@
         <div class="intro-logo">LYXX</div>
     </div>
 
-    <div class="auth-modal" id="loginModal">
-        <div class="auth-box">
-            <button class="auth-close" onclick="closeModals()">×</button>
-            <h2>Login</h2>
-            <input type="text" id="loginId" placeholder="ID">
-            <input type="password" id="loginPw" placeholder="PASSWORD" onkeyup="if(window.event.keyCode==13){handleLogin()}">
-            <button class="auth-submit" onclick="handleLogin()">Enter</button>
-            <button class="forgot-btn" onclick="openFindPw()">Forgot Password?</button>
-        </div>
-    </div>
-
-    <div class="auth-modal" id="findPwModal">
-        <div class="auth-box">
-            <button class="auth-close" onclick="closeModals()">×</button>
-            <h2>Find Password</h2>
-            <input type="text" id="findId" placeholder="ENTER YOUR ID">
-            <input type="email" id="findEmail" placeholder="ENTER YOUR EMAIL" onkeyup="if(window.event.keyCode==13){handleFindPassword()}">
-            <button class="auth-submit" onclick="handleFindPassword()">Send Password to Mail</button>
-        </div>
-    </div>
-
-    <div class="auth-modal" id="signupModal">
-        <div class="auth-box">
-            <button class="auth-close" onclick="closeModals()">×</button>
-            <h2>Sign Up</h2>
-            <input type="text" id="signupName" placeholder="NAME">
-            <input type="text" id="signupId" placeholder="ID">
-            <input type="password" id="signupPw" placeholder="PASSWORD">
-            <input type="email" id="signupEmail" placeholder="EMAIL" onkeyup="if(window.event.keyCode==13){handleSignup()}">
-            <button class="auth-submit" onclick="handleSignup()">Create Account</button>
-        </div>
-    </div>
+    <div class="auth-modal" id="loginModal"><div class="auth-box"><button class="auth-close" onclick="closeModals()">×</button><h2>Login</h2><input type="text" id="loginId" placeholder="ID"><input type="password" id="loginPw" placeholder="PASSWORD" onkeyup="if(window.event.keyCode==13){handleLogin()}"><button class="auth-submit" onclick="handleLogin()">Enter</button><button class="forgot-btn" onclick="openFindPw()">Forgot Password?</button></div></div>
+    <div class="auth-modal" id="findPwModal"><div class="auth-box"><button class="auth-close" onclick="closeModals()">×</button><h2>Find Password</h2><input type="text" id="findId" placeholder="ENTER YOUR ID"><input type="email" id="findEmail" placeholder="ENTER YOUR EMAIL" onkeyup="if(window.event.keyCode==13){handleFindPassword()}"><button class="auth-submit" onclick="handleFindPassword()">Send Password to Mail</button></div></div>
+    <div class="auth-modal" id="signupModal"><div class="auth-box"><button class="auth-close" onclick="closeModals()">×</button><h2>Sign Up</h2><input type="text" id="signupName" placeholder="NAME"><input type="text" id="signupId" placeholder="ID"><input type="password" id="signupPw" placeholder="PASSWORD"><input type="email" id="signupEmail" placeholder="EMAIL" onkeyup="if(window.event.keyCode==13){handleSignup()}"><button class="auth-submit" onclick="handleSignup()">Create Account</button></div></div>
 
     <div class="cart-sidebar" id="cartSidebar">
         <div class="cart-header"><h3>CART</h3><button class="close-cart" onclick="toggleCart()">×</button></div>
         <div class="cart-items-container" id="cartItemsList"></div>
         <div class="cart-footer">
-            <div style="display:flex; justify-content:space-between; margin-bottom:20px; font-weight:700;">
-                <span>TOTAL</span><span id="cartTotalText">₩0</span>
-            </div>
+            <div style="display:flex; justify-content:space-between; margin-bottom:20px; font-weight:700;"><span>TOTAL</span><span id="cartTotalText">₩0</span></div>
             <button class="checkout-btn" onclick="alert('주문 기능은 준비 중입니다!')">CHECKOUT</button>
         </div>
     </div>
@@ -156,7 +139,11 @@
     <header><a href="#home" class="logo nav-link">LYXX</a><nav><ul id="main-nav"></ul></nav></header>
 
     <div id="main-view">
-        <section id="home"><h1 class="main-logo" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">LYXX</h1><p class="slogan">WANT TO LYXX ME?</p></section>
+        <section id="home">
+            <h1 class="main-logo" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">LYXX</h1>
+            <p class="slogan" id="mainSlogan">WANT TO LYXX ME?</p>
+        </section>
+        
         <section id="shop">
             <h2>SHOP</h2>
             <div class="product-grid">
@@ -184,11 +171,38 @@
     </div>
 
     <script>
-        // ✅ [추가] 인트로 사라지는 타이머 로직
+        // ✨ [추가] 인트로 및 스크롤 감시 로직
         window.addEventListener('load', () => {
             setTimeout(() => {
                 document.getElementById('intro-overlay').classList.add('fade-out');
-            }, 2500); // 2.5초 후 사이트 공개
+                initScrollObserver(); // 인트로 끝나고 감시 시작
+            }, 2500);
+        });
+
+        // ✨ [추가] 스크롤 리빌 (Intersection Observer)
+        function initScrollObserver() {
+            const options = { threshold: 0.1 };
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                    }
+                });
+            }, options);
+
+            document.querySelectorAll('.product-card').forEach(card => {
+                observer.observe(card);
+            });
+        }
+
+        // ✨ [추가] 슬로건 패럴렉스 (살짝 움직이는 효과)
+        window.addEventListener('scroll', () => {
+            const scrollPos = window.pageYOffset;
+            const slogan = document.getElementById('mainSlogan');
+            if(scrollPos < 800) {
+                slogan.style.transform = `translateY(${scrollPos * 0.2}px)`;
+                slogan.style.opacity = 0.6 - (scrollPos / 1000);
+            }
         });
 
         let isLoggedIn = false, currentUser = null, cart = [], currentProductKey = '';
