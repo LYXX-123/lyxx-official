@@ -189,6 +189,9 @@
         let cart = [];
         let currentProductKey = '';
 
+        // 🔗 Ryushun님의 배포된 서버 주소
+        const API_URL = 'https://lyxx-official.onrender.com';
+
         const products = {
             'tee': { id: 'tee', name: 'LYXX Crop tee', price: 69000, img: './반팔티.jpg', desc: 'PREMIUM COTTON FABRIC.<br>SIGNATURE CROPPED FIT.' },
             'hoodie': { id: 'hoodie', name: 'CONCRETE HOODIE', price: 129000, img: '', desc: 'HEAVYWEIGHT OVERSIZED FIT.<br>CONCRETE GREY COLORWAY.' },
@@ -207,7 +210,7 @@
             const id = document.getElementById('loginId').value;
             const pw = document.getElementById('loginPw').value;
             try {
-                const res = await fetch('http://localhost:3000/login', {
+                const res = await fetch(`${API_URL}/login`, {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username: id, password: pw })
                 });
@@ -217,7 +220,7 @@
                     alert(`Welcome, ${data.name}!`);
                     updateNavUI(); closeModals();
                 } else alert(data.message);
-            } catch(e) { alert("서버가 꺼져 있습니다."); }
+            } catch(e) { alert("서버가 응답하지 않습니다."); }
         }
 
         async function handleSignup() {
@@ -225,13 +228,13 @@
             const id = document.getElementById('signupId').value;
             const pw = document.getElementById('signupPw').value;
             try {
-                const res = await fetch('http://localhost:3000/signup', {
+                const res = await fetch(`${API_URL}/signup`, {
                     method: 'POST', headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username: id, password: pw, name: name })
                 });
                 const data = await res.json();
                 alert(data.message); if (data.success) closeModals();
-            } catch(e) { alert("서버가 꺼져 있습니다."); }
+            } catch(e) { alert("서버가 응답하지 않습니다."); }
         }
 
         function handleLogout() {
