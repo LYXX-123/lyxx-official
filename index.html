@@ -13,10 +13,11 @@
             overflow-x: hidden;
             background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4WsUAAAABlBMVEUAAAAAAAClZ7nPAAAAAXRSTlMAQObYZgAAADRJREFUeNoNglESwCAMwjr//7vG6b3XQJ4gAgj7A6VqI5iI4P6u4nQ80y4gB16oAn6l2mYvPgD2A/c5h64NAAAAAElFTkSuQmCC');
         }
-        #cursor, #cursor-dot { position: fixed; pointer-events: none; transform: translate(-50%, -50%); z-index: 9999; }
-        #cursor { width: 30px; height: 30px; border: 1px solid rgba(255, 255, 255, 0.5); border-radius: 50%; }
+        #cursor, #cursor-dot { position: fixed; pointer-events: none; transform: translate(-50%, -50%); z-index: 10000; }
+        #cursor { width: 30px; height: 30px; border: 1px solid rgba(255, 255, 255, 0.5); border-radius: 50%; transition: 0.2s; }
         #cursor-dot { width: 4px; height: 4px; background-color: #fff; border-radius: 50%; }
 
+        /* 2. 헤더 */
         header {
             width: 100%; height: 80px; display: flex; justify-content: space-between; align-items: center;
             padding: 0 5%; position: fixed; top: 0; left: 0; z-index: 1000;
@@ -24,14 +25,33 @@
         }
         .logo { font-size: 24px; font-weight: 900; letter-spacing: -1px; text-decoration: none; color: inherit; pointer-events: auto; }
         nav ul { display: flex; gap: 25px; list-style: none; align-items: center; }
-        nav a, .nav-btn, .cart-trigger-btn { font-size: 13px; text-transform: uppercase; font-weight: 300; text-decoration: none; color: inherit; background: none; border: none; transition: 0.3s; opacity: 0.6; pointer-events: auto; }
+        nav a, .nav-btn, .cart-trigger-btn { 
+            font-size: 13px; text-transform: uppercase; font-weight: 300; 
+            text-decoration: none; color: inherit; background: none; border: none; 
+            transition: 0.3s; opacity: 0.6; pointer-events: auto;
+        }
         nav a:hover, .nav-btn:hover, .cart-trigger-btn:hover { opacity: 1; }
         .cart-nav { border: 1px solid rgba(255,255,255,0.3); padding: 5px 12px; border-radius: 20px; }
 
-        /* 🔐 모달 스타일 */
+        /* 3. 로고 빛나는 효과 (완벽 복구) */
+        .main-logo { 
+            font-size: 15vw; font-weight: 900; letter-spacing: -5px; text-transform: uppercase; 
+            background: linear-gradient(145deg, #fff, #bbb, #fff); 
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
+            filter: drop-shadow(0 0 8px rgba(255,255,255,0.4)); 
+            transition: 0.4s; user-select: none; display: inline-block; padding: 0 0.1em;
+            pointer-events: auto;
+        }
+        .main-logo:hover { 
+            filter: drop-shadow(0 0 25px rgba(255,255,255,0.9)); 
+            transform: scale(1.02); 
+        }
+        .slogan { font-size: 14px; font-weight: 300; text-transform: uppercase; letter-spacing: 5px; margin-top: -10px; opacity: 0.6; }
+
+        /* 4. 모달 */
         .auth-modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95); z-index: 3000;
+            background: rgba(0,0,0,0.95); z-index: 5000;
             display: none; justify-content: center; align-items: center;
             backdrop-filter: blur(10px);
         }
@@ -42,59 +62,48 @@
         .auth-close { position: absolute; top: 20px; right: 20px; font-size: 20px; color: #fff; background: none; border: none; pointer-events: auto; }
         .forgot-btn { background: none; border: none; color: #888; font-size: 11px; margin-top: 15px; text-decoration: underline; pointer-events: auto; }
 
-        /* 🛒 장바구니 사이드바 */
+        /* 5. 장바구니 & 수량 버튼 스타일 */
         .cart-sidebar {
             position: fixed; top: 0; right: -400px; width: 400px; height: 100%;
-            background: #111; border-left: 1px solid #333; z-index: 2000;
+            background: #111; border-left: 1px solid #333; z-index: 4000;
             padding: 40px; transition: right 0.5s cubic-bezier(0.77, 0, 0.175, 1);
             display: flex; flex-direction: column;
         }
         .cart-sidebar.active { right: 0; }
         .cart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
         .close-cart { background: none; border: none; color: #fff; font-size: 24px; pointer-events: auto; }
+        
         .cart-items-container { flex-grow: 1; overflow-y: auto; border-top: 1px solid #222; padding-top: 20px; }
         .cart-item { display: flex; gap: 15px; margin-bottom: 25px; align-items: center; }
         .cart-item-img { width: 60px; height: 60px; background: #222; object-fit: cover; border: 1px solid #333; }
-        .cart-footer { border-top: 1px solid #222; padding-top: 20px; }
-        .checkout-btn { width: 100%; padding: 15px; background: #eee; color: #111; border: none; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; pointer-events: auto; }
-
-        /* 🖼 레이아웃 핵심 */
-        #home { width: 100%; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
-        .main-logo { 
-            font-size: 15vw; font-weight: 900; text-transform: uppercase; 
-            background: linear-gradient(145deg, #fff, #bbb, #fff); 
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
-            filter: drop-shadow(0 0 8px rgba(255,255,255,0.4)); transition: 0.4s; pointer-events: auto;
+        .qty-control { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
+        .qty-btn { 
+            background: none; border: 1px solid #444; color: #eee; 
+            width: 24px; height: 24px; display: flex; align-items: center; 
+            justify-content: center; font-size: 14px; pointer-events: auto;
         }
-        .main-logo:hover { filter: drop-shadow(0 0 20px rgba(255,255,255,0.8)); transform: scale(1.02); }
-        .slogan { font-size: 14px; font-weight: 300; text-transform: uppercase; letter-spacing: 5px; margin-top: -10px; opacity: 0.6; }
-        
-        #shop { padding: 100px 5%; width: 100%; }
+
+        /* 6. 상품 그리드 */
+        #shop { padding: 150px 5% 100px; width: 100%; }
         #shop h2 { font-size: 40px; font-weight: 700; text-transform: uppercase; margin-bottom: 60px; text-align: center; }
-        
-        /* 🚀 상품 그리드 */
         .product-grid { 
-            display: grid; 
-            grid-template-columns: repeat(3, 1fr); 
-            gap: 30px; 
-            max-width: 1200px; 
-            margin: 0 auto;
+            display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; 
+            max-width: 1200px; margin: 0 auto; 
         }
         .product-card { background-color: #1a1a1a; border: 1px solid #222; padding: 20px; transition: 0.3s; text-align: left; pointer-events: auto; }
         .product-card:hover { border-color: #eee; transform: translateY(-5px); }
-        .img-box { width: 100%; aspect-ratio: 1/1; background-color: #222; display: flex; justify-content: center; align-items: center; overflow: hidden; margin-bottom: 20px; border: 1px solid #333; }
+        .img-box { width: 100%; aspect-ratio: 1/1; background-color: #222; display: flex; justify-content: center; align-items: center; overflow: hidden; margin-bottom: 20px; }
         .img-box img { width: 100%; height: 100%; object-fit: cover; }
 
+        /* 7. 상세 페이지 */
         #product-detail-view { display: none; padding-top: 80px; }
         #product-top { padding: 80px 5%; display: flex; gap: 60px; min-height: 80vh; }
-        .main-img-box { flex: 1.2; background-color: #1a1a1a; border: 1px solid #222; overflow: hidden; }
-        .main-img-box img { width: 100%; filter: grayscale(1); transition: 0.5s; }
-        .main-img-box:hover img { filter: grayscale(0); }
-        .action-btn { flex: 1; padding: 20px; font-weight: 700; text-transform: uppercase; letter-spacing: 3px; border: 1px solid #444; color: #888; background: none; transition: 0.3s; pointer-events: auto; }
-        .action-btn:hover { border-color: #eee; color: #eee; }
+        .main-img-box { flex: 1.2; background-color: #1a1a1a; border: 1px solid #222; }
+        .main-img-box img { width: 100%; }
+        .action-btn { flex: 1; padding: 20px; font-weight: 700; text-transform: uppercase; letter-spacing: 3px; border: 1px solid #444; color: #888; background: none; pointer-events: auto; }
         .buy-btn { background-color: #eee; color: #111; border: none; }
 
-        footer { padding: 50px; text-align: center; font-size: 11px; opacity: 0.3; border-top: 1px solid #222; }
+        footer { padding: 100px 50px 50px; text-align: center; font-size: 11px; opacity: 0.3; border-top: 1px solid #222; }
     </style>
 </head>
 <body>
@@ -102,38 +111,9 @@
     <div id="cursor"></div>
     <div id="cursor-dot"></div>
 
-    <div class="auth-modal" id="loginModal">
-        <div class="auth-box">
-            <button class="auth-close" onclick="closeModals()">×</button>
-            <h2>Login</h2>
-            <input type="text" id="loginId" placeholder="ID">
-            <input type="password" id="loginPw" placeholder="PASSWORD">
-            <button class="auth-submit" onclick="handleLogin()">Enter</button>
-            <button class="forgot-btn" onclick="openFindPw()">Forgot Password?</button>
-        </div>
-    </div>
-
-    <div class="auth-modal" id="findPwModal">
-        <div class="auth-box">
-            <button class="auth-close" onclick="closeModals()">×</button>
-            <h2>Find Password</h2>
-            <input type="text" id="findId" placeholder="ENTER YOUR ID">
-            <input type="email" id="findEmail" placeholder="ENTER YOUR EMAIL">
-            <button class="auth-submit" onclick="handleFindPassword()">Send Password to Mail</button>
-        </div>
-    </div>
-
-    <div class="auth-modal" id="signupModal">
-        <div class="auth-box">
-            <button class="auth-close" onclick="closeModals()">×</button>
-            <h2>Sign Up</h2>
-            <input type="text" id="signupName" placeholder="NAME">
-            <input type="text" id="signupId" placeholder="ID">
-            <input type="password" id="signupPw" placeholder="PASSWORD">
-            <input type="email" id="signupEmail" placeholder="EMAIL">
-            <button class="auth-submit" onclick="handleSignup()">Create Account</button>
-        </div>
-    </div>
+    <div class="auth-modal" id="loginModal"><div class="auth-box"><button class="auth-close" onclick="closeModals()">×</button><h2>Login</h2><input type="text" id="loginId" placeholder="ID"><input type="password" id="loginPw" placeholder="PASSWORD"><button class="auth-submit" onclick="handleLogin()">Enter</button><button class="forgot-btn" onclick="openFindPw()">Forgot Password?</button></div></div>
+    <div class="auth-modal" id="findPwModal"><div class="auth-box"><button class="auth-close" onclick="closeModals()">×</button><h2>Find Password</h2><input type="text" id="findId" placeholder="ENTER YOUR ID"><input type="email" id="findEmail" placeholder="ENTER YOUR EMAIL"><button class="auth-submit" onclick="handleFindPassword()">Send Password to Mail</button></div></div>
+    <div class="auth-modal" id="signupModal"><div class="auth-box"><button class="auth-close" onclick="closeModals()">×</button><h2>Sign Up</h2><input type="text" id="signupName" placeholder="NAME"><input type="text" id="signupId" placeholder="ID"><input type="password" id="signupPw" placeholder="PASSWORD"><input type="email" id="signupEmail" placeholder="EMAIL"><button class="auth-submit" onclick="handleSignup()">Create Account</button></div></div>
 
     <div class="cart-sidebar" id="cartSidebar">
         <div class="cart-header"><h3>CART</h3><button class="close-cart" onclick="toggleCart()">×</button></div>
@@ -152,43 +132,33 @@
     </header>
 
     <div id="main-view">
-        <section id="home"><h1 class="main-logo">LYXX</h1><p class="slogan">WANT TO LYXX ME?</p></section>
+        <section id="home">
+            <h1 class="main-logo" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">LYXX</h1>
+            <p class="slogan">WANT TO LYXX ME?</p>
+        </section>
         
         <section id="shop">
             <h2>SHOP</h2>
             <div class="product-grid">
-                <div class="product-card" onclick="openProduct('tee')">
-                    <div class="img-box"><img src="./반팔티.jpg" alt="TEE"></div>
-                    <p style="font-size:16px;">LYXX Crop tee</p>
-                    <p style="opacity:0.5;">₩69,000</p>
-                </div>
-                <div class="product-card" onclick="openProduct('hoodie')">
-                    <div class="img-box"><p style="opacity:0.2;">IMAGE</p></div>
-                    <p style="font-size:16px;">CONCRETE HOODIE</p>
-                    <p style="opacity:0.5;">₩129,000</p>
-                </div>
-                <div class="product-card" onclick="openProduct('belt')">
-                    <div class="img-box"><p style="opacity:0.2;">IMAGE</p></div>
-                    <p style="font-size:16px;">STAR BELT</p>
-                    <p style="opacity:0.5;">₩79,000</p>
-                </div>
+                <div class="product-card" onclick="openProduct('tee')"><div class="img-box"><img src="./반팔티.jpg"></div><p>LYXX Crop tee</p><p style="opacity:0.5;">₩69,000</p></div>
+                <div class="product-card" onclick="openProduct('hoodie')"><div class="img-box"><p style="opacity:0.1;">IMAGE</p></div><p>CONCRETE HOODIE</p><p style="opacity:0.5;">₩129,000</p></div>
+                <div class="product-card" onclick="openProduct('belt')"><div class="img-box"><p style="opacity:0.1;">IMAGE</p></div><p>STAR BELT</p><p style="opacity:0.5;">₩79,000</p></div>
             </div>
         </section>
-        
         <footer>&copy; 2026 LYXX.</footer>
     </div>
 
     <div id="product-detail-view">
         <section id="product-top">
-            <div class="main-img-box"><img id="detail-main-img" src="" alt=""></div>
+            <div class="main-img-box"><img id="detail-main-img" src=""></div>
             <div style="flex:1;">
-                <h2 id="detail-name" style="font-size:40px; margin-bottom:10px;">NAME</h2>
-                <p id="detail-price" style="font-size:20px; margin-bottom:30px;">PRICE</p>
-                <div style="display:flex; gap:10px; margin-bottom:40px;">
+                <h2 id="detail-name" style="font-size:42px; margin-bottom:15px;">NAME</h2>
+                <p id="detail-price" style="font-size:22px; margin-bottom:40px; opacity:0.8;">PRICE</p>
+                <div style="display:flex; gap:15px; margin-bottom:50px;">
                     <button class="action-btn" id="addToCartBtn">ADD TO CART</button>
                     <button class="action-btn buy-btn">BUY NOW</button>
                 </div>
-                <p id="detail-desc" style="font-size:13px; opacity:0.5; line-height:1.8;"></p>
+                <p id="detail-desc" style="font-size:12px; opacity:0.4; line-height:2;"></p>
             </div>
         </section>
     </div>
@@ -196,11 +166,10 @@
     <script>
         let isLoggedIn = false, currentUser = null, cart = [], currentProductKey = '';
         const API_URL = 'https://lyxx-official.onrender.com';
-
         const products = {
             'tee': { id: 'tee', name: 'LYXX Crop tee', price: 69000, img: './반팔티.jpg', desc: 'PREMIUM COTTON.<br>SIGNATURE CROPPED FIT.' },
             'hoodie': { id: 'hoodie', name: 'CONCRETE HOODIE', price: 129000, img: '', desc: 'HEAVYWEIGHT OVERSIZED FIT.' },
-            'belt': { id: 'belt', name: 'STAR BELT', price: 79000, img: '', desc: 'GENUINE LEATHER.<br>STAR BUCKLE.' }
+            'belt': { id: 'belt', name: 'STAR BELT', price: 79000, img: '', desc: 'GENUINE LEATHER.<br>STAR BUCKLE DETAIL.' }
         };
 
         const closeModals = () => document.querySelectorAll('.auth-modal').forEach(m => m.style.display = 'none');
@@ -214,9 +183,8 @@
             try {
                 const res = await fetch(`${API_URL}/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: id, password: pw }) });
                 const data = await res.json();
-                if (data.success) { isLoggedIn = true; currentUser = data.name; updateNavUI(); closeModals(); alert(`Welcome!`); } 
-                else alert(data.message);
-            } catch(e) { alert("연결 오류"); }
+                if (data.success) { isLoggedIn = true; currentUser = data.name; updateNavUI(); closeModals(); alert(`Welcome!`); } else alert(data.message);
+            } catch(e) { alert("Server Error"); }
         }
 
         async function handleSignup() {
@@ -224,7 +192,7 @@
             try {
                 const res = await fetch(`${API_URL}/signup`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: id, password: pw, name, email }) });
                 const data = await res.json(); alert(data.message); if (data.success) closeModals();
-            } catch(e) { alert("연결 오류"); }
+            } catch(e) { alert("Server Error"); }
         }
 
         async function handleFindPassword() {
@@ -232,7 +200,7 @@
             try {
                 const res = await fetch(`${API_URL}/find-password`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username, email }) });
                 const data = await res.json(); alert(data.message); if(data.success) closeModals();
-            } catch(e) { alert("메일 발송 실패"); }
+            } catch(e) { alert("Email Error"); }
         }
 
         function handleLogout() { isLoggedIn = false; currentUser = null; updateNavUI(); document.getElementById('product-detail-view').style.display = 'none'; document.getElementById('main-view').style.display = 'block'; }
@@ -255,9 +223,14 @@
         function updateCartUI() {
             const list = document.getElementById('cartItemsList'), totalText = document.getElementById('cartTotalText');
             list.innerHTML = ''; let total = 0;
-            cart.forEach((item) => { total += item.price * item.quantity; list.innerHTML += `<div class="cart-item"><div style="flex:1;"><p style="font-size:13px;">${item.name}</p><p style="font-size:12px; opacity:0.5;">₩${(item.price * item.quantity).toLocaleString()}</p></div></div>`; });
+            cart.forEach((item, i) => {
+                total += item.price * item.quantity;
+                list.innerHTML += `<div class="cart-item"><img src="${item.img || ''}" class="cart-item-img"><div style="flex:1;"><p style="font-size:13px;">${item.name}</p><p style="font-size:12px; opacity:0.5;">₩${(item.price * item.quantity).toLocaleString()}</p><div class="qty-control"><button class="qty-btn" onclick="changeQty(${i},-1)">-</button><span>${item.quantity}</span><button class="qty-btn" onclick="changeQty(${i},1)">+</button></div></div></div>`;
+            });
             totalText.innerText = `₩${total.toLocaleString()}`; updateNavUI();
         }
+
+        function changeQty(i, d) { cart[i].quantity += d; if(cart[i].quantity < 1) cart.splice(i,1); updateCartUI(); }
 
         document.getElementById('addToCartBtn').onclick = () => {
             const data = products[currentProductKey];
