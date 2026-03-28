@@ -24,7 +24,7 @@
             background: rgba(17, 17, 17, 0.8); backdrop-filter: blur(5px);
         }
         .logo { font-size: 24px; font-weight: 900; letter-spacing: -1px; text-decoration: none; color: inherit; pointer-events: auto; }
-        nav ul { display: flex; gap: 25px; list-style: none; align-items: center; }
+        nav ul { display: flex; gap: 20px; list-style: none; align-items: center; }
         nav a, .nav-btn, .cart-trigger-btn { 
             font-size: 13px; text-transform: uppercase; font-weight: 300; 
             text-decoration: none; color: inherit; background: none; border: none; 
@@ -33,7 +33,7 @@
         nav a:hover, .nav-btn:hover, .cart-trigger-btn:hover { opacity: 1; }
         .cart-nav { border: 1px solid rgba(255,255,255,0.3); padding: 5px 12px; border-radius: 20px; }
 
-        /* 3. 로고 빛나는 효과 (완벽 복구) */
+        /* 3. 로고 빛나는 효과 */
         .main-logo { 
             font-size: 15vw; font-weight: 900; letter-spacing: -5px; text-transform: uppercase; 
             background: linear-gradient(145deg, #fff, #bbb, #fff); 
@@ -62,7 +62,7 @@
         .auth-close { position: absolute; top: 20px; right: 20px; font-size: 20px; color: #fff; background: none; border: none; pointer-events: auto; }
         .forgot-btn { background: none; border: none; color: #888; font-size: 11px; margin-top: 15px; text-decoration: underline; pointer-events: auto; }
 
-        /* 5. 장바구니 & 수량 버튼 스타일 */
+        /* 5. 장바구니 사이드바 & 수량 버튼 */
         .cart-sidebar {
             position: fixed; top: 0; right: -400px; width: 400px; height: 100%;
             background: #111; border-left: 1px solid #333; z-index: 4000;
@@ -76,11 +76,11 @@
         .cart-items-container { flex-grow: 1; overflow-y: auto; border-top: 1px solid #222; padding-top: 20px; }
         .cart-item { display: flex; gap: 15px; margin-bottom: 25px; align-items: center; }
         .cart-item-img { width: 60px; height: 60px; background: #222; object-fit: cover; border: 1px solid #333; }
-        .qty-control { display: flex; align-items: center; gap: 12px; margin-top: 8px; }
+        .qty-control { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
         .qty-btn { 
             background: none; border: 1px solid #444; color: #eee; 
-            width: 24px; height: 24px; display: flex; align-items: center; 
-            justify-content: center; font-size: 14px; pointer-events: auto;
+            width: 22px; height: 22px; display: flex; align-items: center; 
+            justify-content: center; font-size: 12px; pointer-events: auto;
         }
 
         /* 6. 상품 그리드 */
@@ -92,13 +92,13 @@
         }
         .product-card { background-color: #1a1a1a; border: 1px solid #222; padding: 20px; transition: 0.3s; text-align: left; pointer-events: auto; }
         .product-card:hover { border-color: #eee; transform: translateY(-5px); }
-        .img-box { width: 100%; aspect-ratio: 1/1; background-color: #222; display: flex; justify-content: center; align-items: center; overflow: hidden; margin-bottom: 20px; }
+        .img-box { width: 100%; aspect-ratio: 1/1; background-color: #222; display: flex; justify-content: center; align-items: center; overflow: hidden; margin-bottom: 20px; border: 1px solid #333; }
         .img-box img { width: 100%; height: 100%; object-fit: cover; }
 
         /* 7. 상세 페이지 */
         #product-detail-view { display: none; padding-top: 80px; }
         #product-top { padding: 80px 5%; display: flex; gap: 60px; min-height: 80vh; }
-        .main-img-box { flex: 1.2; background-color: #1a1a1a; border: 1px solid #222; }
+        .main-img-box { flex: 1.2; background-color: #1a1a1a; border: 1px solid #222; overflow: hidden; }
         .main-img-box img { width: 100%; }
         .action-btn { flex: 1; padding: 20px; font-weight: 700; text-transform: uppercase; letter-spacing: 3px; border: 1px solid #444; color: #888; background: none; pointer-events: auto; }
         .buy-btn { background-color: #eee; color: #111; border: none; }
@@ -183,7 +183,7 @@
             try {
                 const res = await fetch(`${API_URL}/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: id, password: pw }) });
                 const data = await res.json();
-                if (data.success) { isLoggedIn = true; currentUser = data.name; updateNavUI(); closeModals(); alert(`Welcome!`); } else alert(data.message);
+                if (data.success) { isLoggedIn = true; currentUser = data.name; updateNavUI(); closeModals(); alert(`Welcome, ${data.name}!`); } else alert(data.message);
             } catch(e) { alert("Server Error"); }
         }
 
@@ -208,9 +208,23 @@
         function updateNavUI() {
             const navUl = document.getElementById('main-nav');
             const common = `<li><a href="#home" class="nav-link">HOME</a></li><li><a href="#shop" class="nav-link">SHOP</a></li>`;
-            navUl.innerHTML = common + (isLoggedIn ? 
-                `<li><button class="nav-btn" onclick="handleLogout()">LOGOUT</button></li><li><button class="cart-trigger-btn cart-nav" onclick="toggleCart()">CART (${cart.reduce((a,b)=>a+b.quantity,0)})</button></li>` : 
-                `<li><button class="nav-btn" onclick="openLogin()">LOGIN</button></li><li><button class="nav-btn" onclick="openSignup()">SIGNUP</button></li><li><button class="cart-trigger-btn cart-nav" onclick="toggleCart()">CART (0)</button></li>`);
+            
+            // ✅ 로그인 시 마이페이지 버튼 확실히 추가
+            let menu = common;
+            if (isLoggedIn) {
+                menu += `
+                    <li><button class="nav-btn" onclick="alert('${currentUser}님의 마이페이지 준비 중')">MY PAGE</button></li>
+                    <li><button class="nav-btn" onclick="handleLogout()">LOGOUT</button></li>
+                    <li><button class="cart-trigger-btn cart-nav" onclick="toggleCart()">CART (${cart.reduce((a,b)=>a+b.quantity,0)})</button></li>
+                `;
+            } else {
+                menu += `
+                    <li><button class="nav-btn" onclick="openLogin()">LOGIN</button></li>
+                    <li><button class="nav-btn" onclick="openSignup()">SIGNUP</button></li>
+                    <li><button class="cart-trigger-btn cart-nav" onclick="toggleCart()">CART (0)</button></li>
+                `;
+            }
+            navUl.innerHTML = menu;
             bindNavEvents();
         }
 
@@ -220,12 +234,26 @@
             });
         }
 
+        // ✅ 장바구니 이미지 + 수량 조절 버튼 로직 복구
         function updateCartUI() {
             const list = document.getElementById('cartItemsList'), totalText = document.getElementById('cartTotalText');
             list.innerHTML = ''; let total = 0;
             cart.forEach((item, i) => {
                 total += item.price * item.quantity;
-                list.innerHTML += `<div class="cart-item"><img src="${item.img || ''}" class="cart-item-img"><div style="flex:1;"><p style="font-size:13px;">${item.name}</p><p style="font-size:12px; opacity:0.5;">₩${(item.price * item.quantity).toLocaleString()}</p><div class="qty-control"><button class="qty-btn" onclick="changeQty(${i},-1)">-</button><span>${item.quantity}</span><button class="qty-btn" onclick="changeQty(${i},1)">+</button></div></div></div>`;
+                const imgSrc = item.img ? item.img : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
+                list.innerHTML += `
+                    <div class="cart-item">
+                        <img src="${imgSrc}" class="cart-item-img">
+                        <div style="flex:1;">
+                            <p style="font-size:13px;">${item.name}</p>
+                            <p style="font-size:12px; opacity:0.5;">₩${(item.price * item.quantity).toLocaleString()}</p>
+                            <div class="qty-control">
+                                <button class="qty-btn" onclick="changeQty(${i},-1)">-</button>
+                                <span style="font-size:12px;">${item.quantity}</span>
+                                <button class="qty-btn" onclick="changeQty(${i},1)">+</button>
+                            </div>
+                        </div>
+                    </div>`;
             });
             totalText.innerText = `₩${total.toLocaleString()}`; updateNavUI();
         }
@@ -252,7 +280,10 @@
 
         updateNavUI();
         const cursor = document.getElementById('cursor'), cursorDot = document.getElementById('cursor-dot');
-        document.addEventListener('mousemove', e => { cursor.style.left = e.clientX + 'px'; cursor.style.top = e.clientY + 'px'; cursorDot.style.left = e.clientX + 'px'; cursorDot.style.top = e.clientY + 'px'; });
+        document.addEventListener('mousemove', e => { 
+            cursor.style.left = e.clientX + 'px'; cursor.style.top = e.clientY + 'px'; 
+            cursorDot.style.left = e.clientX + 'px'; cursorDot.style.top = e.clientY + 'px'; 
+        });
     </script>
 </body>
 </html>
