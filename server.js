@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const mongoose = require('mongoose');
-const nodemailer = require('nodemailer'); // ✅ 메일 발송 도구 추가
+const nodemailer = require('nodemailer');
 const app = express();
 
 const PORT = process.env.PORT || 3000;
@@ -13,7 +13,6 @@ app.use(express.json());
 const MONGO_URI = "mongodb+srv://admin:lyxx1234@cluster0.ouxd6dx.mongodb.net/LYXX_DB?retryWrites=true&w=majority";
 mongoose.connect(MONGO_URI).then(() => console.log("✅ MongoDB 연결 성공")).catch(err => console.log("❌ DB 연결 에러:", err));
 
-// 📝 유저 데이터 구조
 const userSchema = new mongoose.Schema({
     username: { type: String, required: true, unique: true },
     password: { type: String, required: true },
@@ -22,12 +21,11 @@ const userSchema = new mongoose.Schema({
 });
 const User = mongoose.model('User', userSchema);
 
-// ✉️ 메일 발송 설정 (용준님의 새 계정 정보)
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
         user: 'lyxx.rechive@gmail.com',
-        pass: 'znga rtdq bcma hvqc' // ✅ 발급받은 앱 비밀번호
+        pass: 'znga rtdq bcma hvqc'
     }
 });
 
@@ -45,37 +43,44 @@ app.post('/signup', async (req, res) => {
     } catch (e) { res.status(500).json({ success: false, message: "서버 에러" }); }
 });
 
-// 🔑 로그인
+// 🔑 로그인 (응답에 username도 포함하도록 수정)
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
     try {
         const user = await User.findOne({ username, password });
-        if (user) res.status(200).json({ success: true, name: user.name });
+        if (user) res.status(200).json({ success: true, name: user.name, username: user.username });
         else res.status(200).json({ success: false, message: "정보가 틀렸습니다." });
     } catch (e) { res.status(500).json({ success: false }); }
 });
 
-// 📧 비밀번호 찾기 (이메일 발송 로직)
+// 📧 비밀번호 찾기
 app.post('/find-password', async (req, res) => {
     const { username, email } = req.body;
     try {
         const user = await User.findOne({ username, email });
         if (!user) return res.status(200).json({ success: false, message: "일치하는 정보가 없습니다." });
-
-        // 실제 비밀번호를 메일로 전송 (보안상 임시비번 발급이 좋지만, 일단 확인용으로 실제비번 전송)
         const mailOptions = {
             from: 'lyxx.rechive@gmail.com',
             to: user.email,
             subject: '[LYXX Official] 비밀번호 찾기 결과입니다.',
-            text: `안녕하세요 ${user.name}님, 요청하신 비밀번호는 [ ${user.password} ] 입니다. 로그인 후 변경을 권장합니다.`
+            text: `안녕하세요 ${user.name}님, 요청하신 비밀번호는 [ ${user.password} ] 입니다.`
         };
-
         await transporter.sendMail(mailOptions);
         res.status(200).json({ success: true, message: "입력하신 이메일로 비밀번호를 보냈습니다!" });
-    } catch (e) {
-        console.error(e);
-        res.status(500).json({ success: false, message: "메일 발송 중 에러가 발생했습니다." });
-    }
+    } catch (e) { res.status(500).json({ success: false, message: "메일 발송 에러" }); }
+});
+
+// ✅ [추가] 비밀번호 변경 API
+app.post('/update-password', async (req, res) => {
+    const { username, currentPassword, newPassword } = req.body;
+    try {
+        const user = await User.findOne({ username, password: currentPassword });
+        if (!user) return res.status(200).json({ success: false, message: "현재 비밀번호가 틀렸습니다." });
+        
+        user.password = newPassword;
+        await user.save();
+        res.status(200).json({ success: true, message: "비밀번호가 성공적으로 변경되었습니다!" });
+    } catch (e) { res.status(500).json({ success: false, message: "서버 에러" }); }
 });
 
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
