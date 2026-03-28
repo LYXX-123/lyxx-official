@@ -21,6 +21,7 @@ const userSchema = new mongoose.Schema({
 });
 const User = mongoose.model('User', userSchema);
 
+// 📧 이메일 설정 (비밀번호 찾기용)
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
@@ -31,6 +32,7 @@ const transporter = nodemailer.createTransport({
 
 app.get('/', (req, res) => res.send('SERVER IS RUNNING!'));
 
+// 👤 회원가입
 app.post('/signup', async (req, res) => {
     const { username, password, name, email } = req.body;
     try {
@@ -42,6 +44,7 @@ app.post('/signup', async (req, res) => {
     } catch (e) { res.status(500).json({ success: false, message: "서버 에러" }); }
 });
 
+// 🔑 로그인
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
     try {
@@ -51,6 +54,7 @@ app.post('/login', async (req, res) => {
     } catch (e) { res.status(500).json({ success: false }); }
 });
 
+// 📧 [복구] 비밀번호 찾기 API
 app.post('/find-password', async (req, res) => {
     const { username, email } = req.body;
     try {

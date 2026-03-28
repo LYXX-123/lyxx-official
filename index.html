@@ -196,6 +196,30 @@
             } catch(e) { alert("Server Error"); }
         }
 
+        async function handleFindPassword() {
+            const id = document.getElementById('findId').value;
+            const email = document.getElementById('findEmail').value;
+            if(!id || !email) return alert("빈칸을 채워주세요.");
+            try {
+                const res = await fetch(`${API_URL}/find-password`, { 
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json' }, 
+                    body: JSON.stringify({ username: id, email: email }) 
+                });
+                const data = await res.json();
+                alert(data.message);
+                if(data.success) closeModals();
+            } catch(e) { alert("비밀번호 찾기 요청 실패"); }
+        }
+
+        async function handleSignup() {
+            const name = document.getElementById('signupName').value, id = document.getElementById('signupId').value, pw = document.getElementById('signupPw').value, email = document.getElementById('signupEmail').value;
+            try {
+                const res = await fetch(`${API_URL}/signup`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: id, password: pw, name, email }) });
+                const data = await res.json(); alert(data.message); if (data.success) closeModals();
+            } catch(e) { alert("Server Error"); }
+        }
+
         function handleLogout() { isLoggedIn = false; currentUser = null; updateNavUI(); document.getElementById('product-detail-view').style.display = 'none'; document.getElementById('main-view').style.display = 'block'; }
 
         function bindNavEvents() {
