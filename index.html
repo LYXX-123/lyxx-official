@@ -6,7 +6,7 @@
     <title>LYXX Official</title>
     <style>
         /* 1. 기본 스타일 & 커서 */
-        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
+        * { margin: 0; padding: 0; box-sizing: border-box; cursor: none !important; }
         body {
             background-color: #111; color: #eee;
             font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -17,19 +17,18 @@
         #cursor { width: 30px; height: 30px; border: 1px solid rgba(255, 255, 255, 0.5); border-radius: 50%; }
         #cursor-dot { width: 4px; height: 4px; background-color: #fff; border-radius: 50%; }
 
-        /* 2. 헤더 & 네비 */
         header {
             width: 100%; height: 80px; display: flex; justify-content: space-between; align-items: center;
             padding: 0 5%; position: fixed; top: 0; left: 0; z-index: 1000;
             background: rgba(17, 17, 17, 0.8); backdrop-filter: blur(5px);
         }
-        .logo { font-size: 24px; font-weight: 900; letter-spacing: -1px; text-decoration: none; color: inherit; }
+        .logo { font-size: 24px; font-weight: 900; letter-spacing: -1px; text-decoration: none; color: inherit; pointer-events: auto; }
         nav ul { display: flex; gap: 25px; list-style: none; align-items: center; }
-        nav a, .nav-btn, .cart-trigger-btn { font-size: 13px; text-transform: uppercase; font-weight: 300; text-decoration: none; color: inherit; background: none; border: none; cursor: none; transition: 0.3s; opacity: 0.6; }
+        nav a, .nav-btn, .cart-trigger-btn { font-size: 13px; text-transform: uppercase; font-weight: 300; text-decoration: none; color: inherit; background: none; border: none; transition: 0.3s; opacity: 0.6; pointer-events: auto; }
         nav a:hover, .nav-btn:hover, .cart-trigger-btn:hover { opacity: 1; }
         .cart-nav { border: 1px solid rgba(255,255,255,0.3); padding: 5px 12px; border-radius: 20px; }
 
-        /* 3. 인증 모달 */
+        /* 🔐 모달 스타일 */
         .auth-modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.95); z-index: 3000;
@@ -38,12 +37,12 @@
         }
         .auth-box { width: 400px; padding: 60px 40px; border: 1px solid #222; background: #111; text-align: center; position: relative; }
         .auth-box h2 { font-size: 22px; font-weight: 900; margin-bottom: 35px; letter-spacing: 2px; text-transform: uppercase; }
-        .auth-box input { width: 100%; padding: 15px; margin-bottom: 15px; background: #1a1a1a; border: 1px solid #333; color: #fff; font-size: 12px; outline: none; }
-        .auth-submit { width: 100%; padding: 15px; background: #eee; color: #111; border: none; font-weight: 900; margin-top: 10px; text-transform: uppercase; }
-        .auth-close { position: absolute; top: 20px; right: 20px; font-size: 20px; color: #fff; background: none; border: none; }
-        .forgot-btn { background: none; border: none; color: #888; font-size: 11px; margin-top: 15px; text-decoration: underline; }
+        .auth-box input { width: 100%; padding: 15px; margin-bottom: 15px; background: #1a1a1a; border: 1px solid #333; color: #fff; font-size: 12px; outline: none; pointer-events: auto; }
+        .auth-submit { width: 100%; padding: 15px; background: #eee; color: #111; border: none; font-weight: 900; margin-top: 10px; text-transform: uppercase; pointer-events: auto; }
+        .auth-close { position: absolute; top: 20px; right: 20px; font-size: 20px; color: #fff; background: none; border: none; pointer-events: auto; }
+        .forgot-btn { background: none; border: none; color: #888; font-size: 11px; margin-top: 15px; text-decoration: underline; pointer-events: auto; }
 
-        /* 4. 장바구니 사이드바 */
+        /* 🛒 장바구니 사이드바 */
         .cart-sidebar {
             position: fixed; top: 0; right: -400px; width: 400px; height: 100%;
             background: #111; border-left: 1px solid #333; z-index: 2000;
@@ -52,23 +51,28 @@
         }
         .cart-sidebar.active { right: 0; }
         .cart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
-        .close-cart { background: none; border: none; color: #fff; font-size: 24px; cursor: none; }
+        .close-cart { background: none; border: none; color: #fff; font-size: 24px; pointer-events: auto; }
         .cart-items-container { flex-grow: 1; overflow-y: auto; border-top: 1px solid #222; padding-top: 20px; }
         .cart-item { display: flex; gap: 15px; margin-bottom: 25px; align-items: center; }
         .cart-item-img { width: 60px; height: 60px; background: #222; object-fit: cover; border: 1px solid #333; }
-        .qty-control { display: flex; align-items: center; gap: 10px; margin-top: 5px; }
-        .qty-btn { background: none; border: 1px solid #444; color: #eee; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 12px; cursor: none; }
         .cart-footer { border-top: 1px solid #222; padding-top: 20px; }
-        .checkout-btn { width: 100%; padding: 15px; background: #eee; color: #111; border: none; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; }
+        .checkout-btn { width: 100%; padding: 15px; background: #eee; color: #111; border: none; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; pointer-events: auto; }
 
-        /* 5. 레이아웃 & 상품 그리드 */
+        /* 🖼 레이아웃 핵심 */
         #home { width: 100%; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
-        .main-logo { font-size: 15vw; font-weight: 900; text-transform: uppercase; background: linear-gradient(145deg, #fff, #bbb, #fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
+        .main-logo { 
+            font-size: 15vw; font-weight: 900; text-transform: uppercase; 
+            background: linear-gradient(145deg, #fff, #bbb, #fff); 
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
+            filter: drop-shadow(0 0 8px rgba(255,255,255,0.4)); transition: 0.4s; pointer-events: auto;
+        }
+        .main-logo:hover { filter: drop-shadow(0 0 20px rgba(255,255,255,0.8)); transform: scale(1.02); }
         .slogan { font-size: 14px; font-weight: 300; text-transform: uppercase; letter-spacing: 5px; margin-top: -10px; opacity: 0.6; }
-
+        
         #shop { padding: 100px 5%; width: 100%; }
         #shop h2 { font-size: 40px; font-weight: 700; text-transform: uppercase; margin-bottom: 60px; text-align: center; }
         
+        /* 🚀 상품 그리드 */
         .product-grid { 
             display: grid; 
             grid-template-columns: repeat(3, 1fr); 
@@ -76,17 +80,17 @@
             max-width: 1200px; 
             margin: 0 auto;
         }
-        .product-card { background-color: #1a1a1a; border: 1px solid #222; padding: 20px; transition: 0.3s; text-align: left; }
-        .product-card:hover { border-color: #eee; }
-        .img-box { width: 100%; aspect-ratio: 1/1; background-color: #222; display: flex; justify-content: center; align-items: center; overflow: hidden; margin-bottom: 20px; }
+        .product-card { background-color: #1a1a1a; border: 1px solid #222; padding: 20px; transition: 0.3s; text-align: left; pointer-events: auto; }
+        .product-card:hover { border-color: #eee; transform: translateY(-5px); }
+        .img-box { width: 100%; aspect-ratio: 1/1; background-color: #222; display: flex; justify-content: center; align-items: center; overflow: hidden; margin-bottom: 20px; border: 1px solid #333; }
         .img-box img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* 6. 상품 상세 페이지 */
         #product-detail-view { display: none; padding-top: 80px; }
         #product-top { padding: 80px 5%; display: flex; gap: 60px; min-height: 80vh; }
         .main-img-box { flex: 1.2; background-color: #1a1a1a; border: 1px solid #222; overflow: hidden; }
-        .main-img-box img { width: 100%; transition: 0.5s; }
-        .action-btn { flex: 1; padding: 20px; font-weight: 700; text-transform: uppercase; letter-spacing: 3px; border: 1px solid #444; color: #888; background: none; font-size: 14px; transition: 0.3s; }
+        .main-img-box img { width: 100%; filter: grayscale(1); transition: 0.5s; }
+        .main-img-box:hover img { filter: grayscale(0); }
+        .action-btn { flex: 1; padding: 20px; font-weight: 700; text-transform: uppercase; letter-spacing: 3px; border: 1px solid #444; color: #888; background: none; transition: 0.3s; pointer-events: auto; }
         .action-btn:hover { border-color: #eee; color: #eee; }
         .buy-btn { background-color: #eee; color: #111; border: none; }
 
@@ -98,28 +102,79 @@
     <div id="cursor"></div>
     <div id="cursor-dot"></div>
 
-    <div class="auth-modal" id="loginModal"><div class="auth-box"><button class="auth-close" onclick="closeModals()">×</button><h2>Login</h2><input type="text" id="loginId" placeholder="ID"><input type="password" id="loginPw" placeholder="PASSWORD"><button class="auth-submit" onclick="handleLogin()">Enter</button><button class="forgot-btn" onclick="openFindPw()">Forgot Password?</button></div></div>
-    <div class="auth-modal" id="findPwModal"><div class="auth-box"><button class="auth-close" onclick="closeModals()">×</button><h2>Find Password</h2><input type="text" id="findId" placeholder="ENTER YOUR ID"><input type="email" id="findEmail" placeholder="ENTER YOUR EMAIL"><button class="auth-submit" onclick="handleFindPassword()">Send Password to Mail</button></div></div>
-    <div class="auth-modal" id="signupModal"><div class="auth-box"><button class="auth-close" onclick="closeModals()">×</button><h2>Sign Up</h2><input type="text" id="signupName" placeholder="NAME"><input type="text" id="signupId" placeholder="ID"><input type="password" id="signupPw" placeholder="PASSWORD"><input type="email" id="signupEmail" placeholder="EMAIL"><button class="auth-submit" onclick="handleSignup()">Create Account</button></div></div>
-
-    <div class="cart-sidebar" id="cartSidebar">
-        <div class="cart-header"><h3>CART</h3><button class="close-cart" id="closeCart" onclick="toggleCart()">×</button></div>
-        <div class="cart-items-container" id="cartItemsList"></div>
-        <div class="cart-footer"><div style="display:flex; justify-content:space-between; margin-bottom:20px; font-weight:700;"><span>TOTAL</span><span id="cartTotalText">₩0</span></div><button class="checkout-btn">CHECKOUT</button></div>
+    <div class="auth-modal" id="loginModal">
+        <div class="auth-box">
+            <button class="auth-close" onclick="closeModals()">×</button>
+            <h2>Login</h2>
+            <input type="text" id="loginId" placeholder="ID">
+            <input type="password" id="loginPw" placeholder="PASSWORD">
+            <button class="auth-submit" onclick="handleLogin()">Enter</button>
+            <button class="forgot-btn" onclick="openFindPw()">Forgot Password?</button>
+        </div>
     </div>
 
-    <header><a href="#home" class="logo nav-link">LYXX</a><nav><ul id="main-nav"></ul></nav></header>
+    <div class="auth-modal" id="findPwModal">
+        <div class="auth-box">
+            <button class="auth-close" onclick="closeModals()">×</button>
+            <h2>Find Password</h2>
+            <input type="text" id="findId" placeholder="ENTER YOUR ID">
+            <input type="email" id="findEmail" placeholder="ENTER YOUR EMAIL">
+            <button class="auth-submit" onclick="handleFindPassword()">Send Password to Mail</button>
+        </div>
+    </div>
+
+    <div class="auth-modal" id="signupModal">
+        <div class="auth-box">
+            <button class="auth-close" onclick="closeModals()">×</button>
+            <h2>Sign Up</h2>
+            <input type="text" id="signupName" placeholder="NAME">
+            <input type="text" id="signupId" placeholder="ID">
+            <input type="password" id="signupPw" placeholder="PASSWORD">
+            <input type="email" id="signupEmail" placeholder="EMAIL">
+            <button class="auth-submit" onclick="handleSignup()">Create Account</button>
+        </div>
+    </div>
+
+    <div class="cart-sidebar" id="cartSidebar">
+        <div class="cart-header"><h3>CART</h3><button class="close-cart" onclick="toggleCart()">×</button></div>
+        <div class="cart-items-container" id="cartItemsList"></div>
+        <div class="cart-footer">
+            <div style="display:flex; justify-content:space-between; margin-bottom:20px; font-weight:700;">
+                <span>TOTAL</span><span id="cartTotalText">₩0</span>
+            </div>
+            <button class="checkout-btn">CHECKOUT</button>
+        </div>
+    </div>
+
+    <header>
+        <a href="#home" class="logo nav-link">LYXX</a>
+        <nav><ul id="main-nav"></ul></nav>
+    </header>
 
     <div id="main-view">
         <section id="home"><h1 class="main-logo">LYXX</h1><p class="slogan">WANT TO LYXX ME?</p></section>
+        
         <section id="shop">
             <h2>SHOP</h2>
             <div class="product-grid">
-                <div class="product-card" onclick="openProduct('tee')"><div class="img-box"><img src="./반팔티.jpg" alt="TEE"></div><p style="font-size:16px;">LYXX Crop tee</p><p style="opacity:0.5;">₩69,000</p></div>
-                <div class="product-card" onclick="openProduct('hoodie')"><div class="img-box"><p style="opacity:0.2;">IMAGE</p></div><p style="font-size:16px;">CONCRETE HOODIE</p><p style="opacity:0.5;">₩129,000</p></div>
-                <div class="product-card" onclick="openProduct('belt')"><div class="img-box"><p style="opacity:0.2;">IMAGE</p></div><p style="font-size:16px;">STAR BELT</p><p style="opacity:0.5;">₩79,000</p></div>
+                <div class="product-card" onclick="openProduct('tee')">
+                    <div class="img-box"><img src="./반팔티.jpg" alt="TEE"></div>
+                    <p style="font-size:16px;">LYXX Crop tee</p>
+                    <p style="opacity:0.5;">₩69,000</p>
+                </div>
+                <div class="product-card" onclick="openProduct('hoodie')">
+                    <div class="img-box"><p style="opacity:0.2;">IMAGE</p></div>
+                    <p style="font-size:16px;">CONCRETE HOODIE</p>
+                    <p style="opacity:0.5;">₩129,000</p>
+                </div>
+                <div class="product-card" onclick="openProduct('belt')">
+                    <div class="img-box"><p style="opacity:0.2;">IMAGE</p></div>
+                    <p style="font-size:16px;">STAR BELT</p>
+                    <p style="opacity:0.5;">₩79,000</p>
+                </div>
             </div>
         </section>
+        
         <footer>&copy; 2026 LYXX.</footer>
     </div>
 
@@ -141,6 +196,7 @@
     <script>
         let isLoggedIn = false, currentUser = null, cart = [], currentProductKey = '';
         const API_URL = 'https://lyxx-official.onrender.com';
+
         const products = {
             'tee': { id: 'tee', name: 'LYXX Crop tee', price: 69000, img: './반팔티.jpg', desc: 'PREMIUM COTTON.<br>SIGNATURE CROPPED FIT.' },
             'hoodie': { id: 'hoodie', name: 'CONCRETE HOODIE', price: 129000, img: '', desc: 'HEAVYWEIGHT OVERSIZED FIT.' },
@@ -158,26 +214,25 @@
             try {
                 const res = await fetch(`${API_URL}/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: id, password: pw }) });
                 const data = await res.json();
-                if (data.success) { isLoggedIn = true; currentUser = data.name; updateNavUI(); closeModals(); alert(`Welcome!`); } else alert(data.message);
-            } catch(e) { alert("Error"); }
+                if (data.success) { isLoggedIn = true; currentUser = data.name; updateNavUI(); closeModals(); alert(`Welcome!`); } 
+                else alert(data.message);
+            } catch(e) { alert("연결 오류"); }
         }
 
         async function handleSignup() {
             const name = document.getElementById('signupName').value, id = document.getElementById('signupId').value, pw = document.getElementById('signupPw').value, email = document.getElementById('signupEmail').value;
             try {
                 const res = await fetch(`${API_URL}/signup`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: id, password: pw, name, email }) });
-                const data = await res.json();
-                alert(data.message); if (data.success) closeModals();
-            } catch(e) { alert("Error"); }
+                const data = await res.json(); alert(data.message); if (data.success) closeModals();
+            } catch(e) { alert("연결 오류"); }
         }
 
         async function handleFindPassword() {
             const username = document.getElementById('findId').value, email = document.getElementById('findEmail').value;
             try {
                 const res = await fetch(`${API_URL}/find-password`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username, email }) });
-                const data = await res.json();
-                alert(data.message); if(data.success) closeModals();
-            } catch(e) { alert("Error"); }
+                const data = await res.json(); alert(data.message); if(data.success) closeModals();
+            } catch(e) { alert("메일 발송 실패"); }
         }
 
         function handleLogout() { isLoggedIn = false; currentUser = null; updateNavUI(); document.getElementById('product-detail-view').style.display = 'none'; document.getElementById('main-view').style.display = 'block'; }
@@ -200,10 +255,7 @@
         function updateCartUI() {
             const list = document.getElementById('cartItemsList'), totalText = document.getElementById('cartTotalText');
             list.innerHTML = ''; let total = 0;
-            cart.forEach((item, i) => {
-                total += item.price * item.quantity;
-                list.innerHTML += `<div class="cart-item"><img src="${item.img ? item.img : ''}" class="cart-item-img"><div style="flex:1;"><p style="font-size:13px;">${item.name}</p><p style="font-size:12px; opacity:0.5;">₩${(item.price * item.quantity).toLocaleString()}</p></div></div>`;
-            });
+            cart.forEach((item) => { total += item.price * item.quantity; list.innerHTML += `<div class="cart-item"><div style="flex:1;"><p style="font-size:13px;">${item.name}</p><p style="font-size:12px; opacity:0.5;">₩${(item.price * item.quantity).toLocaleString()}</p></div></div>`; });
             totalText.innerText = `₩${total.toLocaleString()}`; updateNavUI();
         }
 
