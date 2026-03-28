@@ -14,114 +14,72 @@
             background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4WsUAAAABlBMVEUAAAAAAAClZ7nPAAAAAXRSTlMAQObYZgAAADRJREFUeNoNglESwCAMwjr//7vG6b3XQJ4gAgj7A6VqI5iI4P6u4nQ80y4gB16oAn6l2mYvPgD2A/c5h64NAAAAAElFTkSuQmCC');
         }
 
-        /* 인트로 애니메이션 레이어 */
-        #intro-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #000; z-index: 9999;
-            display: flex; justify-content: center; align-items: center;
-            transition: opacity 1s ease-in-out;
-        }
-        .intro-logo {
-            font-size: 8vw; font-weight: 900; letter-spacing: 50px;
-            color: #fff; opacity: 0;
-            animation: introAnim 2.5s cubic-bezier(0.19, 1, 0.22, 1) forwards;
-        }
-        @keyframes introAnim {
-            0% { opacity: 0; letter-spacing: 50px; filter: blur(10px); }
-            50% { opacity: 1; filter: blur(0); }
-            100% { opacity: 1; letter-spacing: 10px; }
-        }
+        /* 인트로 애니메이션 */
+        #intro-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; display: flex; justify-content: center; align-items: center; transition: opacity 1s ease-in-out; }
+        .intro-logo { font-size: 8vw; font-weight: 900; letter-spacing: 50px; color: #fff; opacity: 0; animation: introAnim 2.5s cubic-bezier(0.19, 1, 0.22, 1) forwards; }
+        @keyframes introAnim { 0% { opacity: 0; letter-spacing: 50px; filter: blur(10px); } 50% { opacity: 1; filter: blur(0); } 100% { opacity: 1; letter-spacing: 10px; } }
         .fade-out { opacity: 0 !important; pointer-events: none; }
 
         /* 헤더 */
-        header {
-            width: 100%; height: 80px; display: flex; justify-content: space-between; align-items: center;
-            padding: 0 5%; position: fixed; top: 0; left: 0; z-index: 1000;
-            background: rgba(17, 17, 17, 0.8); backdrop-filter: blur(5px);
-        }
+        header { width: 100%; height: 80px; display: flex; justify-content: space-between; align-items: center; padding: 0 5%; position: fixed; top: 0; left: 0; z-index: 1000; background: rgba(17, 17, 17, 0.8); backdrop-filter: blur(5px); }
         .logo { font-size: 24px; font-weight: 900; letter-spacing: -1px; text-decoration: none; color: inherit; }
         nav ul { display: flex; gap: 20px; list-style: none; align-items: center; }
-        nav a, .nav-btn, .cart-trigger-btn { 
-            font-size: 13px; text-transform: uppercase; font-weight: 300; 
-            text-decoration: none; color: inherit; background: none; border: none; 
-            transition: 0.3s; opacity: 0.6; cursor: pointer;
-        }
+        nav a, .nav-btn, .cart-trigger-btn { font-size: 13px; text-transform: uppercase; font-weight: 300; text-decoration: none; color: inherit; background: none; border: none; transition: 0.3s; opacity: 0.6; cursor: pointer; }
         nav a:hover, .nav-btn:hover, .cart-trigger-btn:hover { opacity: 1; }
         .cart-nav { border: 1px solid rgba(255,255,255,0.3); padding: 5px 12px; border-radius: 20px; }
 
         /* 메인 홈 섹션 */
         #home { width: 100vw; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; }
-        .main-logo { 
-            font-size: 15vw; font-weight: 900; letter-spacing: -5px; text-transform: uppercase; 
-            background: linear-gradient(145deg, #fff, #bbb, #fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
-            filter: drop-shadow(0 0 8px rgba(255,255,255,0.4)); transition: 0.5s cubic-bezier(0.19, 1, 0.22, 1); user-select: none; display: inline-block; padding: 0 0.1em; cursor: pointer; margin: 0; line-height: 1;
-        }
-        .main-logo:hover { 
-            filter: drop-shadow(0 0 25px rgba(255,255,255,0.9)); 
-            transform: scale(1.05);
-            letter-spacing: 15px; 
-        }
-        .slogan { 
-            font-size: 14px; font-weight: 300; text-transform: uppercase; letter-spacing: 5px; 
-            margin-top: 20px; opacity: 0.6; 
-            transition: transform 0.5s ease-out; /* 스크롤 반응용 */
-        }
+        .main-logo { font-size: 15vw; font-weight: 900; letter-spacing: -5px; text-transform: uppercase; background: linear-gradient(145deg, #fff, #bbb, #fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 8px rgba(255,255,255,0.4)); transition: 0.5s cubic-bezier(0.19, 1, 0.22, 1); user-select: none; display: inline-block; padding: 0 0.1em; cursor: pointer; margin: 0; line-height: 1; }
+        .main-logo:hover { filter: drop-shadow(0 0 25px rgba(255,255,255,0.9)); transform: scale(1.05); letter-spacing: 15px; }
+        .slogan { font-size: 14px; font-weight: 300; text-transform: uppercase; letter-spacing: 5px; margin-top: 20px; opacity: 0.6; transition: transform 0.5s ease-out; }
 
-        /* ✨ [수정] 상품 카드 애니메이션 준비 */
-        .product-card { 
-            background-color: #1a1a1a; border: 1px solid #222; padding: 20px; 
-            text-align: left; cursor: pointer;
-            opacity: 0; transform: translateY(60px); /* 처음에 숨겨짐 */
-            transition: all 1s cubic-bezier(0.23, 1, 0.32, 1); /* 부드러운 리빌 */
-        }
-        .product-card.visible { 
-            opacity: 1; transform: translateY(0); 
-        }
+        /* 상품 카드 리빌 */
+        .product-card { background-color: #1a1a1a; border: 1px solid #222; padding: 20px; text-align: left; cursor: pointer; opacity: 0; transform: translateY(60px); transition: all 1s cubic-bezier(0.23, 1, 0.32, 1); }
+        .product-card.visible { opacity: 1; transform: translateY(0); }
         .product-card:hover { border-color: #eee; transform: translateY(-10px) !important; }
 
-        /* 모달 & 장바구니 */
+        /* ✨ [추가] 상세페이지 이미지 슬라이더 스타일 */
+        #product-detail-view { display: none; padding-top: 80px; }
+        #product-top { padding: 80px 5%; display: flex; gap: 60px; min-height: 80vh; align-items: flex-start; }
+        
+        .slider-container { flex: 1.2; position: relative; border: 1px solid #222; overflow: hidden; background: #1a1a1a; aspect-ratio: 1/1; }
+        .slider-wrapper { display: flex; transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1); height: 100%; }
+        .slider-wrapper img { width: 100%; height: 100%; object-fit: cover; flex-shrink: 0; }
+        
+        .slide-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: #fff; border: none; padding: 15px 10px; cursor: pointer; font-size: 20px; z-index: 10; opacity: 0; transition: 0.3s; }
+        .slider-container:hover .slide-btn { opacity: 1; }
+        .prev-btn { left: 0; }
+        .next-btn { right: 0; }
+        
+        .slider-dots { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 11; }
+        .dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.3); cursor: pointer; transition: 0.3s; }
+        .dot.active { background: #fff; width: 20px; border-radius: 10px; }
+
+        .action-btn { flex: 1; padding: 20px; font-weight: 700; text-transform: uppercase; letter-spacing: 3px; border: 1px solid #444; color: #888; background: none; transition: 0.3s; cursor: pointer; }
+        .buy-btn { background-color: #eee; color: #111; border: none; }
+
+        /* 공통 모달 & 사이드바 */
         .auth-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 5000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(10px); }
         .auth-box { width: 400px; padding: 60px 40px; border: 1px solid #222; background: #111; text-align: center; position: relative; }
-        .auth-box h2 { font-size: 22px; font-weight: 900; margin-bottom: 35px; letter-spacing: 2px; text-transform: uppercase; }
         .auth-box input { width: 100%; padding: 15px; margin-bottom: 15px; background: #1a1a1a; border: 1px solid #333; color: #fff; font-size: 12px; outline: none; }
         .auth-submit { width: 100%; padding: 15px; background: #eee; color: #111; border: none; font-weight: 900; margin-top: 10px; text-transform: uppercase; cursor: pointer; }
-        .auth-close { position: absolute; top: 20px; right: 20px; font-size: 20px; color: #fff; background: none; border: none; cursor: pointer; }
-        .forgot-btn { background: none; border: none; color: #888; font-size: 11px; margin-top: 15px; text-decoration: underline; cursor: pointer; }
-
         .cart-sidebar { position: fixed; top: 0; right: -400px; width: 400px; height: 100%; background: #111; border-left: 1px solid #333; z-index: 4000; padding: 40px; transition: right 0.5s cubic-bezier(0.77, 0, 0.175, 1); display: flex; flex-direction: column; }
         .cart-sidebar.active { right: 0; }
-        .cart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
-        .close-cart { background: none; border: none; color: #fff; font-size: 24px; cursor: pointer; }
         .cart-items-container { flex-grow: 1; overflow-y: auto; border-top: 1px solid #222; padding-top: 20px; }
-        .cart-item { display: flex; gap: 15px; margin-bottom: 25px; align-items: center; }
-        .cart-item-img { width: 60px; height: 60px; background: #222; object-fit: cover; border: 1px solid #333; }
-        .qty-control { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
-        .qty-btn { background: none; border: 1px solid #444; color: #eee; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 12px; cursor: pointer; }
-        .cart-footer { border-top: 1px solid #222; padding-top: 20px; }
-        .checkout-btn { width: 100%; padding: 15px; background: #eee; color: #111; border: none; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; transition: 0.3s; cursor: pointer; }
 
-        /* 상품 그리드 섹션 */
         #shop { padding: 150px 5% 100px; width: 100%; }
         #shop h2 { font-size: 40px; font-weight: 700; text-transform: uppercase; margin-bottom: 80px; text-align: center; letter-spacing: 10px; }
         .product-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; max-width: 1200px; margin: 0 auto; }
         .img-box { width: 100%; aspect-ratio: 1/1; background-color: #222; display: flex; justify-content: center; align-items: center; overflow: hidden; margin-bottom: 20px; border: 1px solid #333; }
         .img-box img { width: 100%; height: 100%; object-fit: cover; }
 
-        #product-detail-view { display: none; padding-top: 80px; }
-        #product-top { padding: 80px 5%; display: flex; gap: 60px; min-height: 80vh; }
-        .main-img-box { flex: 1.2; background-color: #1a1a1a; border: 1px solid #222; overflow: hidden; }
-        .main-img-box img { width: 100%; }
-        .action-btn { flex: 1; padding: 20px; font-weight: 700; text-transform: uppercase; letter-spacing: 3px; border: 1px solid #444; color: #888; background: none; transition: 0.3s; cursor: pointer; }
-        .buy-btn { background-color: #eee; color: #111; border: none; }
-
         footer { padding: 100px 50px 50px; text-align: center; font-size: 11px; opacity: 0.3; border-top: 1px solid #222; }
     </style>
 </head>
 <body>
 
-    <div id="intro-overlay">
-        <div class="intro-logo">LYXX</div>
-    </div>
+    <div id="intro-overlay"><div class="intro-logo">LYXX</div></div>
 
     <div class="auth-modal" id="loginModal"><div class="auth-box"><button class="auth-close" onclick="closeModals()">×</button><h2>Login</h2><input type="text" id="loginId" placeholder="ID"><input type="password" id="loginPw" placeholder="PASSWORD" onkeyup="if(window.event.keyCode==13){handleLogin()}"><button class="auth-submit" onclick="handleLogin()">Enter</button><button class="forgot-btn" onclick="openFindPw()">Forgot Password?</button></div></div>
     <div class="auth-modal" id="findPwModal"><div class="auth-box"><button class="auth-close" onclick="closeModals()">×</button><h2>Find Password</h2><input type="text" id="findId" placeholder="ENTER YOUR ID"><input type="email" id="findEmail" placeholder="ENTER YOUR EMAIL" onkeyup="if(window.event.keyCode==13){handleFindPassword()}"><button class="auth-submit" onclick="handleFindPassword()">Send Password to Mail</button></div></div>
@@ -129,7 +87,7 @@
 
     <div class="cart-sidebar" id="cartSidebar">
         <div class="cart-header"><h3>CART</h3><button class="close-cart" onclick="toggleCart()">×</button></div>
-        <div class="cart-items-container" id="cartItemsList"></div>
+        <div id="cartItemsList" class="cart-items-container"></div>
         <div class="cart-footer">
             <div style="display:flex; justify-content:space-between; margin-bottom:20px; font-weight:700;"><span>TOTAL</span><span id="cartTotalText">₩0</span></div>
             <button class="checkout-btn" onclick="alert('주문 기능은 준비 중입니다!')">CHECKOUT</button>
@@ -139,11 +97,7 @@
     <header><a href="#home" class="logo nav-link">LYXX</a><nav><ul id="main-nav"></ul></nav></header>
 
     <div id="main-view">
-        <section id="home">
-            <h1 class="main-logo" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">LYXX</h1>
-            <p class="slogan" id="mainSlogan">WANT TO LYXX ME?</p>
-        </section>
-        
+        <section id="home"><h1 class="main-logo" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">LYXX</h1><p class="slogan" id="mainSlogan">WANT TO LYXX ME?</p></section>
         <section id="shop">
             <h2>SHOP</h2>
             <div class="product-grid">
@@ -157,7 +111,12 @@
 
     <div id="product-detail-view">
         <section id="product-top">
-            <div class="main-img-box"><img id="detail-main-img" src=""></div>
+            <div class="slider-container">
+                <div class="slider-wrapper" id="detailSlider"></div>
+                <button class="slide-btn prev-btn" onclick="moveSlide(-1)">❮</button>
+                <button class="slide-btn next-btn" onclick="moveSlide(1)">❯</button>
+                <div class="slider-dots" id="sliderDots"></div>
+            </div>
             <div style="flex:1;">
                 <h2 id="detail-name" style="font-size:42px; margin-bottom:15px;">NAME</h2>
                 <p id="detail-price" style="font-size:22px; margin-bottom:40px; opacity:0.8;">PRICE</p>
@@ -171,46 +130,36 @@
     </div>
 
     <script>
-        // ✨ [추가] 인트로 및 스크롤 감시 로직
+        // 1. 인트로 및 스크롤
         window.addEventListener('load', () => {
             setTimeout(() => {
                 document.getElementById('intro-overlay').classList.add('fade-out');
-                initScrollObserver(); // 인트로 끝나고 감시 시작
+                initScrollObserver();
             }, 2500);
         });
 
-        // ✨ [추가] 스크롤 리빌 (Intersection Observer)
         function initScrollObserver() {
-            const options = { threshold: 0.1 };
             const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('visible');
-                    }
-                });
-            }, options);
-
-            document.querySelectorAll('.product-card').forEach(card => {
-                observer.observe(card);
-            });
+                entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
+            }, { threshold: 0.1 });
+            document.querySelectorAll('.product-card').forEach(card => observer.observe(card));
         }
 
-        // ✨ [추가] 슬로건 패럴렉스 (살짝 움직이는 효과)
         window.addEventListener('scroll', () => {
             const scrollPos = window.pageYOffset;
             const slogan = document.getElementById('mainSlogan');
-            if(scrollPos < 800) {
-                slogan.style.transform = `translateY(${scrollPos * 0.2}px)`;
-                slogan.style.opacity = 0.6 - (scrollPos / 1000);
-            }
+            if(scrollPos < 800) { slogan.style.transform = `translateY(${scrollPos * 0.2}px)`; slogan.style.opacity = 0.6 - (scrollPos / 1000); }
         });
 
-        let isLoggedIn = false, currentUser = null, cart = [], currentProductKey = '';
+        // 2. 데이터 및 장바구니
+        let isLoggedIn = false, currentUser = null, cart = [], currentProductKey = '', currentSlide = 0;
         const API_URL = 'https://lyxx-official.onrender.com';
+        
+        // ✨ [수정] 디테일 컷 이미지 배열 추가
         const products = {
-            'tee': { id: 'tee', name: 'LYXX Crop tee', price: 69000, img: './반팔티.jpg', desc: 'PREMIUM COTTON.<br>SIGNATURE CROPPED FIT.' },
-            'hoodie': { id: 'hoodie', name: 'CONCRETE HOODIE', price: 129000, img: '', desc: 'HEAVYWEIGHT OVERSIZED FIT.' },
-            'belt': { id: 'belt', name: 'STAR BELT', price: 79000, img: '', desc: 'GENUINE LEATHER.<br>STAR BUCKLE DETAIL.' }
+            'tee': { id: 'tee', name: 'LYXX Crop tee', price: 69000, images: ['./반팔티.jpg', './디테일1.jpg', './디테일2.jpg'], desc: 'PREMIUM COTTON.<br>SIGNATURE CROPPED FIT.' },
+            'hoodie': { id: 'hoodie', name: 'CONCRETE HOODIE', price: 129000, images: [], desc: 'HEAVYWEIGHT OVERSIZED FIT.' },
+            'belt': { id: 'belt', name: 'STAR BELT', price: 79000, images: [], desc: 'GENUINE LEATHER.<br>STAR BUCKLE DETAIL.' }
         };
 
         const closeModals = () => document.querySelectorAll('.auth-modal').forEach(m => m.style.display = 'none');
@@ -219,17 +168,47 @@
         const openFindPw = () => { closeModals(); document.getElementById('findPwModal').style.display = 'flex'; };
         const toggleCart = () => document.getElementById('cartSidebar').classList.toggle('active');
 
-        function updateNavUI() {
-            const navUl = document.getElementById('main-nav');
-            const common = `<li><a href="#home" class="nav-link">HOME</a></li><li><a href="#shop" class="nav-link">SHOP</a></li>`;
-            let menu = common;
-            if (isLoggedIn) {
-                menu += `<li><button class="nav-btn" onclick="alert('로그인됨')">MY PAGE</button></li><li><button class="nav-btn" onclick="handleLogout()">LOGOUT</button></li><li><button class="cart-trigger-btn cart-nav" onclick="toggleCart()">CART (${cart.reduce((a,b)=>a+b.quantity,0)})</button></li>`;
-            } else {
-                menu += `<li><button class="nav-btn" onclick="openLogin()">LOGIN</button></li><li><button class="nav-btn" onclick="openSignup()">SIGNUP</button></li><li><button class="cart-trigger-btn cart-nav" onclick="toggleCart()">CART (0)</button></li>`;
-            }
-            navUl.innerHTML = menu;
-            bindNavEvents();
+        // ✨ [추가] 슬라이더 기능
+        function openProduct(key) {
+            currentProductKey = key; const data = products[key];
+            currentSlide = 0;
+            document.getElementById('detail-name').innerText = data.name;
+            document.getElementById('detail-price').innerText = `₩${data.price.toLocaleString()}`;
+            document.getElementById('detail-desc').innerHTML = data.desc;
+            
+            // 이미지 슬라이더 생성
+            const wrapper = document.getElementById('detailSlider');
+            const dots = document.getElementById('sliderDots');
+            wrapper.innerHTML = ''; dots.innerHTML = '';
+            
+            const imgs = data.images.length > 0 ? data.images : ['data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='];
+            
+            imgs.forEach((src, i) => {
+                wrapper.innerHTML += `<img src="${src}">`;
+                dots.innerHTML += `<div class="dot ${i===0?'active':''}" onclick="goToSlide(${i})"></div>`;
+            });
+            
+            updateSlide();
+            document.getElementById('main-view').style.display = 'none';
+            document.getElementById('product-detail-view').style.display = 'block';
+            window.scrollTo(0,0);
+        }
+
+        function moveSlide(n) {
+            const data = products[currentProductKey];
+            const max = data.images.length > 0 ? data.images.length : 1;
+            currentSlide = (currentSlide + n + max) % max;
+            updateSlide();
+        }
+
+        function goToSlide(n) { currentSlide = n; updateSlide(); }
+
+        function updateSlide() {
+            const wrapper = document.getElementById('detailSlider');
+            wrapper.style.transform = `translateX(-${currentSlide * 100}%)`;
+            document.querySelectorAll('.dot').forEach((dot, i) => {
+                dot.classList.toggle('active', i === currentSlide);
+            });
         }
 
         async function handleLogin() {
@@ -247,7 +226,7 @@
             try {
                 const res = await fetch(`${API_URL}/find-password`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: id, email: email }) });
                 const data = await res.json(); alert(data.message); if(data.success) closeModals();
-            } catch(e) { alert("비밀번호 찾기 요청 실패"); }
+            } catch(e) { alert("비밀번호 찾기 실패"); }
         }
 
         async function handleSignup() {
@@ -260,6 +239,16 @@
 
         function handleLogout() { isLoggedIn = false; currentUser = null; updateNavUI(); document.getElementById('product-detail-view').style.display = 'none'; document.getElementById('main-view').style.display = 'block'; }
 
+        function updateNavUI() {
+            const navUl = document.getElementById('main-nav');
+            const common = `<li><a href="#home" class="nav-link">HOME</a></li><li><a href="#shop" class="nav-link">SHOP</a></li>`;
+            let menu = common;
+            if (isLoggedIn) menu += `<li><button class="nav-btn" onclick="alert('로그인됨')">MY PAGE</button></li><li><button class="nav-btn" onclick="handleLogout()">LOGOUT</button></li><li><button class="cart-trigger-btn cart-nav" onclick="toggleCart()">CART (${cart.reduce((a,b)=>a+b.quantity,0)})</button></li>`;
+            else menu += `<li><button class="nav-btn" onclick="openLogin()">LOGIN</button></li><li><button class="nav-btn" onclick="openSignup()">SIGNUP</button></li><li><button class="cart-trigger-btn cart-nav" onclick="toggleCart()">CART (0)</button></li>`;
+            navUl.innerHTML = menu;
+            bindNavEvents();
+        }
+
         function bindNavEvents() {
             document.querySelectorAll('.nav-link').forEach(link => {
                 link.onclick = (e) => { e.preventDefault(); document.getElementById('product-detail-view').style.display = 'none'; document.getElementById('main-view').style.display = 'block'; const target = link.getAttribute('href'); document.querySelector(target).scrollIntoView({ behavior: 'smooth' }); };
@@ -271,7 +260,7 @@
             list.innerHTML = ''; let total = 0;
             cart.forEach((item, i) => {
                 total += item.price * item.quantity;
-                const imgSrc = item.img ? item.img : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
+                const imgSrc = (item.images && item.images.length > 0) ? item.images[0] : 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
                 list.innerHTML += `<div class="cart-item"><img src="${imgSrc}" class="cart-item-img"><div style="flex:1;"><p>${item.name}</p><p>₩${(item.price * item.quantity).toLocaleString()}</p><div class="qty-control"><button class="qty-btn" onclick="changeQty(${i},-1)">-</button><span>${item.quantity}</span><button class="qty-btn" onclick="changeQty(${i},1)">+</button></div></div></div>`;
             });
             totalText.innerText = `₩${total.toLocaleString()}`; updateNavUI();
@@ -286,16 +275,6 @@
             updateCartUI(); toggleCart();
         };
 
-        function openProduct(key) {
-            currentProductKey = key; const data = products[key];
-            document.getElementById('detail-name').innerText = data.name;
-            document.getElementById('detail-price').innerText = `₩${data.price.toLocaleString()}`;
-            document.getElementById('detail-desc').innerHTML = data.desc;
-            document.getElementById('detail-main-img').src = data.img;
-            document.getElementById('main-view').style.display = 'none';
-            document.getElementById('product-detail-view').style.display = 'block';
-            window.scrollTo(0,0);
-        }
         updateNavUI();
     </script>
 </body>
