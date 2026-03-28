@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LYXX Official</title>
     <style>
+        /* 1. 기본 스타일 */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             background-color: #111; color: #eee;
@@ -12,6 +13,27 @@
             overflow-x: hidden;
             background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4WsUAAAABlBMVEUAAAAAAAClZ7nPAAAAAXRSTlMAQObYZgAAADRJREFUeNoNglESwCAMwjr//7vG6b3XQJ4gAgj7A6VqI5iI4P6u4nQ80y4gB16oAn6l2mYvPgD2A/c5h64NAAAAAElFTkSuQmCC');
         }
+
+        /* ✨ [추가] 인트로 애니메이션 레이어 */
+        #intro-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #000; z-index: 9999;
+            display: flex; justify-content: center; align-items: center;
+            transition: opacity 1s ease-in-out;
+        }
+        .intro-logo {
+            font-size: 8vw; font-weight: 900; letter-spacing: 50px; /* 처음엔 아주 넓게 시작 */
+            color: #fff; opacity: 0;
+            animation: introAnim 2.5s cubic-bezier(0.19, 1, 0.22, 1) forwards;
+        }
+        @keyframes introAnim {
+            0% { opacity: 0; letter-spacing: 50px; filter: blur(10px); }
+            50% { opacity: 1; filter: blur(0); }
+            100% { opacity: 1; letter-spacing: 10px; } /* 서서히 좁혀짐 */
+        }
+        .fade-out { opacity: 0 !important; pointer-events: none; }
+
+        /* 2. 헤더 */
         header {
             width: 100%; height: 80px; display: flex; justify-content: space-between; align-items: center;
             padding: 0 5%; position: fixed; top: 0; left: 0; z-index: 1000;
@@ -27,21 +49,22 @@
         nav a:hover, .nav-btn:hover, .cart-trigger-btn:hover { opacity: 1; }
         .cart-nav { border: 1px solid rgba(255,255,255,0.3); padding: 5px 12px; border-radius: 20px; }
 
+        /* 3. 로고 정중앙 정렬 & 호버 효과 */
         #home { width: 100vw; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; }
         .main-logo { 
             font-size: 15vw; font-weight: 900; letter-spacing: -5px; text-transform: uppercase; 
             background: linear-gradient(145deg, #fff, #bbb, #fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
-            filter: drop-shadow(0 0 8px rgba(255,255,255,0.4)); transition: 0.4s; user-select: none; display: inline-block; padding: 0 0.1em; cursor: pointer; margin: 0; line-height: 1;
+            filter: drop-shadow(0 0 8px rgba(255,255,255,0.4)); transition: 0.5s cubic-bezier(0.19, 1, 0.22, 1); user-select: none; display: inline-block; padding: 0 0.1em; cursor: pointer; margin: 0; line-height: 1;
         }
-        .main-logo:hover { filter: drop-shadow(0 0 25px rgba(255,255,255,0.9)); transform: scale(1.02); }
+        .main-logo:hover { 
+            filter: drop-shadow(0 0 25px rgba(255,255,255,0.9)); 
+            transform: scale(1.05);
+            letter-spacing: 15px; /* 호버 시에도 웅장하게 벌어짐 */
+        }
         .slogan { font-size: 14px; font-weight: 300; text-transform: uppercase; letter-spacing: 5px; margin-top: 20px; opacity: 0.6; }
 
-        .auth-modal {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.95); z-index: 5000;
-            display: none; justify-content: center; align-items: center;
-            backdrop-filter: blur(10px);
-        }
+        /* 4. 모달 & 장바구니 (기존 동일) */
+        .auth-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 5000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(10px); }
         .auth-box { width: 400px; padding: 60px 40px; border: 1px solid #222; background: #111; text-align: center; position: relative; }
         .auth-box h2 { font-size: 22px; font-weight: 900; margin-bottom: 35px; letter-spacing: 2px; text-transform: uppercase; }
         .auth-box input { width: 100%; padding: 15px; margin-bottom: 15px; background: #1a1a1a; border: 1px solid #333; color: #fff; font-size: 12px; outline: none; }
@@ -49,12 +72,7 @@
         .auth-close { position: absolute; top: 20px; right: 20px; font-size: 20px; color: #fff; background: none; border: none; cursor: pointer; }
         .forgot-btn { background: none; border: none; color: #888; font-size: 11px; margin-top: 15px; text-decoration: underline; cursor: pointer; }
 
-        .cart-sidebar {
-            position: fixed; top: 0; right: -400px; width: 400px; height: 100%;
-            background: #111; border-left: 1px solid #333; z-index: 4000;
-            padding: 40px; transition: right 0.5s cubic-bezier(0.77, 0, 0.175, 1);
-            display: flex; flex-direction: column;
-        }
+        .cart-sidebar { position: fixed; top: 0; right: -400px; width: 400px; height: 100%; background: #111; border-left: 1px solid #333; z-index: 4000; padding: 40px; transition: right 0.5s cubic-bezier(0.77, 0, 0.175, 1); display: flex; flex-direction: column; }
         .cart-sidebar.active { right: 0; }
         .cart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
         .close-cart { background: none; border: none; color: #fff; font-size: 24px; cursor: pointer; }
@@ -66,6 +84,7 @@
         .cart-footer { border-top: 1px solid #222; padding-top: 20px; }
         .checkout-btn { width: 100%; padding: 15px; background: #eee; color: #111; border: none; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; transition: 0.3s; cursor: pointer; }
 
+        /* 5. 상품 그리드 */
         #shop { padding: 150px 5% 100px; width: 100%; }
         #shop h2 { font-size: 40px; font-weight: 700; text-transform: uppercase; margin-bottom: 60px; text-align: center; }
         .product-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; max-width: 1200px; margin: 0 auto; }
@@ -85,6 +104,11 @@
     </style>
 </head>
 <body>
+
+    <div id="intro-overlay">
+        <div class="intro-logo">LYXX</div>
+    </div>
+
     <div class="auth-modal" id="loginModal">
         <div class="auth-box">
             <button class="auth-close" onclick="closeModals()">×</button>
@@ -160,6 +184,13 @@
     </div>
 
     <script>
+        // ✅ [추가] 인트로 사라지는 타이머 로직
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                document.getElementById('intro-overlay').classList.add('fade-out');
+            }, 2500); // 2.5초 후 사이트 공개
+        });
+
         let isLoggedIn = false, currentUser = null, cart = [], currentProductKey = '';
         const API_URL = 'https://lyxx-official.onrender.com';
         const products = {
@@ -197,18 +228,11 @@
         }
 
         async function handleFindPassword() {
-            const id = document.getElementById('findId').value;
-            const email = document.getElementById('findEmail').value;
+            const id = document.getElementById('findId').value, email = document.getElementById('findEmail').value;
             if(!id || !email) return alert("빈칸을 채워주세요.");
             try {
-                const res = await fetch(`${API_URL}/find-password`, { 
-                    method: 'POST', 
-                    headers: { 'Content-Type': 'application/json' }, 
-                    body: JSON.stringify({ username: id, email: email }) 
-                });
-                const data = await res.json();
-                alert(data.message);
-                if(data.success) closeModals();
+                const res = await fetch(`${API_URL}/find-password`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: id, email: email }) });
+                const data = await res.json(); alert(data.message); if(data.success) closeModals();
             } catch(e) { alert("비밀번호 찾기 요청 실패"); }
         }
 
@@ -258,7 +282,6 @@
             document.getElementById('product-detail-view').style.display = 'block';
             window.scrollTo(0,0);
         }
-
         updateNavUI();
     </script>
 </body>
