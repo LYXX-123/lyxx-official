@@ -33,25 +33,14 @@
         nav a:hover, .nav-btn:hover, .cart-trigger-btn:hover { opacity: 1; }
         .cart-nav { border: 1px solid rgba(255,255,255,0.3); padding: 5px 12px; border-radius: 20px; }
 
-        /* 3. 로고 정중앙 정렬 */
-        #home { 
-            width: 100vw; height: 100vh; display: flex; flex-direction: column; 
-            justify-content: center; align-items: center; text-align: center; 
-            position: relative;
-        }
+        /* 3. 로고 정중앙 정렬 & 효과 */
+        #home { width: 100vw; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; }
         .main-logo { 
             font-size: 15vw; font-weight: 900; letter-spacing: -5px; text-transform: uppercase; 
-            background: linear-gradient(145deg, #fff, #bbb, #fff); 
-            -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
-            filter: drop-shadow(0 0 8px rgba(255,255,255,0.4)); 
-            transition: 0.4s; user-select: none; display: inline-block; 
-            padding: 0 0.1em; pointer-events: auto;
-            margin: 0; line-height: 1;
+            background: linear-gradient(145deg, #fff, #bbb, #fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
+            filter: drop-shadow(0 0 8px rgba(255,255,255,0.4)); transition: 0.4s; user-select: none; display: inline-block; padding: 0 0.1em; pointer-events: auto; margin: 0; line-height: 1;
         }
-        .main-logo:hover { 
-            filter: drop-shadow(0 0 25px rgba(255,255,255,0.9)); 
-            transform: scale(1.02); 
-        }
+        .main-logo:hover { filter: drop-shadow(0 0 25px rgba(255,255,255,0.9)); transform: scale(1.02); }
         .slogan { font-size: 14px; font-weight: 300; text-transform: uppercase; letter-spacing: 5px; margin-top: 20px; opacity: 0.6; }
 
         /* 4. 모달 */
@@ -78,13 +67,11 @@
         .cart-sidebar.active { right: 0; }
         .cart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
         .close-cart { background: none; border: none; color: #fff; font-size: 24px; pointer-events: auto; }
-        
         .cart-items-container { flex-grow: 1; overflow-y: auto; border-top: 1px solid #222; padding-top: 20px; }
         .cart-item { display: flex; gap: 15px; margin-bottom: 25px; align-items: center; }
         .cart-item-img { width: 60px; height: 60px; background: #222; object-fit: cover; border: 1px solid #333; }
         .qty-control { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
         .qty-btn { background: none; border: 1px solid #444; color: #eee; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 12px; pointer-events: auto; }
-
         .cart-footer { border-top: 1px solid #222; padding-top: 20px; }
         .checkout-btn { width: 100%; padding: 15px; background: #eee; color: #111; border: none; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; pointer-events: auto; transition: 0.3s; }
         .checkout-btn:hover { background: #fff; }
@@ -92,10 +79,7 @@
         /* 6. 상품 그리드 */
         #shop { padding: 150px 5% 100px; width: 100%; }
         #shop h2 { font-size: 40px; font-weight: 700; text-transform: uppercase; margin-bottom: 60px; text-align: center; }
-        .product-grid { 
-            display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; 
-            max-width: 1200px; margin: 0 auto; 
-        }
+        .product-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; max-width: 1200px; margin: 0 auto; }
         .product-card { background-color: #1a1a1a; border: 1px solid #222; padding: 20px; transition: 0.3s; text-align: left; pointer-events: auto; }
         .product-card:hover { border-color: #eee; transform: translateY(-5px); }
         .img-box { width: 100%; aspect-ratio: 1/1; background-color: #222; display: flex; justify-content: center; align-items: center; overflow: hidden; margin-bottom: 20px; border: 1px solid #333; }
@@ -117,9 +101,38 @@
     <div id="cursor"></div>
     <div id="cursor-dot"></div>
 
-    <div class="auth-modal" id="loginModal"><div class="auth-box"><button class="auth-close" onclick="closeModals()">×</button><h2>Login</h2><input type="text" id="loginId" placeholder="ID"><input type="password" id="loginPw" placeholder="PASSWORD"><button class="auth-submit" onclick="handleLogin()">Enter</button><button class="forgot-btn" onclick="openFindPw()">Forgot Password?</button></div></div>
-    <div class="auth-modal" id="findPwModal"><div class="auth-box"><button class="auth-close" onclick="closeModals()">×</button><h2>Find Password</h2><input type="text" id="findId" placeholder="ENTER YOUR ID"><input type="email" id="findEmail" placeholder="ENTER YOUR EMAIL"><button class="auth-submit" onclick="handleFindPassword()">Send Password to Mail</button></div></div>
-    <div class="auth-modal" id="signupModal"><div class="auth-box"><button class="auth-close" onclick="closeModals()">×</button><h2>Sign Up</h2><input type="text" id="signupName" placeholder="NAME"><input type="text" id="signupId" placeholder="ID"><input type="password" id="signupPw" placeholder="PASSWORD"><input type="email" id="signupEmail" placeholder="EMAIL"><button class="auth-submit" onclick="handleSignup()">Create Account</button></div></div>
+    <div class="auth-modal" id="loginModal">
+        <div class="auth-box">
+            <button class="auth-close" onclick="closeModals()">×</button>
+            <h2>Login</h2>
+            <input type="text" id="loginId" placeholder="ID">
+            <input type="password" id="loginPw" placeholder="PASSWORD" onkeyup="if(window.event.keyCode==13){handleLogin()}">
+            <button class="auth-submit" onclick="handleLogin()">Enter</button>
+            <button class="forgot-btn" onclick="openFindPw()">Forgot Password?</button>
+        </div>
+    </div>
+
+    <div class="auth-modal" id="findPwModal">
+        <div class="auth-box">
+            <button class="auth-close" onclick="closeModals()">×</button>
+            <h2>Find Password</h2>
+            <input type="text" id="findId" placeholder="ENTER YOUR ID">
+            <input type="email" id="findEmail" placeholder="ENTER YOUR EMAIL" onkeyup="if(window.event.keyCode==13){handleFindPassword()}">
+            <button class="auth-submit" onclick="handleFindPassword()">Send Password to Mail</button>
+        </div>
+    </div>
+
+    <div class="auth-modal" id="signupModal">
+        <div class="auth-box">
+            <button class="auth-close" onclick="closeModals()">×</button>
+            <h2>Sign Up</h2>
+            <input type="text" id="signupName" placeholder="NAME">
+            <input type="text" id="signupId" placeholder="ID">
+            <input type="password" id="signupPw" placeholder="PASSWORD">
+            <input type="email" id="signupEmail" placeholder="EMAIL" onkeyup="if(window.event.keyCode==13){handleSignup()}">
+            <button class="auth-submit" onclick="handleSignup()">Create Account</button>
+        </div>
+    </div>
 
     <div class="cart-sidebar" id="cartSidebar">
         <div class="cart-header"><h3>CART</h3><button class="close-cart" onclick="toggleCart()">×</button></div>
@@ -187,20 +200,13 @@
         function updateNavUI() {
             const navUl = document.getElementById('main-nav');
             const common = `<li><a href="#home" class="nav-link">HOME</a></li><li><a href="#shop" class="nav-link">SHOP</a></li>`;
-            
+            let menu = common;
             if (isLoggedIn) {
-                navUl.innerHTML = common + `
-                    <li><button class="nav-btn" onclick="alert('${currentUser}님의 마이페이지 준비 중')">MY PAGE</button></li>
-                    <li><button class="nav-btn" onclick="handleLogout()">LOGOUT</button></li>
-                    <li><button class="cart-trigger-btn cart-nav" onclick="toggleCart()">CART (${cart.reduce((a,b)=>a+b.quantity,0)})</button></li>
-                `;
+                menu += `<li><button class="nav-btn" onclick="alert('${currentUser}님의 마이페이지 준비 중')">MY PAGE</button></li><li><button class="nav-btn" onclick="handleLogout()">LOGOUT</button></li><li><button class="cart-trigger-btn cart-nav" onclick="toggleCart()">CART (${cart.reduce((a,b)=>a+b.quantity,0)})</button></li>`;
             } else {
-                navUl.innerHTML = common + `
-                    <li><button class="nav-btn" onclick="openLogin()">LOGIN</button></li>
-                    <li><button class="nav-btn" onclick="openSignup()">SIGNUP</button></li>
-                    <li><button class="cart-trigger-btn cart-nav" onclick="toggleCart()">CART (0)</button></li>
-                `;
+                menu += `<li><button class="nav-btn" onclick="openLogin()">LOGIN</button></li><li><button class="nav-btn" onclick="openSignup()">SIGNUP</button></li><li><button class="cart-trigger-btn cart-nav" onclick="toggleCart()">CART (0)</button></li>`;
             }
+            navUl.innerHTML = menu;
             bindNavEvents();
         }
 
@@ -209,10 +215,7 @@
             try {
                 const res = await fetch(`${API_URL}/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: id, password: pw }) });
                 const data = await res.json();
-                if (data.success) { 
-                    isLoggedIn = true; currentUser = data.name; 
-                    updateNavUI(); closeModals(); alert(`Welcome!`); 
-                } else alert(data.message);
+                if (data.success) { isLoggedIn = true; currentUser = data.name; updateNavUI(); closeModals(); alert(`Welcome!`); } else alert(data.message);
             } catch(e) { alert("Server Error"); }
         }
 
