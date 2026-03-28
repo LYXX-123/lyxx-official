@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LYXX Official</title>
     <style>
-        /* 1. 기본 스타일 */
         * { margin: 0; padding: 0; box-sizing: border-box; cursor: none; }
         body {
             background-color: #111; color: #eee;
@@ -28,7 +27,6 @@
         nav a:hover, .nav-btn:hover, .cart-trigger-btn:hover { opacity: 1; }
         .cart-nav { border: 1px solid rgba(255,255,255,0.3); padding: 5px 12px; border-radius: 20px; }
 
-        /* 🔐 인증 모달 */
         .auth-modal {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0,0,0,0.95); z-index: 3000;
@@ -53,7 +51,6 @@
         .auth-submit:hover { background: #fff; }
         .auth-close { position: absolute; top: 20px; right: 20px; font-size: 20px; opacity: 0.3; background: none; border: none; color: #fff; }
 
-        /* 🛒 장바구니 */
         .cart-sidebar {
             position: fixed; top: 0; right: -400px; width: 400px; height: 100%;
             background: #111; border-left: 1px solid #333; z-index: 2000;
@@ -72,7 +69,6 @@
         .total-box { display: flex; justify-content: space-between; margin-bottom: 20px; font-weight: 700; letter-spacing: 1px; }
         .checkout-btn { width: 100%; padding: 15px; background: #eee; color: #111; border: none; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; }
 
-        /* 🖼 메인 로고 및 섹션 */
         #home { width: 100%; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
         .main-logo { font-size: 15vw; font-weight: 900; letter-spacing: -5px; text-transform: uppercase; background: linear-gradient(145deg, #fff, #bbb, #fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 8px rgba(255,255,255,0.4)); transition: 0.4s; user-select: none; display: inline-block; padding: 0 0.1em; }
         .main-logo:hover { filter: drop-shadow(0 0 20px rgba(255,255,255,0.6)); transform: scale(1.02); }
@@ -121,7 +117,7 @@
             <input type="text" id="signupName" placeholder="NAME">
             <input type="text" id="signupId" placeholder="ID">
             <input type="password" id="signupPw" placeholder="PASSWORD">
-            <button class="auth-submit" onclick="handleSignup()">Create Account</button>
+            <input type="email" id="signupEmail" placeholder="EMAIL"> <button class="auth-submit" onclick="handleSignup()">Create Account</button>
         </div>
     </div>
 
@@ -165,7 +161,7 @@
             </div>
         </section>
         
-        <footer id="contact-section">&copy; 2026 LYXX.</footer>
+        <footer>&copy; 2026 LYXX.</footer>
     </div>
 
     <div id="product-detail-view">
@@ -189,7 +185,6 @@
         let cart = [];
         let currentProductKey = '';
 
-        // 🔗 Ryushun님의 배포된 서버 주소
         const API_URL = 'https://lyxx-official.onrender.com';
 
         const products = {
@@ -198,7 +193,6 @@
             'belt': { id: 'belt', name: 'STAR BELT', price: 79000, img: '', desc: 'GENUINE LEATHER.<br>STAR BUCKLE DETAIL.' }
         };
 
-        // 🔐 인증 관련
         const closeModals = () => { 
             document.getElementById('loginModal').style.display = 'none'; 
             document.getElementById('signupModal').style.display = 'none'; 
@@ -216,40 +210,31 @@
                     body: JSON.stringify({ username: id, password: pw })
                 });
                 const data = await res.json();
-                
                 if (data.success) {
                     isLoggedIn = true; 
                     currentUser = data.name;
                     alert(data.message || `Welcome, ${data.name}!`);
                     updateNavUI(); 
                     closeModals();
-                } else {
-                    alert(data.message || "로그인에 실패했습니다.");
-                }
-            } catch(e) { 
-                alert("서버와 통신할 수 없습니다."); 
-            }
+                } else alert(data.message || "로그인 실패");
+            } catch(e) { alert("서버와 통신 불가"); }
         }
 
         async function handleSignup() {
             const name = document.getElementById('signupName').value;
             const id = document.getElementById('signupId').value;
             const pw = document.getElementById('signupPw').value;
+            const email = document.getElementById('signupEmail').value;
             try {
                 const res = await fetch(`${API_URL}/signup`, {
                     method: 'POST', 
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ username: id, password: pw, name: name })
+                    body: JSON.stringify({ username: id, password: pw, name: name, email: email })
                 });
                 const data = await res.json();
-                
-                // ✅ 서버에서 온 메시지(data.message)를 최우선으로 보여줌
                 alert(data.message || (data.success ? "회원가입 완료!" : "가입 실패")); 
-                
                 if (data.success) closeModals();
-            } catch(e) { 
-                alert("서버와 통신할 수 없습니다."); 
-            }
+            } catch(e) { alert("서버와 통신 불가"); }
         }
 
         function handleLogout() {
@@ -263,10 +248,9 @@
         function updateNavUI() {
             const navUl = document.getElementById('main-nav');
             const commonMenu = `<li><a href="#home" class="nav-link">HOME</a></li><li><a href="#shop" class="nav-link">SHOP</a></li>`;
-            
             if (isLoggedIn) {
                 navUl.innerHTML = commonMenu + `
-                    <li><button class="nav-btn" onclick="alert('${currentUser}님의 마이페이지입니다.')">MY PAGE</button></li>
+                    <li><button class="nav-btn" onclick="alert('${currentUser}님의 마이페이지')">MY PAGE</button></li>
                     <li><button class="nav-btn" onclick="handleLogout()">LOGOUT</button></li>
                     <li><button class="cart-trigger-btn cart-nav" onclick="toggleCart()">CART (${cart.reduce((a,b)=>a+b.quantity,0)})</button></li>
                 `;
@@ -302,19 +286,7 @@
             let total = 0;
             cart.forEach((item, i) => {
                 total += item.price * item.quantity;
-                list.innerHTML += `
-                    <div class="cart-item">
-                        <img src="${item.img ? item.img : ''}" class="cart-item-img" style="background:#222;">
-                        <div style="flex:1;">
-                            <p style="font-size:13px; text-transform:uppercase;">${item.name}</p>
-                            <p style="font-size:12px; opacity:0.5;">₩${(item.price * item.quantity).toLocaleString()}</p>
-                            <div class="qty-control">
-                                <button class="qty-btn" onclick="changeQty(${i},-1)">-</button>
-                                <span>${item.quantity}</span>
-                                <button class="qty-btn" onclick="changeQty(${i},1)">+</button>
-                            </div>
-                        </div>
-                    </div>`;
+                list.innerHTML += `<div class="cart-item"><img src="${item.img ? item.img : ''}" class="cart-item-img"><div style="flex:1;"><p style="font-size:13px;">${item.name}</p><p style="font-size:12px; opacity:0.5;">₩${(item.price * item.quantity).toLocaleString()}</p><div class="qty-control"><button class="qty-btn" onclick="changeQty(${i},-1)">-</button><span>${item.quantity}</span><button class="qty-btn" onclick="changeQty(${i},1)">+</button></div></div></div>`;
             });
             totalText.innerText = `₩${total.toLocaleString()}`;
             updateNavUI();
