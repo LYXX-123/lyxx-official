@@ -211,16 +211,24 @@
             const pw = document.getElementById('loginPw').value;
             try {
                 const res = await fetch(`${API_URL}/login`, {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username: id, password: pw })
                 });
                 const data = await res.json();
+                
                 if (data.success) {
-                    isLoggedIn = true; currentUser = data.name;
-                    alert(`Welcome, ${data.name}!`);
-                    updateNavUI(); closeModals();
-                } else alert(data.message);
-            } catch(e) { alert("서버가 응답하지 않습니다."); }
+                    isLoggedIn = true; 
+                    currentUser = data.name;
+                    alert(data.message || `Welcome, ${data.name}!`);
+                    updateNavUI(); 
+                    closeModals();
+                } else {
+                    alert(data.message || "로그인에 실패했습니다.");
+                }
+            } catch(e) { 
+                alert("서버와 통신할 수 없습니다."); 
+            }
         }
 
         async function handleSignup() {
@@ -229,12 +237,19 @@
             const pw = document.getElementById('signupPw').value;
             try {
                 const res = await fetch(`${API_URL}/signup`, {
-                    method: 'POST', headers: { 'Content-Type': 'application/json' },
+                    method: 'POST', 
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ username: id, password: pw, name: name })
                 });
                 const data = await res.json();
-                alert(data.message); if (data.success) closeModals();
-            } catch(e) { alert("서버가 응답하지 않습니다."); }
+                
+                // ✅ 서버에서 온 메시지(data.message)를 최우선으로 보여줌
+                alert(data.message || (data.success ? "회원가입 완료!" : "가입 실패")); 
+                
+                if (data.success) closeModals();
+            } catch(e) { 
+                alert("서버와 통신할 수 없습니다."); 
+            }
         }
 
         function handleLogout() {
@@ -245,7 +260,6 @@
             document.getElementById('main-view').style.display = 'block';
         }
 
-        // 🧭 네비게이션 UI 업데이트
         function updateNavUI() {
             const navUl = document.getElementById('main-nav');
             const commonMenu = `<li><a href="#home" class="nav-link">HOME</a></li><li><a href="#shop" class="nav-link">SHOP</a></li>`;
@@ -278,7 +292,6 @@
             });
         }
 
-        // 🛒 장바구니 관련
         const toggleCart = () => document.getElementById('cartSidebar').classList.toggle('active');
         document.getElementById('closeCart').onclick = toggleCart;
 
@@ -327,7 +340,6 @@
             window.scrollTo(0,0);
         }
 
-        // 초기화
         updateNavUI();
         const cursor = document.getElementById('cursor');
         const cursorDot = document.getElementById('cursor-dot');
