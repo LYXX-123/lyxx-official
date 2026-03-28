@@ -50,6 +50,7 @@
         }
         .auth-submit:hover { background: #fff; }
         .auth-close { position: absolute; top: 20px; right: 20px; font-size: 20px; opacity: 0.3; background: none; border: none; color: #fff; }
+        .forgot-btn { background: none; border: none; color: #888; font-size: 11px; margin-top: 15px; text-decoration: underline; cursor: none; }
 
         .cart-sidebar {
             position: fixed; top: 0; right: -400px; width: 400px; height: 100%;
@@ -66,7 +67,6 @@
         .qty-control { display: flex; align-items: center; gap: 10px; margin-top: 5px; }
         .qty-btn { background: none; border: 1px solid #444; color: #eee; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 12px; cursor: none; }
         .cart-footer { border-top: 1px solid #222; padding-top: 20px; }
-        .total-box { display: flex; justify-content: space-between; margin-bottom: 20px; font-weight: 700; letter-spacing: 1px; }
         .checkout-btn { width: 100%; padding: 15px; background: #eee; color: #111; border: none; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; }
 
         #home { width: 100%; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
@@ -107,6 +107,17 @@
             <input type="text" id="loginId" placeholder="ID">
             <input type="password" id="loginPw" placeholder="PASSWORD">
             <button class="auth-submit" onclick="handleLogin()">Enter</button>
+            <button class="forgot-btn" onclick="openFindPw()">Forgot Password?</button>
+        </div>
+    </div>
+
+    <div class="auth-modal" id="findPwModal">
+        <div class="auth-box">
+            <button class="auth-close" onclick="closeModals()">×</button>
+            <h2>Find Password</h2>
+            <input type="text" id="findId" placeholder="ENTER YOUR ID">
+            <input type="email" id="findEmail" placeholder="ENTER YOUR EMAIL">
+            <button class="auth-submit" onclick="handleFindPassword()">Send Password to Mail</button>
         </div>
     </div>
 
@@ -117,7 +128,8 @@
             <input type="text" id="signupName" placeholder="NAME">
             <input type="text" id="signupId" placeholder="ID">
             <input type="password" id="signupPw" placeholder="PASSWORD">
-            <input type="email" id="signupEmail" placeholder="EMAIL"> <button class="auth-submit" onclick="handleSignup()">Create Account</button>
+            <input type="email" id="signupEmail" placeholder="EMAIL">
+            <button class="auth-submit" onclick="handleSignup()">Create Account</button>
         </div>
     </div>
 
@@ -139,7 +151,6 @@
 
     <div id="main-view">
         <section id="home"><h1 class="main-logo">LYXX</h1><p class="slogan">WANT TO LYXX ME?</p></section>
-        
         <section id="shop">
             <h2>SHOP</h2>
             <div class="product-grid">
@@ -148,19 +159,8 @@
                     <p style="font-size:18px; margin-bottom:5px;">LYXX Crop tee</p>
                     <p style="opacity:0.6;">₩69,000</p>
                 </div>
-                <div class="product-card" onclick="openProduct('hoodie')">
-                    <div class="img-box"><p style="opacity:0.2;">IMAGE</p></div>
-                    <p style="font-size:18px; margin-bottom:5px;">CONCRETE HOODIE</p>
-                    <p style="opacity:0.6;">₩129,000</p>
-                </div>
-                <div class="product-card" onclick="openProduct('belt')">
-                    <div class="img-box"><p style="opacity:0.2;">IMAGE</p></div>
-                    <p style="font-size:18px; margin-bottom:5px;">STAR BELT</p>
-                    <p style="opacity:0.6;">₩79,000</p>
-                </div>
             </div>
         </section>
-        
         <footer>&copy; 2026 LYXX.</footer>
     </div>
 
@@ -188,17 +188,18 @@
         const API_URL = 'https://lyxx-official.onrender.com';
 
         const products = {
-            'tee': { id: 'tee', name: 'LYXX Crop tee', price: 69000, img: './반팔티.jpg', desc: 'PREMIUM COTTON FABRIC.<br>SIGNATURE CROPPED FIT.' },
-            'hoodie': { id: 'hoodie', name: 'CONCRETE HOODIE', price: 129000, img: '', desc: 'HEAVYWEIGHT OVERSIZED FIT.<br>CONCRETE GREY COLORWAY.' },
-            'belt': { id: 'belt', name: 'STAR BELT', price: 79000, img: '', desc: 'GENUINE LEATHER.<br>STAR BUCKLE DETAIL.' }
+            'tee': { id: 'tee', name: 'LYXX Crop tee', price: 69000, img: './반팔티.jpg', desc: 'PREMIUM COTTON FABRIC.<br>SIGNATURE CROPPED FIT.' }
         };
 
         const closeModals = () => { 
-            document.getElementById('loginModal').style.display = 'none'; 
-            document.getElementById('signupModal').style.display = 'none'; 
+            document.querySelectorAll('.auth-modal').forEach(m => m.style.display = 'none');
         };
         const openLogin = () => document.getElementById('loginModal').style.display = 'flex';
         const openSignup = () => document.getElementById('signupModal').style.display = 'flex';
+        const openFindPw = () => {
+            closeModals();
+            document.getElementById('findPwModal').style.display = 'flex';
+        };
 
         async function handleLogin() {
             const id = document.getElementById('loginId').value;
@@ -211,13 +212,11 @@
                 });
                 const data = await res.json();
                 if (data.success) {
-                    isLoggedIn = true; 
-                    currentUser = data.name;
-                    alert(data.message || `Welcome, ${data.name}!`);
-                    updateNavUI(); 
-                    closeModals();
-                } else alert(data.message || "로그인 실패");
-            } catch(e) { alert("서버와 통신 불가"); }
+                    isLoggedIn = true; currentUser = data.name;
+                    alert(`Welcome, ${data.name}!`);
+                    updateNavUI(); closeModals();
+                } else alert(data.message);
+            } catch(e) { alert("연결 오류"); }
         }
 
         async function handleSignup() {
@@ -232,15 +231,31 @@
                     body: JSON.stringify({ username: id, password: pw, name: name, email: email })
                 });
                 const data = await res.json();
-                alert(data.message || (data.success ? "회원가입 완료!" : "가입 실패")); 
+                alert(data.message); 
                 if (data.success) closeModals();
-            } catch(e) { alert("서버와 통신 불가"); }
+            } catch(e) { alert("연결 오류"); }
+        }
+
+        async function handleFindPassword() {
+            const id = document.getElementById('findId').value;
+            const email = document.getElementById('findEmail').value;
+            if(!id || !email) return alert("정보를 모두 입력해주세요.");
+            
+            try {
+                const res = await fetch(`${API_URL}/find-password`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ username: id, email: email })
+                });
+                const data = await res.json();
+                alert(data.message);
+                if(data.success) closeModals();
+            } catch(e) { alert("메일 발송 실패"); }
         }
 
         function handleLogout() {
             isLoggedIn = false; currentUser = null;
-            alert("Logged out."); 
-            updateNavUI();
+            alert("Logged out."); updateNavUI();
             document.getElementById('product-detail-view').style.display = 'none';
             document.getElementById('main-view').style.display = 'block';
         }
@@ -250,7 +265,7 @@
             const commonMenu = `<li><a href="#home" class="nav-link">HOME</a></li><li><a href="#shop" class="nav-link">SHOP</a></li>`;
             if (isLoggedIn) {
                 navUl.innerHTML = commonMenu + `
-                    <li><button class="nav-btn" onclick="alert('${currentUser}님의 마이페이지')">MY PAGE</button></li>
+                    <li><button class="nav-btn">MY PAGE</button></li>
                     <li><button class="nav-btn" onclick="handleLogout()">LOGOUT</button></li>
                     <li><button class="cart-trigger-btn cart-nav" onclick="toggleCart()">CART (${cart.reduce((a,b)=>a+b.quantity,0)})</button></li>
                 `;
@@ -286,13 +301,11 @@
             let total = 0;
             cart.forEach((item, i) => {
                 total += item.price * item.quantity;
-                list.innerHTML += `<div class="cart-item"><img src="${item.img ? item.img : ''}" class="cart-item-img"><div style="flex:1;"><p style="font-size:13px;">${item.name}</p><p style="font-size:12px; opacity:0.5;">₩${(item.price * item.quantity).toLocaleString()}</p><div class="qty-control"><button class="qty-btn" onclick="changeQty(${i},-1)">-</button><span>${item.quantity}</span><button class="qty-btn" onclick="changeQty(${i},1)">+</button></div></div></div>`;
+                list.innerHTML += `<div class="cart-item"><img src="${item.img}" class="cart-item-img"><div style="flex:1;"><p style="font-size:13px;">${item.name}</p><p style="font-size:12px; opacity:0.5;">₩${(item.price * item.quantity).toLocaleString()}</p></div></div>`;
             });
             totalText.innerText = `₩${total.toLocaleString()}`;
             updateNavUI();
         }
-
-        function changeQty(i, d) { cart[i].quantity += d; if(cart[i].quantity < 1) cart.splice(i,1); updateCartUI(); }
 
         document.getElementById('addToCartBtn').onclick = () => {
             const data = products[currentProductKey];
