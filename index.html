@@ -33,7 +33,7 @@
         nav a:hover, .nav-btn:hover, .cart-trigger-btn:hover { opacity: 1; }
         .cart-nav { border: 1px solid rgba(255,255,255,0.3); padding: 5px 12px; border-radius: 20px; }
 
-        /* 3. 로고 정중앙 정렬 (완벽 수정) */
+        /* 3. 로고 정중앙 정렬 */
         #home { 
             width: 100vw; height: 100vh; display: flex; flex-direction: column; 
             justify-content: center; align-items: center; text-align: center; 
@@ -85,6 +85,10 @@
         .qty-control { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
         .qty-btn { background: none; border: 1px solid #444; color: #eee; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 12px; pointer-events: auto; }
 
+        .cart-footer { border-top: 1px solid #222; padding-top: 20px; }
+        .checkout-btn { width: 100%; padding: 15px; background: #eee; color: #111; border: none; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; pointer-events: auto; transition: 0.3s; }
+        .checkout-btn:hover { background: #fff; }
+
         /* 6. 상품 그리드 */
         #shop { padding: 150px 5% 100px; width: 100%; }
         #shop h2 { font-size: 40px; font-weight: 700; text-transform: uppercase; margin-bottom: 60px; text-align: center; }
@@ -124,7 +128,7 @@
             <div style="display:flex; justify-content:space-between; margin-bottom:20px; font-weight:700;">
                 <span>TOTAL</span><span id="cartTotalText">₩0</span>
             </div>
-            <button class="checkout-btn">CHECKOUT</button>
+            <button class="checkout-btn" onclick="alert('주문 기능은 준비 중입니다!')">CHECKOUT</button>
         </div>
     </div>
 
