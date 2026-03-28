@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LYXX Official</title>
     <style>
-        /* 1. 기본 스타일 */
+        /* 1. 기본 스타일 (복구 완료) */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             background-color: #111; color: #eee;
@@ -28,18 +28,74 @@
         nav a:hover, .nav-btn:hover, .cart-trigger-btn:hover { opacity: 1; }
         .cart-nav { border: 1px solid rgba(255,255,255,0.3); padding: 5px 12px; border-radius: 20px; }
 
-        /* 메인 홈 섹션 */
+        /* 메인 홈 섹션 (로고 호버 효과 유지) */
         #home { width: 100vw; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; }
         .main-logo { font-size: 15vw; font-weight: 900; letter-spacing: -5px; text-transform: uppercase; background: linear-gradient(145deg, #fff, #bbb, #fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 8px rgba(255,255,255,0.4)); transition: 0.5s cubic-bezier(0.19, 1, 0.22, 1); user-select: none; display: inline-block; padding: 0 0.1em; cursor: pointer; margin: 0; line-height: 1; }
         .main-logo:hover { filter: drop-shadow(0 0 25px rgba(255,255,255,0.9)); transform: scale(1.05); letter-spacing: 15px; }
         .slogan { font-size: 14px; font-weight: 300; text-transform: uppercase; letter-spacing: 5px; margin-top: 20px; opacity: 0.6; transition: transform 0.5s ease-out; }
 
-        /* 상품 카드 리빌 */
+        /* 상품 카드 리빌 효과 유지 */
         .product-card { background-color: #1a1a1a; border: 1px solid #222; padding: 20px; text-align: left; cursor: pointer; opacity: 0; transform: translateY(60px); transition: all 1s cubic-bezier(0.23, 1, 0.32, 1); }
         .product-card.visible { opacity: 1; transform: translateY(0); }
         .product-card:hover { border-color: #eee; transform: translateY(-10px) !important; }
 
-        /* ✨ [추가] 상세페이지 이미지 슬라이더 스타일 */
+        /* ✨ [복구 완료] 모달창 공통 스타일 (로그인/회원가입/마이페이지 다시 중앙으로!) */
+        .auth-modal { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.95); z-index: 5000; 
+            display: none; justify-content: center; align-items: center; /* 중앙 정렬 핵심 */
+            backdrop-filter: blur(10px); 
+        }
+        .auth-box { 
+            width: 400px; padding: 60px 40px; border: 1px solid #222; background: #111; 
+            text-align: center; position: relative; 
+            filter: drop-shadow(0 0 15px rgba(0,0,0,0.5));
+        }
+        .auth-box h2 { font-size: 22px; font-weight: 900; margin-bottom: 35px; letter-spacing: 2px; text-transform: uppercase; }
+        .auth-box input { 
+            width: 100%; padding: 15px; margin-bottom: 15px; 
+            background: #1a1a1a; border: 1px solid #333; color: #fff; 
+            font-size: 12px; outline: none; transition: 0.3s;
+        }
+        .auth-box input:focus { border-color: #eee; }
+        .auth-submit { 
+            width: 100%; padding: 15px; background: #eee; color: #111; 
+            border: none; font-weight: 900; margin-top: 10px; 
+            text-transform: uppercase; cursor: pointer; transition: 0.3s;
+        }
+        .auth-submit:hover { background: #fff; }
+        .auth-close { position: absolute; top: 20px; right: 20px; font-size: 20px; color: #fff; background: none; border: none; cursor: pointer; }
+        .forgot-btn { background: none; border: none; color: #888; font-size: 11px; margin-top: 15px; text-decoration: underline; cursor: pointer; }
+
+        /* ✨ [복구 완료] 장바구니 사이드바 스타일 (5번째 사진 쌩HTML 문제 해결) */
+        .cart-sidebar { 
+            position: fixed; top: 0; right: -400px; width: 400px; height: 100%; 
+            background: #111; border-left: 1px solid #333; z-index: 4000; 
+            padding: 40px; transition: right 0.5s cubic-bezier(0.77, 0, 0.175, 1); 
+            display: flex; flex-direction: column; 
+        }
+        .cart-sidebar.active { right: 0; }
+        .cart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+        .cart-header h3 { font-size: 18px; text-transform: uppercase; letter-spacing: 2px; }
+        .close-cart { background: none; border: none; color: #fff; font-size: 24px; cursor: pointer; }
+        
+        .cart-items-container { flex-grow: 1; overflow-y: auto; border-top: 1px solid #222; padding-top: 20px; }
+        /* 장바구니 내부 아이템 스타일 정의 */
+        .cart-item { display: flex; gap: 15px; margin-bottom: 25px; align-items: center; }
+        .cart-item-img { width: 60px; height: 60px; background: #222; object-fit: cover; border: 1px solid #333; }
+        .qty-control { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
+        .qty-btn { background: none; border: 1px solid #444; color: #eee; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 12px; cursor: pointer; }
+        
+        .cart-footer { border-top: 1px solid #222; padding-top: 20px; }
+        .cart-total { display: flex; justify-content: space-between; margin-bottom: 20px; font-weight: 700; font-size: 16px; text-transform: uppercase; }
+        .checkout-btn { 
+            width: 100%; padding: 15px; background: #eee; color: #111; 
+            border: none; font-weight: 900; text-transform: uppercase; 
+            letter-spacing: 2px; transition: 0.3s; cursor: pointer; 
+        }
+        .checkout-btn:hover { background: #fff; }
+
+        /* 상세페이지 이미지 슬라이더 스타일 (유지) */
         #product-detail-view { display: none; padding-top: 80px; }
         #product-top { padding: 80px 5%; display: flex; gap: 60px; min-height: 80vh; align-items: flex-start; }
         
@@ -59,15 +115,6 @@
         .action-btn { flex: 1; padding: 20px; font-weight: 700; text-transform: uppercase; letter-spacing: 3px; border: 1px solid #444; color: #888; background: none; transition: 0.3s; cursor: pointer; }
         .buy-btn { background-color: #eee; color: #111; border: none; }
 
-        /* 공통 모달 & 사이드바 */
-        .auth-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 5000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(10px); }
-        .auth-box { width: 400px; padding: 60px 40px; border: 1px solid #222; background: #111; text-align: center; position: relative; }
-        .auth-box input { width: 100%; padding: 15px; margin-bottom: 15px; background: #1a1a1a; border: 1px solid #333; color: #fff; font-size: 12px; outline: none; }
-        .auth-submit { width: 100%; padding: 15px; background: #eee; color: #111; border: none; font-weight: 900; margin-top: 10px; text-transform: uppercase; cursor: pointer; }
-        .cart-sidebar { position: fixed; top: 0; right: -400px; width: 400px; height: 100%; background: #111; border-left: 1px solid #333; z-index: 4000; padding: 40px; transition: right 0.5s cubic-bezier(0.77, 0, 0.175, 1); display: flex; flex-direction: column; }
-        .cart-sidebar.active { right: 0; }
-        .cart-items-container { flex-grow: 1; overflow-y: auto; border-top: 1px solid #222; padding-top: 20px; }
-
         #shop { padding: 150px 5% 100px; width: 100%; }
         #shop h2 { font-size: 40px; font-weight: 700; text-transform: uppercase; margin-bottom: 80px; text-align: center; letter-spacing: 10px; }
         .product-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; max-width: 1200px; margin: 0 auto; }
@@ -81,15 +128,51 @@
 
     <div id="intro-overlay"><div class="intro-logo">LYXX</div></div>
 
-    <div class="auth-modal" id="loginModal"><div class="auth-box"><button class="auth-close" onclick="closeModals()">×</button><h2>Login</h2><input type="text" id="loginId" placeholder="ID"><input type="password" id="loginPw" placeholder="PASSWORD" onkeyup="if(window.event.keyCode==13){handleLogin()}"><button class="auth-submit" onclick="handleLogin()">Enter</button><button class="forgot-btn" onclick="openFindPw()">Forgot Password?</button></div></div>
-    <div class="auth-modal" id="findPwModal"><div class="auth-box"><button class="auth-close" onclick="closeModals()">×</button><h2>Find Password</h2><input type="text" id="findId" placeholder="ENTER YOUR ID"><input type="email" id="findEmail" placeholder="ENTER YOUR EMAIL" onkeyup="if(window.event.keyCode==13){handleFindPassword()}"><button class="auth-submit" onclick="handleFindPassword()">Send Password to Mail</button></div></div>
-    <div class="auth-modal" id="signupModal"><div class="auth-box"><button class="auth-close" onclick="closeModals()">×</button><h2>Sign Up</h2><input type="text" id="signupName" placeholder="NAME"><input type="text" id="signupId" placeholder="ID"><input type="password" id="signupPw" placeholder="PASSWORD"><input type="email" id="signupEmail" placeholder="EMAIL" onkeyup="if(window.event.keyCode==13){handleSignup()}"><button class="auth-submit" onclick="handleSignup()">Create Account</button></div></div>
+    <div class="auth-modal" id="loginModal">
+        <div class="auth-box">
+            <button class="auth-close" onclick="closeModals()">×</button>
+            <h2>Login</h2>
+            <input type="text" id="loginId" placeholder="ID">
+            <input type="password" id="loginPw" placeholder="PASSWORD" onkeyup="if(window.event.keyCode==13){handleLogin()}">
+            <button class="auth-submit" onclick="handleLogin()">Enter</button>
+            <button class="forgot-btn" onclick="openFindPw()">Forgot Password?</button>
+        </div>
+    </div>
+
+    <div class="auth-modal" id="findPwModal">
+        <div class="auth-box">
+            <button class="auth-close" onclick="closeModals()">×</button>
+            <h2>Find Password</h2>
+            <input type="text" id="findId" placeholder="ENTER YOUR ID">
+            <input type="email" id="findEmail" placeholder="ENTER YOUR EMAIL" onkeyup="if(window.event.keyCode==13){handleFindPassword()}">
+            <button class="auth-submit" onclick="handleFindPassword()">Send Password to Mail</button>
+        </div>
+    </div>
+
+    <div class="auth-modal" id="signupModal">
+        <div class="auth-box">
+            <button class="auth-close" onclick="closeModals()">×</button>
+            <h2>Sign Up</h2>
+            <input type="text" id="signupName" placeholder="NAME">
+            <input type="text" id="signupId" placeholder="ID">
+            <input type="password" id="signupPw" placeholder="PASSWORD">
+            <input type="email" id="signupEmail" placeholder="EMAIL" onkeyup="if(window.event.keyCode==13){handleSignup()}">
+            <button class="auth-submit" onclick="handleSignup()">Create Account</button>
+        </div>
+    </div>
 
     <div class="cart-sidebar" id="cartSidebar">
-        <div class="cart-header"><h3>CART</h3><button class="close-cart" onclick="toggleCart()">×</button></div>
-        <div id="cartItemsList" class="cart-items-container"></div>
+        <div class="cart-header">
+            <h3>CART</h3>
+            <button class="close-cart" onclick="toggleCart()">×</button>
+        </div>
+        <div id="cartItemsList" class="cart-items-container">
+            </div>
         <div class="cart-footer">
-            <div style="display:flex; justify-content:space-between; margin-bottom:20px; font-weight:700;"><span>TOTAL</span><span id="cartTotalText">₩0</span></div>
+            <div class="cart-total">
+                <span>TOTAL</span>
+                <span id="cartTotalText">₩0</span>
+            </div>
             <button class="checkout-btn" onclick="alert('주문 기능은 준비 중입니다!')">CHECKOUT</button>
         </div>
     </div>
@@ -130,7 +213,7 @@
     </div>
 
     <script>
-        // 1. 인트로 및 스크롤
+        // 자바스크립트 로직 (기존과 동일, 복구된 HTML 구조에 맞춰 작동함)
         window.addEventListener('load', () => {
             setTimeout(() => {
                 document.getElementById('intro-overlay').classList.add('fade-out');
@@ -151,11 +234,9 @@
             if(scrollPos < 800) { slogan.style.transform = `translateY(${scrollPos * 0.2}px)`; slogan.style.opacity = 0.6 - (scrollPos / 1000); }
         });
 
-        // 2. 데이터 및 장바구니
         let isLoggedIn = false, currentUser = null, cart = [], currentProductKey = '', currentSlide = 0;
         const API_URL = 'https://lyxx-official.onrender.com';
         
-        // ✨ [수정] 디테일 컷 이미지 배열 추가
         const products = {
             'tee': { id: 'tee', name: 'LYXX Crop tee', price: 69000, images: ['./반팔티.jpg', './디테일1.jpg', './디테일2.jpg'], desc: 'PREMIUM COTTON.<br>SIGNATURE CROPPED FIT.' },
             'hoodie': { id: 'hoodie', name: 'CONCRETE HOODIE', price: 129000, images: [], desc: 'HEAVYWEIGHT OVERSIZED FIT.' },
@@ -168,7 +249,6 @@
         const openFindPw = () => { closeModals(); document.getElementById('findPwModal').style.display = 'flex'; };
         const toggleCart = () => document.getElementById('cartSidebar').classList.toggle('active');
 
-        // ✨ [추가] 슬라이더 기능
         function openProduct(key) {
             currentProductKey = key; const data = products[key];
             currentSlide = 0;
@@ -176,7 +256,6 @@
             document.getElementById('detail-price').innerText = `₩${data.price.toLocaleString()}`;
             document.getElementById('detail-desc').innerHTML = data.desc;
             
-            // 이미지 슬라이더 생성
             const wrapper = document.getElementById('detailSlider');
             const dots = document.getElementById('sliderDots');
             wrapper.innerHTML = ''; dots.innerHTML = '';
