@@ -14,17 +14,15 @@
     <script src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"></script>
 
     <style>
-        /* [완벽 복구] 기본 스타일 */
+        /* [유지] 기본 스타일 */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { background-color: #111; color: #eee; font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; overflow-x: hidden; background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4WsUAAAABlBMVEUAAAAAAAClZ7nPAAAAAXRSTlMAQObYZgAAADRJREFUeNoNglESwCAMwjr//7vG6b3XQJ4gAgj7A6VqI5iI4P6u4nQ80y4gB16oAn6l2mYvPgD2A/c5h64NAAAAAElFTkSuQmCC'); }
         
-        /* 인트로 유지 */
         #intro-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; display: flex; justify-content: center; align-items: center; transition: opacity 1s ease-in-out; }
         .intro-logo { font-size: 8vw; font-weight: 900; letter-spacing: 50px; color: #fff; opacity: 0; animation: introAnim 2.5s cubic-bezier(0.19, 1, 0.22, 1) forwards; }
         @keyframes introAnim { 0% { opacity: 0; letter-spacing: 50px; filter: blur(10px); } 50% { opacity: 1; filter: blur(0); } 100% { opacity: 1; letter-spacing: 10px; } }
         .fade-out { opacity: 0 !important; pointer-events: none; }
 
-        /* 헤더 유지 */
         header { width: 100%; height: 80px; display: flex; justify-content: space-between; align-items: center; padding: 0 5%; position: fixed; top: 0; left: 0; z-index: 1000; background: rgba(17, 17, 17, 0.8); backdrop-filter: blur(5px); }
         .logo { font-size: 24px; font-weight: 900; letter-spacing: -1px; text-decoration: none; color: inherit; }
         nav ul { display: flex; gap: 20px; list-style: none; align-items: center; }
@@ -32,55 +30,62 @@
         nav a:hover, .nav-btn:hover, .cart-trigger-btn:hover { opacity: 1; }
         .cart-nav { border: 1px solid rgba(255,255,255,0.3); padding: 5px 12px; border-radius: 20px; }
 
-        /* ✨ [복구 완료] 메인 LYXX 로고 빛 효과 */
+        /* [복구] 메인 로고 빛 효과 */
         #home { width: 100vw; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; }
         .main-logo { 
             font-size: 15vw; font-weight: 900; letter-spacing: -5px; text-transform: uppercase; 
             background: linear-gradient(145deg, #fff, #bbb, #fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
-            filter: drop-shadow(0 0 15px rgba(255,255,255,0.8)); /* 하얀 빛 추가 */
-            text-shadow: 0 0 10px rgba(255,255,255,0.5); /* 텍스트 자체 빛 추가 */
+            filter: drop-shadow(0 0 15px rgba(255,255,255,0.8)); text-shadow: 0 0 10px rgba(255,255,255,0.5);
             transition: 0.5s cubic-bezier(0.19, 1, 0.22, 1); user-select: none; line-height: 1; cursor: pointer;
         }
-        .main-logo:hover { filter: drop-shadow(0 0 30px rgba(255,255,255,1)); transform: scale(1.05); letter-spacing: 15px; }
         .slogan { font-size: 14px; font-weight: 300; text-transform: uppercase; letter-spacing: 5px; margin-top: 20px; opacity: 0.6; }
 
-        /* ✨ [긴급복구] SHOP 섹션 레이아웃 (9칸 캐러셀 절대 고정) */
+        /* ✨ [긴급복구] SHOP 섹션 사진 크기 완벽 고정 (9칸 캐러셀) */
         #shop { padding: 150px 0 100px; width: 100%; position: relative; overflow: hidden; }
         #shop h2 { font-size: 40px; font-weight: 700; text-transform: uppercase; margin-bottom: 80px; text-align: center; letter-spacing: 10px; }
         .shop-outer { width: 100%; padding: 0 10%; position: relative; }
         .shop-inner { width: 100%; overflow: visible; } 
         .product-carousel { display: flex; gap: 40px; transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1); width: 100%; }
-        .product-card { min-width: calc((100% - 80px) / 3); background-color: #1a1a1a; border: 1px solid #222; padding: 20px; text-align: left; opacity: 0; transform: translateY(60px); transition: all 1s cubic-bezier(0.23, 1, 0.32, 1); cursor: pointer; flex-shrink: 0; }
+        
+        /* ✅ 사진이 거대해지지 않도록 카드 너비를 3등분으로 강력 고정 */
+        .product-card { 
+            min-width: calc((100% - 80px) / 3); 
+            max-width: calc((100% - 80px) / 3);
+            background-color: #1a1a1a; border: 1px solid #222; padding: 20px; 
+            text-align: left; opacity: 0; transform: translateY(60px); 
+            transition: all 1s cubic-bezier(0.23, 1, 0.32, 1); cursor: pointer; flex-shrink: 0; 
+        }
         .product-card.visible { opacity: 1; transform: translateY(0); }
         .product-card:hover { border-color: #eee; transform: translateY(-10px) !important; }
         
+        /* ✅ 카드 내부 이미지 박스 비율 고정 */
+        .card-img-box { width: 100%; aspect-ratio: 1/1; background:#222; overflow:hidden; margin-bottom:20px; border:1px solid #333; }
+        .card-img-box img { width: 100%; height: 100%; object-fit: cover; }
+
         .carousel-nav { position: absolute; top: 45%; width: 100%; left: 0; display: flex; justify-content: space-between; transform: translateY(-50%); pointer-events: none; z-index: 100; }
         .nav-btn-container { width: 100%; display: flex; justify-content: space-between; pointer-events: none; padding: 0 2%; } 
         .c-btn { width: 50px; height: 50px; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.1); color: #fff; cursor: pointer; pointer-events: auto; transition: 0.3s; border-radius: 50%; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
         .scroll-bar-container { width: 200px; height: 2px; background: rgba(255,255,255,0.1); margin: 80px auto 0; position: relative; overflow: hidden; border-radius: 2px; }
         .scroll-bar-fill { position: absolute; top: 0; left: 0; width: 33.33%; height: 100%; background: #eee; transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1); }
 
-        /* 장바구니 & 상세페이지 (유지) */
+        /* [유지] 장바구니 및 상세페이지 */
         .cart-sidebar { position: fixed; top: 0; right: -400px; width: 400px; height: 100%; background: #111; border-left: 1px solid #333; z-index: 4000; padding: 40px; transition: right 0.5s cubic-bezier(0.77, 0, 0.175, 1); display: flex; flex-direction: column; }
         .cart-sidebar.active { right: 0; }
+        .qty-btn { background: none; border: 1px solid #444; color: #eee; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 12px; cursor: pointer; }
         #product-detail-view { display: none; padding-top: 80px; }
         #product-top { padding: 80px 5%; display: flex; gap: 60px; min-height: 80vh; align-items: flex-start; }
         .slider-container { flex: 1.2; position: relative; border: 1px solid #222; overflow: hidden; background: #1a1a1a; aspect-ratio: 1/1; max-width: 500px; }
-        .slider-wrapper { display: flex; transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1); height: 100%; width: 100%; }
-        .slider-wrapper img { width: 100% !important; height: 100% !important; object-fit: cover !important; flex-shrink: 0; }
+        .slider-wrapper img { width: 100% !important; height: 100% !important; object-fit: cover !important; flex-shrink: 0; display: block; }
+        .action-btn { flex: 1; padding: 20px; font-weight: 700; text-transform: uppercase; letter-spacing: 3px; border: 1px solid #444; color: #888; background: none; transition: 0.3s; cursor: pointer; font-size: 13px; }
+        .buy-btn { background-color: #eee; color: #111; border: none; }
 
-        /* 모달 및 주소 검색 */
+        /* [유지] 모달 */
         .auth-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 5000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(10px); }
         .auth-box { width: 400px; padding: 60px 40px; border: 1px solid #333; background: #111; position: relative; text-align: center; }
         .auth-box input { width: 100%; padding: 15px; margin-bottom: 15px; background: #1a1a1a; border: 1px solid #333; color: #fff; font-size: 12px; outline: none; }
-        .auth-submit { width: 100%; padding: 15px; background: #eee; color: #111; border: none; font-weight: 900; margin-top: 10px; text-transform: uppercase; cursor: pointer; }
-        .addr-search-row { display: flex; gap: 5px; margin-bottom: 15px; }
-        .addr-btn { background: #333; border: 1px solid #444; color: #eee; padding: 0 15px; font-size: 11px; cursor: pointer; flex-shrink: 0; }
-        
         .legal-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 6000; display: none; justify-content: center; align-items: center; }
         .legal-box { width: 100%; max-width: 600px; max-height: 80vh; background: #111; border: 1px solid #333; padding: 40px; overflow-y: auto; text-align: left; position: relative; }
         footer { padding: 80px 5% 50px; border-top: 1px solid #222; font-size: 11px; color: #666; line-height: 1.8; }
-        .footer-links span { color: #888; margin-right: 15px; cursor: pointer; }
     </style>
 </head>
 <body>
@@ -89,21 +94,9 @@
 
     <div class="legal-modal" id="legalPop"><div class="legal-box"><button onclick="closeLegal()" style="position:absolute; top:20px; right:20px; background:none; border:none; color:#fff; font-size:24px; cursor:pointer;">×</button><h3 id="legalTitle" style="text-align:center; margin-bottom:30px;">TITLE</h3><div id="legalContent" style="color: #888; font-size: 12px; line-height: 1.8;">CONTENT</div></div></div>
 
-    <div class="auth-modal" id="loginModal"><div class="auth-box"><button onclick="closeModals()" style="position:absolute; top:20px; right:20px; background:none; border:none; color:#fff; font-size:24px; cursor:pointer;">×</button><h2>Login</h2><input type="text" id="loginId" placeholder="ID"><input type="password" id="loginPw" placeholder="PASSWORD" onkeyup="if(window.event.keyCode==13){handleLogin()}"><button class="auth-submit" onclick="handleLogin()">Enter</button><button onclick="openFindPw()" style="background:none; border:none; color:#666; font-size:10px; margin-top:15px; cursor:pointer; text-decoration:underline;">Forgot Password?</button></div></div>
-    
-    <div class="auth-modal" id="findPwModal"><div class="auth-box"><button onclick="closeModals()" style="position:absolute; top:20px; right:20px; background:none; border:none; color:#fff; font-size:24px; cursor:pointer;">×</button><h2>Find Password</h2><input type="text" id="findId" placeholder="ENTER YOUR ID"><input type="email" id="findEmail" placeholder="ENTER YOUR EMAIL" onkeyup="if(window.event.keyCode==13){handleFindPassword()}"><button class="auth-submit" onclick="handleFindPassword()">Send Password</button></div></div>
-
-    <div class="auth-modal" id="signupModal">
-        <div class="auth-box" style="width: 450px;">
-            <button onclick="closeModals()" style="position:absolute; top:20px; right:20px; background:none; border:none; color:#fff; font-size:24px; cursor:pointer;">×</button>
-            <h2>Sign Up</h2>
-            <input type="text" id="signupName" placeholder="NAME"><input type="text" id="signupId" placeholder="ID"><input type="password" id="signupPw" placeholder="PASSWORD"><input type="email" id="signupEmail" placeholder="EMAIL">
-            <div class="addr-search-row"><input type="text" id="signupAddr" placeholder="ADDRESS" readonly style="margin-bottom:0;"><button onclick="execDaumPostcode()" class="addr-btn">FIND</button></div>
-            <input type="text" id="signupAddrDetail" placeholder="DETAILED ADDRESS">
-            <div style="margin: 15px 0; font-size: 10px; color: #666; text-align: center;"><input type="checkbox" id="agreeCheck"> [필수] 개인정보 수집 및 이용 동의</div>
-            <button class="auth-submit" onclick="handleSignup()">Create Account</button>
-        </div>
-    </div>
+    <div class="auth-modal" id="loginModal"><div class="auth-box"><button onclick="closeModals()" style="position:absolute; top:20px; right:20px; background:none; border:none; color:#fff; font-size:24px; cursor:pointer;">×</button><h2>Login</h2><input type="text" id="loginId" placeholder="ID"><input type="password" id="loginPw" placeholder="PASSWORD" onkeyup="if(window.event.keyCode==13){handleLogin()}"><button style="width:100%; padding:15px; background:#eee; color:#111; border:none; font-weight:900; margin-top:10px; cursor:pointer;" onclick="handleLogin()">Enter</button><button onclick="openFindPw()" style="background:none; border:none; color:#666; font-size:10px; margin-top:15px; cursor:pointer; text-decoration:underline;">Forgot Password?</button></div></div>
+    <div class="auth-modal" id="findPwModal"><div class="auth-box"><button onclick="closeModals()" style="position:absolute; top:20px; right:20px; background:none; border:none; color:#fff; font-size:24px; cursor:pointer;">×</button><h2>Find Password</h2><input type="text" id="findId" placeholder="ENTER YOUR ID"><input type="email" id="findEmail" placeholder="ENTER YOUR EMAIL" onkeyup="if(window.event.keyCode==13){handleFindPassword()}"><button style="width:100%; padding:15px; background:#eee; color:#111; border:none; font-weight:900; margin-top:10px; cursor:pointer;" onclick="handleFindPassword()">Send Password</button></div></div>
+    <div class="auth-modal" id="signupModal"><div class="auth-box" style="width:450px;"><button onclick="closeModals()" style="position:absolute; top:20px; right:20px; background:none; border:none; color:#fff; font-size:24px; cursor:pointer;">×</button><h2>Sign Up</h2><input type="text" id="signupName" placeholder="NAME"><input type="text" id="signupId" placeholder="ID"><input type="password" id="signupPw" placeholder="PASSWORD"><input type="email" id="signupEmail" placeholder="EMAIL"><div style="display:flex; gap:5px; margin-bottom:15px;"><input type="text" id="signupAddr" placeholder="ADDRESS" readonly style="margin-bottom:0; flex:1;"><button onclick="execDaumPostcode()" style="background:#333; border:none; color:#eee; padding:0 15px; font-size:11px; cursor:pointer;">FIND</button></div><input type="text" id="signupAddrDetail" placeholder="DETAILED ADDRESS"><div style="margin: 15px 0; font-size: 10px; color: #666; text-align: center;"><input type="checkbox" id="agreeCheck"> [필수] 개인정보 수집 및 이용 동의</div><button style="width:100%; padding:15px; background:#eee; color:#111; border:none; font-weight:900; cursor:pointer;" onclick="handleSignup()">Create Account</button></div></div>
 
     <div class="cart-sidebar" id="cartSidebar">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;"><h3>CART</h3><button onclick="toggleCart()" style="background:none; border:none; color:#fff; font-size:24px; cursor:pointer;">×</button></div>
@@ -118,15 +111,15 @@
         <section id="shop">
             <h2>SHOP</h2>
             <div class="shop-outer"><div class="shop-inner"><div class="product-carousel" id="productCarousel">
-                <div class="product-card" onclick="openProduct('tee')"><div style="width:100%; aspect-ratio:1/1; background:#222; overflow:hidden; margin-bottom:20px; border:1px solid #333;"><img src="./반팔티.png" style="width:100%; height:100%; object-fit:cover;"></div><p>LYXX Logo tee</p><p style="opacity:0.5;">₩69,000</p></div>
-                <div class="product-card" onclick="openProduct('hoodie')"><div style="width:100%; aspect-ratio:1/1; background:#222; overflow:hidden; margin-bottom:20px; border:1px solid #333;"><img src="./후드티.png" style="width:100%; height:100%; object-fit:cover;"></div><p>LYXX layered tee</p><p style="opacity:0.5;">₩129,000</p></div>
-                <div class="product-card" onclick="openProduct('belt')"><div style="width:100%; aspect-ratio:1/1; background:#222; overflow:hidden; margin-bottom:20px; border:1px solid #333;"><img src="./벨트.png" style="width:100%; height:100%; object-fit:cover;"></div><p>STAR BELT</p><p style="opacity:0.5;">₩79,000</p></div>
-                <div class="product-card" onclick="openProduct('cap')"><div style="width:100%; aspect-ratio:1/1; background:#222; overflow:hidden; margin-bottom:20px; border:1px solid #333;"><img src="./모자.png" style="width:100%; height:100%; object-fit:cover;"></div><p>LYXX BALL CAP</p><p style="opacity:0.5;">₩49,000</p></div>
-                <div class="product-card" onclick="openProduct('denim')"><div style="width:100%; aspect-ratio:1/1; background:#222; overflow:hidden; margin-bottom:20px; border:1px solid #333;"><img src="./데님.png" style="width:100%; height:100%; object-fit:cover;"></div><p>RAW DENIM PANTS</p><p style="opacity:0.5;">₩159,000</p></div>
-                <div class="product-card" onclick="alert('준비중')"><div style="width:100%; aspect-ratio:1/1; background:#222; margin-bottom:20px; border:1px solid #333;"></div><p>NEW ITEM 06</p><p style="opacity:0.5;">₩0</p></div>
-                <div class="product-card" onclick="alert('준비중')"><div style="width:100%; aspect-ratio:1/1; background:#222; margin-bottom:20px; border:1px solid #333;"></div><p>NEW ITEM 07</p><p style="opacity:0.5;">₩0</p></div>
-                <div class="product-card" onclick="alert('준비중')"><div style="width:100%; aspect-ratio:1/1; background:#222; margin-bottom:20px; border:1px solid #333;"></div><p>NEW ITEM 08</p><p style="opacity:0.5;">₩0</p></div>
-                <div class="product-card" onclick="alert('준비중')"><div style="width:100%; aspect-ratio:1/1; background:#222; margin-bottom:20px; border:1px solid #333;"></div><p>NEW ITEM 09</p><p style="opacity:0.5;">₩0</p></div>
+                <div class="product-card" onclick="openProduct('tee')"><div class="card-img-box"><img src="./반팔티.png"></div><p>LYXX Logo tee</p><p style="opacity:0.5;">₩69,000</p></div>
+                <div class="product-card" onclick="openProduct('hoodie')"><div class="card-img-box"><img src="./후드티.png"></div><p>LYXX layered tee</p><p style="opacity:0.5;">₩129,000</p></div>
+                <div class="product-card" onclick="openProduct('belt')"><div class="card-img-box"><img src="./벨트.png"></div><p>STAR BELT</p><p style="opacity:0.5;">₩79,000</p></div>
+                <div class="product-card" onclick="openProduct('cap')"><div class="card-img-box"><img src="./모자.png"></div><p>LYXX BALL CAP</p><p style="opacity:0.5;">₩49,000</p></div>
+                <div class="product-card" onclick="openProduct('denim')"><div class="card-img-box"><img src="./데님.png"></div><p>RAW DENIM PANTS</p><p style="opacity:0.5;">₩159,000</p></div>
+                <div class="product-card" onclick="alert('준비중')"><div class="card-img-box"></div><p>NEW ITEM 06</p><p style="opacity:0.5;">₩0</p></div>
+                <div class="product-card" onclick="alert('준비중')"><div class="card-img-box"></div><p>NEW ITEM 07</p><p style="opacity:0.5;">₩0</p></div>
+                <div class="product-card" onclick="alert('준비중')"><div class="card-img-box"></div><p>NEW ITEM 08</p><p style="opacity:0.5;">₩0</p></div>
+                <div class="product-card" onclick="alert('준비중')"><div class="card-img-box"></div><p>NEW ITEM 09</p><p style="opacity:0.5;">₩0</p></div>
             </div></div><div class="carousel-nav"><div class="nav-btn-container"><button class="c-btn" onclick="moveCarousel(-1)">❮</button><button class="c-btn" onclick="moveCarousel(1)">❯</button></div></div></div>
             <div class="scroll-bar-container"><div class="scroll-bar-fill" id="scrollFill"></div></div>
         </section>
@@ -135,7 +128,7 @@
                 <div><p>CEO. 용준 지환</p><p>서울특별시 동대문구 회기동</p><p>lyxx.rechive@gmail.com</p></div>
                 <div>&copy; 2026 LYXX. ALL RIGHTS RESERVED.</div>
             </div>
-            <div class="footer-links"><span onclick="showLegal('privacy')">개인정보 처리방침</span><span onclick="showLegal('refund')">교환 및 환불 규정</span><span onclick="showLegal('terms')">이용약관</span></div>
+            <div class="footer-links"><span onclick="showLegal('privacy')" style="cursor:pointer; color:#888; margin-right:15px;">개인정보 처리방침</span><span onclick="showLegal('refund')" style="cursor:pointer; color:#888; margin-right:15px;">교환 및 환불 규정</span><span onclick="showLegal('terms')" style="cursor:pointer; color:#888;">이용약관</span></div>
         </footer>
     </div>
 
@@ -149,59 +142,19 @@
     <script>
         const API_URL = 'https://lyxx-official.onrender.com';
         
-        /* [복구] 캐러셀 이동 */
         let shopIdx = 0;
-        function moveCarousel(d) {
-            shopIdx += d; if(shopIdx < 0) shopIdx = 2; if(shopIdx > 2) shopIdx = 0;
-            document.getElementById('productCarousel').style.transform = `translateX(-${shopIdx * 100}%)`;
-            document.getElementById('scrollFill').style.transform = `translateX(${shopIdx * 100}%)`;
-        }
-
-        /* 주소 검색 */
-        function execDaumPostcode() {
-            new daum.Postcode({
-                oncomplete: function(data) {
-                    document.getElementById('signupAddr').value = data.userSelectedType === 'R' ? data.roadAddress : data.jibunAddress;
-                    document.getElementById('signupAddrDetail').focus();
-                }
-            }).open();
-        }
-
-        /* [유지] 기본 로직 */
+        function moveCarousel(d) { shopIdx += d; if(shopIdx < 0) shopIdx = 2; if(shopIdx > 2) shopIdx = 0; document.getElementById('productCarousel').style.transform = `translateX(-${shopIdx * 100}%)`; document.getElementById('scrollFill').style.transform = `translateX(${shopIdx * 100}%)`; }
+        function execDaumPostcode() { new daum.Postcode({ oncomplete: function(data) { document.getElementById('signupAddr').value = data.userSelectedType === 'R' ? data.roadAddress : data.jibunAddress; document.getElementById('signupAddrDetail').focus(); } }).open(); }
         const closeModals = () => document.querySelectorAll('.auth-modal').forEach(m => m.style.display = 'none');
         const openLogin = () => document.getElementById('loginModal').style.display = 'flex';
         const openSignup = () => document.getElementById('signupModal').style.display = 'flex';
         const openFindPw = () => { closeModals(); document.getElementById('findPwModal').style.display = 'flex'; };
         const toggleCart = () => document.getElementById('cartSidebar').classList.toggle('active');
 
-        async function handleLogin() {
-            const id = document.getElementById('loginId').value, pw = document.getElementById('loginPw').value;
-            try {
-                const res = await fetch(`${API_URL}/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: id, password: pw }) });
-                const data = await res.json(); if (data.success) { isLoggedIn = true; updateNavUI(); closeModals(); alert(`Welcome!`); } else alert(data.message);
-            } catch(e) { alert("Server Error"); }
-        }
+        async function handleLogin() { const id = document.getElementById('loginId').value, pw = document.getElementById('loginPw').value; try { const res = await fetch(`${API_URL}/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: id, password: pw }) }); const data = await res.json(); if (data.success) { isLoggedIn = true; updateNavUI(); closeModals(); alert(`Welcome!`); } else alert(data.message); } catch(e) { alert("Server Error"); } }
+        async function handleSignup() { if(!document.getElementById('agreeCheck').checked) return alert("동의해주세요."); const n = document.getElementById('signupName').value, id = document.getElementById('signupId').value, pw = document.getElementById('signupPw').value, e = document.getElementById('signupEmail').value, a = document.getElementById('signupAddr').value, ad = document.getElementById('signupAddrDetail').value; try { const res = await fetch(`${API_URL}/signup`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: id, password: pw, name: n, email: e, address: a + ' ' + ad }) }); const data = await res.json(); alert(data.message); if (data.success) closeModals(); } catch(e) { alert("Server Error"); } }
+        async function handleFindPassword() { const id = document.getElementById('findId').value, email = document.getElementById('findEmail').value; try { const res = await fetch(`${API_URL}/find-password`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: id, email }) }); const data = await res.json(); alert(data.message); if(data.success) closeModals(); } catch(e) { alert("Error"); } }
 
-        async function handleSignup() {
-            if(!document.getElementById('agreeCheck').checked) return alert("동의해주세요.");
-            const n = document.getElementById('signupName').value, id = document.getElementById('signupId').value, pw = document.getElementById('signupPw').value, e = document.getElementById('signupEmail').value, a = document.getElementById('signupAddr').value, ad = document.getElementById('signupAddrDetail').value;
-            try {
-                const res = await fetch(`${API_URL}/signup`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: id, password: pw, name: n, email: e, address: a + ' ' + ad }) });
-                const data = await res.json(); alert(data.message); if (data.success) closeModals();
-            } catch(e) { alert("Server Error"); }
-        }
-
-        /* [복구] 비밀번호 찾기 */
-        async function handleFindPassword() {
-            const id = document.getElementById('findId').value, email = document.getElementById('findEmail').value;
-            if(!id || !email) return alert("아이디와 이메일을 입력하세요.");
-            try {
-                const res = await fetch(`${API_URL}/find-password`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: id, email }) });
-                const data = await res.json(); alert(data.message); if(data.success) closeModals();
-            } catch(e) { alert("Error"); }
-        }
-
-        /* [유지] 상품 로직 */
         const products = { 'tee': { id:'tee', name:'LYXX Logo tee', price:69000, images:['./반팔티.png'], desc:'PREMIUM COTTON.' }, 'hoodie': { id:'hoodie', name:'LYXX layered tee', price:129000, images:['./후드티.png'], desc:'Y2K STYLE.' }, 'belt': { id:'belt', name:'STAR BELT', price:79000, images:['./벨트.png'], desc:'LEATHER.' }, 'cap': { id:'cap', name:'LYXX BALL CAP', price:49000, images:['./모자.png'], desc:'WASHED COTTON.' }, 'denim': { id:'denim', name:'RAW DENIM PANTS', price:159000, images:['./데님.png'], desc:'SELVEDGE.' } };
         let isLoggedIn = false, cart = [], currentProductKey = '', currentSlide = 0;
 
@@ -210,7 +163,7 @@
         function addToCart() { const d = products[currentProductKey]; const item = cart.find(i => i.id === d.id); if(item) item.quantity++; else cart.push({...d, quantity:1}); updateCartUI(); toggleCart(); }
         function changeQty(i, d) { cart[i].quantity += d; if(cart[i].quantity < 1) cart.splice(i,1); updateCartUI(); }
         function updateCartUI() { const l = document.getElementById('cartItemsList'); l.innerHTML = ''; let t = 0; cart.forEach((item, i) => { t += item.price * item.quantity; l.innerHTML += `<div style="display:flex; gap:15px; margin-bottom:20px;"><img src="${item.images[0]||''}" style="width:60px; height:60px; object-fit:cover;"><div style="flex:1;"><p style="font-size:12px;">${item.name}</p><p style="font-size:12px; opacity:0.5;">₩${(item.price * item.quantity).toLocaleString()}</p><div style="display:flex; align-items:center; gap:10px; margin-top:5px;"><button onclick="changeQty(${i},-1)" class="qty-btn">-</button><span>${item.quantity}</span><button onclick="changeQty(${i},1)" class="qty-btn">+</button></div></div></div>`; }); document.getElementById('cartTotalText').innerText = `₩${t.toLocaleString()}`; updateNavUI(); }
-        function updateNavUI() { const nav = document.getElementById('main-nav'); let menu = `<li><a href="#home" class="nav-link">HOME</a></li><li><a href="#shop" class="nav-link">SHOP</a></li>`; if (isLoggedIn) menu += `<li><button class="nav-btn">MY PAGE</button></li><li><button class="nav-btn" onclick="isLoggedIn=false;updateNavUI()">LOGOUT</button></li>`; else menu += `<li><button class="nav-btn" onclick="openLogin()">LOGIN</button></li><li><button class="nav-btn" onclick="openSignup()">SIGNUP</button></li>`; menu += `<li><button class="cart-trigger-btn cart-nav" onclick="toggleCart()">CART (${cart.reduce((a,b)=>a+b.quantity,0)})</button></li>`; nav.innerHTML = menu; }
+        function updateNavUI() { const nav = document.getElementById('main-nav'); let menu = `<li><a href="#home" class="nav-link">HOME</a></li><li><a href="#shop" class="nav-link">SHOP</a></li>`; if (isLoggedIn) menu += `<li><button class="nav-btn">MY PAGE</button></li><li><button class="nav-btn" onclick="isLoggedIn=false;updateNavUI()">LOGOUT</button></li>`; else menu += `<li><button class="nav-btn" onclick="openLogin()">LOGIN</button></li><li><button class="nav-btn" onclick="openSignup()">SIGNUP</button></li>`; menu += `<li><button class="cart-trigger-btn cart-nav" onclick="toggleCart()">CART (${cart.reduce((a,b)=>a+b.quantity,0)})</button></li>`; nav.innerHTML = menu; document.querySelectorAll('.nav-link').forEach(link => { link.onclick = (e) => { e.preventDefault(); document.getElementById('product-detail-view').style.display = 'none'; document.getElementById('main-view').style.display = 'block'; const target = link.getAttribute('href'); document.querySelector(target).scrollIntoView({ behavior: 'smooth' }); }; }); }
         
         const legalData = { privacy: { title: "개인정보 처리방침", content: "수집: 이름, 이메일, 주소. 보유: 탈퇴 시까지." }, refund: { title: "교환 및 환불 규정", content: "7일 이내 반품 가능." }, terms: { title: "이용약관", content: "사이트 이용 약관입니다." } };
         function showLegal(t) { document.getElementById('legalTitle').innerText = legalData[t].title; document.getElementById('legalContent').innerHTML = legalData[t].content; document.getElementById('legalPop').style.display = 'flex'; }
