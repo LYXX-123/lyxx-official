@@ -55,13 +55,18 @@
 
         .cart-sidebar { position: fixed; top: 0; right: -400px; width: 400px; height: 100%; background: #111; border-left: 1px solid #333; z-index: 9000; padding: 40px; transition: right 0.5s cubic-bezier(0.77, 0, 0.175, 1); display: flex; flex-direction: column; }
         .cart-sidebar.active { right: 0; }
+        
+        /* ✅ [복구] 세련된 플러스 마이너스 버튼 디자인 */
+        .qty-btn { background: none; border: 1px solid #444; color: #eee; width: 25px; height: 25px; display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer; transition: 0.2s; line-height: 1; }
+        .qty-btn:hover { border-color: #eee; color: #fff; }
 
         .auth-modal, .legal-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 9999; display: none; justify-content: center; align-items: center; backdrop-filter: blur(10px); }
         .auth-box, .legal-box { width: 400px; padding: 60px 40px; border: 1px solid #333; background: #111; position: relative; text-align: center; }
         .legal-box { max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto; text-align: left; }
         .auth-box input { width: 100%; padding: 15px; margin-bottom: 15px; background: #1a1a1a; border: 1px solid #333; color: #fff; font-size: 12px; outline: none; }
 
-        #mypage-view { display: none; padding: 150px 10%; min-height: 80vh; position: relative; z-index: 100; background-color: #111; }
+        /* ✅ [고정] 마이페이지 뷰 최우선 순위 */
+        #mypage-view { display: none; padding: 150px 10%; min-height: 80vh; background-color: #111; position: relative; z-index: 200; }
         .mypage-container { max-width: 600px; margin: 0 auto; }
         .mp-row { display: flex; justify-content: space-between; align-items: center; padding: 25px 0; border-bottom: 1px solid #222; }
         .mp-label { color: #666; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
@@ -72,6 +77,7 @@
         footer { padding: 80px 5% 50px; border-top: 1px solid #222; font-size: 11px; color: #666; line-height: 1.8; position: relative; z-index: 10; }
         .footer-links { display: flex; gap: 30px; margin-top: 25px; }
         .footer-links span { color: #888; cursor: pointer; transition: 0.3s; }
+        .footer-links span:hover { color: #eee; }
 
         #product-detail-view { display: none; padding-top: 80px; position: relative; z-index: 50; }
         #product-top { padding: 80px 5%; display: flex; gap: 60px; min-height: 80vh; align-items: flex-start; }
@@ -85,13 +91,7 @@
 
     <div id="intro-overlay"><div class="intro-logo">LYXX</div></div>
 
-    <div class="legal-modal" id="legalPop">
-        <div class="legal-box">
-            <button onclick="closeLegal()" style="position:absolute; top:20px; right:20px; background:none; border:none; color:#fff; font-size:24px; cursor:pointer;">×</button>
-            <h3 id="legalTitle" style="text-align:center; margin-bottom:30px; letter-spacing:2px;">TITLE</h3>
-            <div id="legalContent" style="color: #888; font-size: 12px; line-height: 2;">CONTENT</div>
-        </div>
-    </div>
+    <div class="legal-modal" id="legalPop"><div class="legal-box"><button onclick="closeLegal()" style="position:absolute; top:20px; right:20px; background:none; border:none; color:#fff; font-size:24px; cursor:pointer;">×</button><h3 id="legalTitle" style="text-align:center; margin-bottom:30px;">TITLE</h3><div id="legalContent" style="color: #888; font-size: 12px; line-height: 2;">CONTENT</div></div></div>
 
     <div class="auth-modal" id="changePwModal"><div class="auth-box"><button onclick="closeModals()" style="position:absolute; top:20px; right:20px; background:none; border:none; color:#fff; font-size:20px; cursor:pointer;">×</button><h2>Change Password</h2><input type="password" id="newPw" placeholder="NEW PASSWORD"><input type="password" id="confirmNewPw" placeholder="CONFIRM NEW PASSWORD"><button style="width:100%; padding:15px; background:#eee; color:#111; border:none; font-weight:900; margin-top:10px; cursor:pointer;" onclick="handleChangePassword()">Update Password</button></div></div>
 
@@ -159,6 +159,7 @@
         const API_URL = 'https://lyxx-official.onrender.com';
         let isLoggedIn = false, currentUser = null, cart = [], currentProductKey = '', currentSlide = 0, shopIdx = 0;
 
+        // ✅ [고정] 화면 전환 마스터 로직 - 최우선 순위
         function goHome() { 
             document.getElementById('mypage-view').style.display = 'none'; 
             document.getElementById('product-detail-view').style.display = 'none'; 
@@ -167,7 +168,7 @@
         }
         function goShop() { goHome(); setTimeout(() => { document.getElementById('shop').scrollIntoView({behavior:'smooth'}); }, 100); }
         
-        // ✅ [강화] 로그인 상태와 유저 데이터를 즉시 동기화하여 마이페이지 진입 보장
+        // ✅ [복구] 마이페이지 강제 오픈 로직
         function openMypage() {
             if(!isLoggedIn || !currentUser) { openLogin(); return; }
             document.getElementById('main-view').style.display = 'none';
@@ -203,7 +204,6 @@
                 const res = await fetch(`${API_URL}/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: id, password: pw }) }); 
                 const data = await res.json(); 
                 if (data.success) { 
-                    // ✅ 로그인 성공 즉시 전역 변수에 데이터 고정
                     isLoggedIn = true; 
                     currentUser = data.user; 
                     updateNavUI(); 
@@ -248,7 +248,29 @@
         function moveSlide(n) { const max = document.getElementById('detailSlider').children.length || 1; currentSlide = (currentSlide + n + max) % max; document.getElementById('detailSlider').style.transform = `translateX(-${currentSlide * 100}%)`; }
         function addToCart() { const d = products[currentProductKey]; const item = cart.find(i => i.id === d.id); if(item) item.quantity++; else cart.push({...d, quantity:1}); updateCartUI(); toggleCart(); }
         function changeQty(i, d) { cart[i].quantity += d; if(cart[i].quantity < 1) cart.splice(i,1); updateCartUI(); }
-        function updateCartUI() { const l = document.getElementById('cartItemsList'); l.innerHTML = ''; let t = 0; cart.forEach((item, i) => { t += item.price * item.quantity; l.innerHTML += `<div style="display:flex; gap:15px; margin-bottom:20px;"><img src="${item.images[0]||''}" style="width:60px; height:60px; object-fit:cover;"><div style="flex:1;"><p style="font-size:12px;">${item.name}</p><p style="font-size:12px; opacity:0.5;">₩${(item.price * item.quantity).toLocaleString()}</p><div style="display:flex; align-items:center; gap:10px; margin-top:5px;"><button onclick="changeQty(${i},-1)" class="qty-btn">-</button><span>${item.quantity}</span><button onclick="changeQty(${i},1)" class="qty-btn">+</button></div></div></div>`; }); document.getElementById('cartTotalText').innerText = `₩${t.toLocaleString()}`; updateNavUI(); }
+        
+        // ✅ [디자인 복구] 예쁜 플러스 마이너스 버튼 UI
+        function updateCartUI() { 
+            const l = document.getElementById('cartItemsList'); 
+            l.innerHTML = ''; let t = 0; 
+            cart.forEach((item, i) => { 
+                t += item.price * item.quantity; 
+                l.innerHTML += `
+                    <div style="display:flex; gap:15px; margin-bottom:20px;">
+                        <img src="${item.images[0]||''}" style="width:60px; height:60px; object-fit:cover;">
+                        <div style="flex:1;">
+                            <p style="font-size:12px;">${item.name}</p>
+                            <p style="font-size:12px; opacity:0.5;">₩${(item.price * item.quantity).toLocaleString()}</p>
+                            <div style="display:flex; align-items:center; gap:10px; margin-top:5px;">
+                                <button onclick="changeQty(${i},-1)" class="qty-btn">-</button>
+                                <span style="font-size:13px; font-weight:700;">${item.quantity}</span>
+                                <button onclick="changeQty(${i},1)" class="qty-btn">+</button>
+                            </div>
+                        </div>
+                    </div>`; 
+            }); 
+            document.getElementById('cartTotalText').innerText = `₩${t.toLocaleString()}`; updateNavUI(); 
+        }
         
         function updateNavUI() { 
             const nav = document.getElementById('main-nav'); 
