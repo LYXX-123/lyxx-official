@@ -66,7 +66,9 @@
         .auth-box { width: 400px; padding: 60px 40px; border: 1px solid #333; background: #111; position: relative; text-align: center; }
         .auth-box input { width: 100%; padding: 15px; margin-bottom: 15px; background: #1a1a1a; border: 1px solid #333; color: #fff; font-size: 12px; outline: none; }
 
-        #mypage-view { display: none; padding: 150px 10%; min-height: 80vh; }
+        /* 마이페이지/디테일 뷰 섹션 */
+        #mypage-view, #product-detail-view { display: none; }
+        #mypage-view { padding: 150px 10%; min-height: 80vh; }
         .mypage-container { max-width: 600px; margin: 0 auto; }
         .mp-row { display: flex; justify-content: space-between; align-items: center; padding: 25px 0; border-bottom: 1px solid #222; }
         .mp-label { color: #666; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
@@ -79,7 +81,7 @@
         footer { padding: 80px 5% 50px; border-top: 1px solid #222; font-size: 11px; color: #666; line-height: 1.8; }
         .footer-links span { color: #888; margin-right: 15px; cursor: pointer; }
 
-        #product-detail-view { display: none; padding-top: 80px; }
+        #product-detail-view { padding-top: 80px; }
         #product-top { padding: 80px 5%; display: flex; gap: 60px; min-height: 80vh; align-items: flex-start; }
         .slider-container { flex: 1.2; position: relative; border: 1px solid #222; overflow: hidden; background: #1a1a1a; aspect-ratio: 1/1; max-width: 500px; }
         .slider-wrapper img { width: 100% !important; height: 100% !important; object-fit: cover !important; flex-shrink: 0; display: block; }
@@ -155,8 +157,20 @@
         const API_URL = 'https://lyxx-official.onrender.com';
         let isLoggedIn = false, currentUser = null, cart = [], currentProductKey = '', currentSlide = 0, shopIdx = 0;
 
-        window.addEventListener('scroll', () => { const s = document.getElementById('mainSlogan'); if(s && window.pageYOffset < 800) { s.style.transform = `translateY(${window.pageYOffset * 0.2}px)`; s.style.opacity = 0.6 - (window.pageYOffset / 1000); } });
-        function moveCarousel(d) { shopIdx += d; if(shopIdx < 0) shopIdx = 2; if(shopIdx > 2) shopIdx = 0; document.getElementById('productCarousel').style.transform = `translateX(-${shopIdx * 100}%)`; document.getElementById('scrollFill').style.transform = `translateX(${shopIdx * 100}%)`; }
+        window.addEventListener('scroll', () => { 
+            const s = document.getElementById('mainSlogan'); 
+            if(s && window.pageYOffset < 800) { 
+                s.style.transform = `translateY(${window.pageYOffset * 0.2}px)`; 
+                s.style.opacity = 0.6 - (window.pageYOffset / 1000); 
+            } 
+        });
+
+        function moveCarousel(d) { 
+            shopIdx += d; if(shopIdx < 0) shopIdx = 2; if(shopIdx > 2) shopIdx = 0; 
+            document.getElementById('productCarousel').style.transform = `translateX(-${shopIdx * 100}%)`; 
+            document.getElementById('scrollFill').style.transform = `translateX(${shopIdx * 100}%)`; 
+        }
+
         function execDaumPostcode(targetId) { 
             new daum.Postcode({ oncomplete: function(data) { 
                 const addr = data.userSelectedType === 'R' ? data.roadAddress : data.jibunAddress;
@@ -165,12 +179,12 @@
             }}).open(); 
         }
 
-        const closeModals = () => document.querySelectorAll('.auth-modal').forEach(m => m.style.display = 'none');
-        const openLogin = () => document.getElementById('loginModal').style.display = 'flex';
-        const openSignup = () => document.getElementById('signupModal').style.display = 'flex';
-        const openFindPw = () => { closeModals(); document.getElementById('findPwModal').style.display = 'flex'; };
-        const openChangePw = () => document.getElementById('changePwModal').style.display = 'flex';
-        const toggleCart = () => document.getElementById('cartSidebar').classList.toggle('active');
+        function closeModals() { document.querySelectorAll('.auth-modal').forEach(m => m.style.display = 'none'); }
+        function openLogin() { closeModals(); document.getElementById('loginModal').style.display = 'flex'; }
+        function openSignup() { closeModals(); document.getElementById('signupModal').style.display = 'flex'; }
+        function openFindPw() { closeModals(); document.getElementById('findPwModal').style.display = 'flex'; }
+        function openChangePw() { closeModals(); document.getElementById('changePwModal').style.display = 'flex'; }
+        function toggleCart() { document.getElementById('cartSidebar').classList.toggle('active'); }
 
         async function handleLogin() { 
             const id = document.getElementById('loginId').value, pw = document.getElementById('loginPw').value; 
@@ -229,7 +243,11 @@
             window.scrollTo(0,0);
         }
 
-        function closeAllViews() { document.getElementById('mypage-view').style.display = 'none'; document.getElementById('product-detail-view').style.display = 'none'; document.getElementById('main-view').style.display = 'block'; }
+        function closeAllViews() { 
+            document.getElementById('mypage-view').style.display = 'none'; 
+            document.getElementById('product-detail-view').style.display = 'none'; 
+            document.getElementById('main-view').style.display = 'block'; 
+        }
 
         const products = { 'tee': { id:'tee', name:'LYXX Logo tee', price:69000, images:['./반팔티.png'], desc:'PREMIUM COTTON.' }, 'hoodie': { id:'hoodie', name:'LYXX layered tee', price:129000, images:['./후드티.png'], desc:'Y2K STYLE.' }, 'belt': { id:'belt', name:'STAR BELT', price:79000, images:['./벨트.png'], desc:'LEATHER.' }, 'cap': { id:'cap', name:'LYXX BALL CAP', price:49000, images:['./모자.png'], desc:'WASHED COTTON.' }, 'denim': { id:'denim', name:'RAW DENIM PANTS', price:159000, images:['./데님.png'], desc:'SELVEDGE.' } };
         function openProduct(k) { currentProductKey = k; const d = products[k]; document.getElementById('detail-name').innerText = d.name; document.getElementById('detail-price').innerText = `₩${d.price.toLocaleString()}`; document.getElementById('detail-desc').innerText = d.desc; const w = document.getElementById('detailSlider'); w.innerHTML = ''; (d.images.length > 0 ? d.images : ['data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=']).forEach(s => { w.innerHTML += `<img src="${s}">`; }); document.getElementById('main-view').style.display = 'none'; document.getElementById('mypage-view').style.display = 'none'; document.getElementById('product-detail-view').style.display = 'block'; window.scrollTo(0,0); }
@@ -240,7 +258,7 @@
         
         function updateNavUI() { 
             const nav = document.getElementById('main-nav'); 
-            let menu = `<li><div class="nav-btn" onclick="closeAllViews()">HOME</div></li><li><div class="nav-btn" onclick="closeAllViews(); document.getElementById('shop').scrollIntoView({behavior:'smooth'});">SHOP</div></li>`; 
+            let menu = `<li><button class="nav-btn" onclick="closeAllViews()">HOME</button></li><li><button class="nav-btn" onclick="closeAllViews(); document.getElementById('shop').scrollIntoView({behavior:'smooth'});">SHOP</button></li>`; 
             if (isLoggedIn) menu += `<li><button class="nav-btn" onclick="openMypage()">MY PAGE</button></li><li><button class="nav-btn" onclick="isLoggedIn=false; currentUser=null; updateNavUI(); closeAllViews();">LOGOUT</button></li>`; 
             else menu += `<li><button class="nav-btn" onclick="openLogin()">LOGIN</button></li><li><button class="nav-btn" onclick="openSignup()">SIGNUP</button></li>`; 
             menu += `<li><button class="cart-trigger-btn cart-nav" onclick="toggleCart()">CART (${cart.reduce((a,b)=>a+b.quantity,0)})</button></li>`; 
