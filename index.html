@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LYXX Official</title>
     <style>
-        /* 1. 기본 스타일 */
+        /* 기본 스타일 및 애니메이션 */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             background-color: #111; color: #eee;
@@ -14,13 +14,11 @@
             background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4WsUAAAABlBMVEUAAAAAAAClZ7nPAAAAAXRSTlMAQObYZgAAADRJREFUeNoNglESwCAMwjr//7vG6b3XQJ4gAgj7A6VqI5iI4P6u4nQ80y4gB16oAn6l2mYvPgD2A/c5h64NAAAAAElFTkSuQmCC');
         }
 
-        /* 인트로 애니메이션 */
         #intro-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; display: flex; justify-content: center; align-items: center; transition: opacity 1s ease-in-out; }
         .intro-logo { font-size: 8vw; font-weight: 900; letter-spacing: 50px; color: #fff; opacity: 0; animation: introAnim 2.5s cubic-bezier(0.19, 1, 0.22, 1) forwards; }
         @keyframes introAnim { 0% { opacity: 0; letter-spacing: 50px; filter: blur(10px); } 50% { opacity: 1; filter: blur(0); } 100% { opacity: 1; letter-spacing: 10px; } }
         .fade-out { opacity: 0 !important; pointer-events: none; }
 
-        /* 헤더 */
         header { width: 100%; height: 80px; display: flex; justify-content: space-between; align-items: center; padding: 0 5%; position: fixed; top: 0; left: 0; z-index: 1000; background: rgba(17, 17, 17, 0.8); backdrop-filter: blur(5px); }
         .logo { font-size: 24px; font-weight: 900; letter-spacing: -1px; text-decoration: none; color: inherit; }
         nav ul { display: flex; gap: 20px; list-style: none; align-items: center; }
@@ -28,19 +26,33 @@
         nav a:hover, .nav-btn:hover, .cart-trigger-btn:hover { opacity: 1; }
         .cart-nav { border: 1px solid rgba(255,255,255,0.3); padding: 5px 12px; border-radius: 20px; }
 
-        /* 메인 홈 로고 */
         #home { width: 100vw; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; }
         .main-logo { font-size: 15vw; font-weight: 900; letter-spacing: -5px; text-transform: uppercase; background: linear-gradient(145deg, #fff, #bbb, #fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 8px rgba(255,255,255,0.4)); transition: 0.5s cubic-bezier(0.19, 1, 0.22, 1); user-select: none; display: inline-block; padding: 0 0.1em; cursor: pointer; margin: 0; line-height: 1; }
         .main-logo:hover { filter: drop-shadow(0 0 25px rgba(255,255,255,0.9)); transform: scale(1.05); letter-spacing: 15px; }
         .slogan { font-size: 14px; font-weight: 300; text-transform: uppercase; letter-spacing: 5px; margin-top: 20px; opacity: 0.6; transition: transform 0.1s linear; }
 
-        /* SHOP 섹션 (9칸 캐러셀) */
+        /* ✨ [수정] 짤림 방지 SHOP 섹션 레이아웃 */
         #shop { padding: 150px 0 100px; width: 100%; position: relative; overflow: hidden; }
         #shop h2 { font-size: 40px; font-weight: 700; text-transform: uppercase; margin-bottom: 80px; text-align: center; letter-spacing: 10px; }
-        .shop-outer { width: 100%; padding: 0 8%; position: relative; }
-        .shop-inner { width: 100%; overflow: hidden; position: relative; }
-        .product-carousel { display: flex; gap: 40px; transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1); width: 100%; }
-        .product-card { min-width: calc((100% - 80px) / 3); background-color: #1a1a1a; border: 1px solid #222; padding: 20px; text-align: left; opacity: 0; transform: translateY(60px); transition: all 1s cubic-bezier(0.23, 1, 0.32, 1); cursor: pointer; }
+        
+        .shop-outer { width: 100%; padding: 0 10%; position: relative; } 
+        .shop-inner { width: 100%; overflow: visible; } /* 테두리 안 짤리게 보임 처리 */
+        
+        .product-carousel { 
+            display: flex; 
+            gap: 40px; 
+            transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+            width: 100%;
+        }
+        
+        .product-card { 
+            /* ✨ 정확한 3분할 계산: (100% - 여백합계) / 개수 */
+            min-width: calc((100% - 80px) / 3); 
+            background-color: #1a1a1a; border: 1px solid #222; padding: 20px; 
+            text-align: left; opacity: 0; transform: translateY(60px); 
+            transition: all 1s cubic-bezier(0.23, 1, 0.32, 1);
+            cursor: pointer;
+        }
         .product-card.visible { opacity: 1; transform: translateY(0); }
         .product-card:hover { border-color: #eee; transform: translateY(-10px) !important; }
 
@@ -58,35 +70,18 @@
         .legal-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 6000; display: none; justify-content: center; align-items: center; padding: 20px; }
         .legal-box { width: 100%; max-width: 600px; max-height: 80vh; background: #111; border: 1px solid #333; padding: 40px; overflow-y: auto; position: relative; }
 
-        /* ✨ [수정] 상세페이지 사진 크기 강제 고정 */
+        /* 상세페이지 사진 고정 (이전 수정 유지) */
         #product-detail-view { display: none; padding-top: 80px; }
         #product-top { padding: 80px 5%; display: flex; gap: 60px; min-height: 80vh; align-items: flex-start; }
-        
-        .slider-container { 
-            flex: 1.2; position: relative; border: 1px solid #222; overflow: hidden; 
-            background: #1a1a1a; aspect-ratio: 1/1; /* 컨테이너를 정사각형으로 고정 */
-            max-width: 500px; /* 너무 커지지 않게 제한 */
-        }
-        .slider-wrapper { 
-            display: flex; transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1); 
-            height: 100%; width: 100%; 
-        }
-        
-        /* ✅ 중요: 상세페이지 내 모든 이미지가 컨테이너를 벗어나지 못하게 강력 고정 */
-        .slider-wrapper img { 
-            width: 100% !important; 
-            height: 100% !important; 
-            object-fit: cover !important; /* 이미지 비율 맞추며 꽉 채우기 */
-            flex-shrink: 0; 
-        }
-        
+        .slider-container { flex: 1.2; position: relative; border: 1px solid #222; overflow: hidden; background: #1a1a1a; aspect-ratio: 1/1; max-width: 500px; }
+        .slider-wrapper { display: flex; transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1); height: 100%; width: 100%; }
+        .slider-wrapper img { width: 100% !important; height: 100% !important; object-fit: cover !important; flex-shrink: 0; }
         .slide-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: #fff; border: none; padding: 15px 10px; cursor: pointer; font-size: 20px; z-index: 10; }
-        .prev-btn { left: 0; } .next-btn { right: 0; }
         .slider-dots { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 11; }
         .dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.3); cursor: pointer; }
         .dot.active { background: #fff; width: 20px; border-radius: 10px; }
 
-        /* 기타 기존 스타일 */
+        /* 기타 스타일 */
         .img-box { width: 100%; aspect-ratio: 1/1; background-color: #222; display: flex; justify-content: center; align-items: center; overflow: hidden; margin-bottom: 20px; border: 1px solid #333; }
         .img-box img { width: 100%; height: 100%; object-fit: cover; }
         .auth-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 5000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(10px); }
@@ -104,14 +99,22 @@
 
     <div id="intro-overlay"><div class="intro-logo">LYXX</div></div>
 
-    <div class="legal-modal" id="privacyModal"><div class="legal-box"><button class="auth-close" onclick="closeLegal()">×</button><h3>개인정보 처리방침</h3><p>...</p></div></div>
-    <div class="legal-modal" id="refundModal"><div class="legal-box"><button class="auth-close" onclick="closeLegal()">×</button><h3>청약철회 및 환불 규정</h3><p>...</p></div></div>
+    <div class="legal-modal" id="privacyModal"><div class="legal-box"><button class="auth-close" onclick="closeLegal()">×</button><h3>개인정보 처리방침</h3><p>수집 항목: 이름, 아이디, 비밀번호, 이메일. 보유 기간: 탈퇴 시까지.</p></div></div>
+    <div class="legal-modal" id="refundModal"><div class="legal-box"><button class="auth-close" onclick="closeLegal()">×</button><h3>청약철회 및 환불 규정</h3><p>수령 후 7일 이내 환불 가능. 단순 변심 시 왕복 배송비 발생.</p></div></div>
 
     <div class="auth-modal" id="loginModal"><div class="auth-box"><button class="auth-close" onclick="closeModals()">×</button><h2>Login</h2><input type="text" id="loginId" placeholder="ID"><input type="password" id="loginPw" placeholder="PASSWORD"><button class="auth-submit" onclick="handleLogin()">Enter</button></div></div>
-    <div class="auth-modal" id="signupModal"><div class="auth-box"><button class="auth-close" onclick="closeModals()">×</button><h2>Sign Up</h2><input type="text" id="signupName" placeholder="NAME"><input type="text" id="signupId" placeholder="ID"><input type="password" id="signupPw" placeholder="PASSWORD"><input type="email" id="signupEmail" placeholder="EMAIL"><div style="text-align: left; margin: 15px 0; font-size: 10px; color: #666;"><input type="checkbox" id="agreeCheck"> [필수] 개인정보 수집 동의</div><button class="auth-submit" onclick="handleSignup()">Create Account</button></div></div>
+    <div class="auth-modal" id="signupModal">
+        <div class="auth-box" style="width: 450px;">
+            <button class="auth-close" onclick="closeModals()">×</button>
+            <h2>Sign Up</h2>
+            <input type="text" id="signupName" placeholder="NAME"><input type="text" id="signupId" placeholder="ID"><input type="password" id="signupPw" placeholder="PASSWORD"><input type="email" id="signupEmail" placeholder="EMAIL">
+            <div style="text-align: left; margin: 15px 0; font-size: 10px; color: #666;"><input type="checkbox" id="agreeCheck"> [필수] 개인정보 수집 동의</div>
+            <button class="auth-submit" onclick="handleSignup()">Create Account</button>
+        </div>
+    </div>
 
     <div class="cart-sidebar" id="cartSidebar">
-        <div style="display:flex; justify-content:space-between; margin-bottom:30px;"><h3>CART</h3><button onclick="toggleCart()" style="background:none; border:none; color:#fff; font-size:24px;">×</button></div>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;"><h3>CART</h3><button onclick="toggleCart()" style="background:none; border:none; color:#fff; font-size:24px;">×</button></div>
         <div id="cartItemsList" style="flex-grow:1; overflow-y:auto; border-top:1px solid #222; padding-top:20px;"></div>
         <div style="border-top:1px solid #222; padding-top:20px;"><div style="display:flex; justify-content:space-between; margin-bottom:20px; font-weight:700;"><span>TOTAL</span><span id="cartTotalText">₩0</span></div><button style="width:100%; padding:20px; background:#eee; color:#111; border:none; font-weight:900;" onclick="alert('준비중')">CHECKOUT</button></div>
     </div>
@@ -120,6 +123,7 @@
 
     <div id="main-view">
         <section id="home"><h1 class="main-logo" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">LYXX</h1><p class="slogan" id="mainSlogan">WANT TO LYXX ME?</p></section>
+        
         <section id="shop">
             <h2>SHOP</h2>
             <div class="shop-outer">
@@ -140,7 +144,16 @@
             </div>
             <div class="scroll-bar-container"><div class="scroll-bar-fill" id="scrollFill"></div></div>
         </section>
-        <footer><div style="display:flex; justify-content:space-between;"><div><p>CEO. 용준 지환</p><p>서울특별시 동대문구 회기동</p><p>lyxx.rechive@gmail.com</p></div><div>&copy; 2026 LYXX.</div></div></footer>
+        <footer>
+            <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
+                <div><p>CEO. 용준 지환</p><p>서울특별시 동대문구 회기동</p><p>lyxx.rechive@gmail.com</p></div>
+                <div>&copy; 2026 LYXX. ALL RIGHTS RESERVED.</div>
+            </div>
+            <div class="footer-links">
+                <a onclick="openLegal('privacy')">개인정보 처리방침</a>
+                <a onclick="openLegal('refund')">교환 및 환불 규정</a>
+            </div>
+        </footer>
     </div>
 
     <div id="product-detail-view">
@@ -161,18 +174,27 @@
     </div>
 
     <script>
-        // 모든 스크립트 기능 유지
         window.addEventListener('scroll', () => {
             const scrollPos = window.pageYOffset;
             const slogan = document.getElementById('mainSlogan');
             if(slogan && scrollPos < 800) { slogan.style.transform = `translateY(${scrollPos * 0.2}px)`; slogan.style.opacity = 0.6 - (scrollPos / 1000); }
         });
 
+        function openLegal(type) { if(type === 'privacy') document.getElementById('privacyModal').style.display = 'flex'; else if(type === 'refund') document.getElementById('refundModal').style.display = 'flex'; }
+        function closeLegal() { document.querySelectorAll('.legal-modal').forEach(m => m.style.display = 'none'); }
+
         let shopIdx = 0;
         function moveCarousel(dir) {
-            shopIdx += dir; if(shopIdx < 0) shopIdx = 2; if(shopIdx > 2) shopIdx = 0;
-            document.getElementById('productCarousel').style.transform = `translateX(-${shopIdx * 100}%)`;
-            document.getElementById('scrollFill').style.transform = `translateX(${shopIdx * 100}%)`;
+            shopIdx += dir;
+            if(shopIdx < 0) shopIdx = 2; 
+            if(shopIdx > 2) shopIdx = 0;
+            
+            const carousel = document.getElementById('productCarousel');
+            const fill = document.getElementById('scrollFill');
+            
+            // ✨ [수정] 이동 공식을 페이지 단위로 더 정확하게 고정 (100% 이동)
+            carousel.style.transform = `translateX(-${shopIdx * 100}%)`;
+            fill.style.transform = `translateX(${shopIdx * 100}%)`;
         }
 
         window.addEventListener('load', () => { setTimeout(() => { document.getElementById('intro-overlay').classList.add('fade-out'); initScrollObserver(); }, 2500); });
@@ -201,10 +223,8 @@
             const wrapper = document.getElementById('detailSlider');
             const dots = document.getElementById('sliderDots');
             wrapper.innerHTML = ''; dots.innerHTML = '';
-            data.images.forEach((src, i) => {
-                wrapper.innerHTML += `<img src="${src}">`;
-                dots.innerHTML += `<div class="dot ${i===0?'active':''}" onclick="goToSlide(${i})"></div>`;
-            });
+            const imgs = data.images.length > 0 ? data.images : ['data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='];
+            imgs.forEach((src, i) => { wrapper.innerHTML += `<img src="${src}">`; dots.innerHTML += `<div class="dot ${i===0?'active':''}" onclick="goToSlide(${i})"></div>`; });
             updateSlide();
             document.getElementById('main-view').style.display = 'none';
             document.getElementById('product-detail-view').style.display = 'block';
