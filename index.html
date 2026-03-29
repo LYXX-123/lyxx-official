@@ -63,7 +63,6 @@
         .auth-box input { width: 100%; padding: 15px; margin-bottom: 15px; background: #1a1a1a; border: 1px solid #333; color: #fff; font-size: 12px; outline: none; }
 
         #mypage-view { display: none; padding: 150px 10%; min-height: 80vh; position: relative; z-index: 100; background-color: #111; }
-        .mypage-container { max-width: 600px; margin: 0 auto; }
         .mp-row { display: flex; justify-content: space-between; align-items: center; padding: 25px 0; border-bottom: 1px solid #222; }
         .mp-label { color: #666; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
         .mp-value { font-size: 14px; font-weight: 300; }
@@ -159,13 +158,17 @@
         const API_URL = 'https://lyxx-official.onrender.com';
         let isLoggedIn = false, currentUser = null, cart = [], currentProductKey = '', currentSlide = 0, shopIdx = 0;
 
-        // ✅ [강화] localStorage를 사용하여 새로고침해도 로그인 유지
+        // ✅ [강화] 페이지 로드 시 로그인 상태 및 유저별 장바구니 복구
         window.addEventListener('DOMContentLoaded', () => {
             const savedUser = localStorage.getItem('lyxx_user');
             if(savedUser) {
                 isLoggedIn = true;
                 currentUser = JSON.parse(savedUser);
+                // 해당 유저의 전용 장바구니 불러오기
+                const savedCart = localStorage.getItem(`lyxx_cart_${currentUser.username}`);
+                if(savedCart) cart = JSON.parse(savedCart);
                 updateNavUI();
+                updateCartUI();
             }
         });
 
@@ -204,13 +207,12 @@
                 const data = await res.json(); 
                 if (data.success) { 
                     isLoggedIn = true; currentUser = data.user;
-                    // ✅ localStorage에 저장하여 새로고침 시에도 유지
                     localStorage.setItem('lyxx_user', JSON.stringify(currentUser));
-                    updateNavUI(); closeModals(); 
-                } else {
-                    // ✅ 로그인 실패 시 메시지 노출 (비밀번호 틀림 등)
-                    alert(data.message);
-                }
+                    // 로그인 시 해당 유저의 장바구니 연동
+                    const savedCart = localStorage.getItem(`lyxx_cart_${id}`);
+                    cart = savedCart ? JSON.parse(savedCart) : [];
+                    updateNavUI(); updateCartUI(); closeModals(); 
+                } else alert(data.message);
             } catch(e) { alert("서버 통신 오류"); } 
         }
 
@@ -230,8 +232,12 @@
         const products = { 'tee': { id:'tee', name:'LYXX Logo tee', price:69000, images:['./반팔티.png'], desc:'PREMIUM COTTON.' }, 'hoodie': { id:'hoodie', name:'LYXX layered tee', price:129000, images:['./후드티.png'], desc:'Y2K STYLE.' }, 'belt': { id:'belt', name:'STAR BELT', price:79000, images:['./벨트.png'], desc:'LEATHER.' }, 'cap': { id:'cap', name:'LYXX BALL CAP', price:49000, images:['./모자.png'], desc:'WASHED COTTON.' }, 'denim': { id:'denim', name:'RAW DENIM PANTS', price:159000, images:['./데님.png'], desc:'SELVEDGE.' } };
         function openProduct(k) { currentProductKey = k; const d = products[k]; document.getElementById('detail-name').innerText = d.name; document.getElementById('detail-price').innerText = `₩${d.price.toLocaleString()}`; document.getElementById('detail-desc').innerText = d.desc; const w = document.getElementById('detailSlider'); w.innerHTML = ''; (d.images.length > 0 ? d.images : ['data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=']).forEach(s => { w.innerHTML += `<img src="${s}">`; }); document.getElementById('main-view').style.display = 'none'; document.getElementById('mypage-view').style.display = 'none'; document.getElementById('product-detail-view').style.display = 'block'; window.scrollTo(0,0); }
         function moveSlide(n) { const max = document.getElementById('detailSlider').children.length || 1; currentSlide = (currentSlide + n + max) % max; document.getElementById('detailSlider').style.transform = `translateX(-${currentSlide * 100}%)`; }
-        function addToCart() { const d = products[currentProductKey]; const item = cart.find(i => i.id === d.id); if(item) item.quantity++; else cart.push({...d, quantity:1}); updateCartUI(); toggleCart(); }
-        function changeQty(i, d) { cart[i].quantity += d; if(cart[i].quantity < 1) cart.splice(i,1); updateCartUI(); }
+        
+        // ✅ [영구 장바구니] 추가/수정 시 아이디별로 로컬스토리지에 저장
+        function saveCart() { if(isLoggedIn && currentUser) localStorage.setItem(`lyxx_cart_${currentUser.username}`, JSON.stringify(cart)); }
+        function addToCart() { const d = products[currentProductKey]; const item = cart.find(i => i.id === d.id); if(item) item.quantity++; else cart.push({...d, quantity:1}); saveCart(); updateCartUI(); toggleCart(); }
+        function changeQty(i, d) { cart[i].quantity += d; if(cart[i].quantity < 1) cart.splice(i,1); saveCart(); updateCartUI(); }
+        
         function updateCartUI() { 
             const l = document.getElementById('cartItemsList'); l.innerHTML = ''; let t = 0; 
             cart.forEach((item, i) => { t += item.price * item.quantity; l.innerHTML += `<div style="display:flex; gap:15px; margin-bottom:20px;"><img src="${item.images[0]||''}" style="width:60px; height:60px; object-fit:cover;"><div style="flex:1;"><p style="font-size:12px;">${item.name}</p><p style="font-size:12px; opacity:0.5;">₩${(item.price * item.quantity).toLocaleString()}</p><div style="display:flex; align-items:center; gap:10px; margin-top:5px;"><button onclick="changeQty(${i},-1)" class="qty-btn">-</button><span style="font-size:13px; font-weight:700;">${item.quantity}</span><button onclick="changeQty(${i},1)" class="qty-btn">+</button></div></div></div>`; }); 
@@ -241,7 +247,7 @@
         function updateNavUI() { 
             const nav = document.getElementById('main-nav'); 
             let menu = `<li><button class="nav-btn" onclick="goHome()">HOME</button></li><li><button class="nav-btn" onclick="goShop()">SHOP</button></li>`; 
-            if (isLoggedIn) menu += `<li><button class="nav-btn" onclick="window.openMypage()">MY PAGE</button></li><li><button class="nav-btn" onclick="isLoggedIn=false; currentUser=null; localStorage.removeItem('lyxx_user'); updateNavUI(); goHome();">LOGOUT</button></li>`; 
+            if (isLoggedIn) menu += `<li><button class="nav-btn" onclick="window.openMypage()">MY PAGE</button></li><li><button class="nav-btn" onclick="isLoggedIn=false; currentUser=null; cart=[]; localStorage.removeItem('lyxx_user'); updateNavUI(); updateCartUI(); goHome();">LOGOUT</button></li>`; 
             else menu += `<li><button class="nav-btn" onclick="openLogin()">LOGIN</button></li><li><button class="nav-btn" onclick="openSignup()">SIGNUP</button></li>`; 
             menu += `<li><button class="cart-trigger-btn cart-nav" onclick="toggleCart()">CART (${cart.reduce((a,b)=>a+b.quantity,0)})</button></li>`; 
             nav.innerHTML = menu; 
