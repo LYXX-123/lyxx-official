@@ -66,7 +66,6 @@
         .auth-box { width: 400px; padding: 60px 40px; border: 1px solid #333; background: #111; position: relative; text-align: center; }
         .auth-box input { width: 100%; padding: 15px; margin-bottom: 15px; background: #1a1a1a; border: 1px solid #333; color: #fff; font-size: 12px; outline: none; }
 
-        /* 마이페이지/디테일 뷰 섹션 */
         #mypage-view, #product-detail-view { display: none; }
         #mypage-view { padding: 150px 10%; min-height: 80vh; }
         .mypage-container { max-width: 600px; margin: 0 auto; }
@@ -76,11 +75,7 @@
         .mp-edit-btn { background: none; border: 1px solid #444; color: #888; padding: 6px 12px; font-size: 10px; cursor: pointer; transition: 0.3s; }
         .mp-edit-btn:hover { border-color: #eee; color: #eee; }
 
-        .legal-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 6000; display: none; justify-content: center; align-items: center; }
-        .legal-box { width: 100%; max-width: 600px; max-height: 80vh; background: #111; border: 1px solid #333; padding: 40px; overflow-y: auto; text-align: left; position: relative; }
         footer { padding: 80px 5% 50px; border-top: 1px solid #222; font-size: 11px; color: #666; line-height: 1.8; }
-        .footer-links span { color: #888; margin-right: 15px; cursor: pointer; }
-
         #product-detail-view { padding-top: 80px; }
         #product-top { padding: 80px 5%; display: flex; gap: 60px; min-height: 80vh; align-items: flex-start; }
         .slider-container { flex: 1.2; position: relative; border: 1px solid #222; overflow: hidden; background: #1a1a1a; aspect-ratio: 1/1; max-width: 500px; }
@@ -107,7 +102,7 @@
         <div style="border-top:1px solid #222; padding-top:20px;"><div style="display:flex; justify-content:space-between; margin-bottom:20px; font-weight:700;"><span>TOTAL</span><span id="cartTotalText">₩0</span></div><button style="width:100%; padding:20px; background:#eee; color:#111; border:none; font-weight:900; cursor:pointer;" onclick="alert('준비중')">CHECKOUT</button></div>
     </div>
 
-    <header><div class="logo" onclick="closeAllViews()">LYXX</div><nav><ul id="main-nav"></ul></nav></header>
+    <header><div class="logo" onclick="goHome()">LYXX</div><nav><ul id="main-nav"></ul></nav></header>
 
     <div id="main-view">
         <section id="home"><h1 class="main-logo" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">LYXX</h1><p class="slogan" id="mainSlogan">WANT TO LYXX ME?</p></section>
@@ -156,6 +151,30 @@
     <script>
         const API_URL = 'https://lyxx-official.onrender.com';
         let isLoggedIn = false, currentUser = null, cart = [], currentProductKey = '', currentSlide = 0, shopIdx = 0;
+
+        // ✅ 화면 전환 마스터 함수
+        function goHome() {
+            document.getElementById('mypage-view').style.display = 'none';
+            document.getElementById('product-detail-view').style.display = 'none';
+            document.getElementById('main-view').style.display = 'block';
+            window.scrollTo(0,0);
+        }
+
+        function goShop() {
+            goHome();
+            setTimeout(() => { document.getElementById('shop').scrollIntoView({behavior:'smooth'}); }, 100);
+        }
+
+        function openMypage() {
+            if(!currentUser) return;
+            document.getElementById('main-view').style.display = 'none';
+            document.getElementById('product-detail-view').style.display = 'none';
+            document.getElementById('mypage-view').style.display = 'block';
+            document.getElementById('mp-name').innerText = currentUser.name || "-";
+            document.getElementById('mp-email').innerText = currentUser.email || "-";
+            document.getElementById('mp-addr').innerText = currentUser.address || "No address registered.";
+            window.scrollTo(0,0);
+        }
 
         window.addEventListener('scroll', () => { 
             const s = document.getElementById('mainSlogan'); 
@@ -232,23 +251,6 @@
             } catch(e) { alert("Change failed."); }
         }
 
-        function openMypage() {
-            if(!currentUser) return;
-            document.getElementById('main-view').style.display = 'none';
-            document.getElementById('product-detail-view').style.display = 'none';
-            document.getElementById('mypage-view').style.display = 'block';
-            document.getElementById('mp-name').innerText = currentUser.name || "-";
-            document.getElementById('mp-email').innerText = currentUser.email || "-";
-            document.getElementById('mp-addr').innerText = currentUser.address || "No address registered.";
-            window.scrollTo(0,0);
-        }
-
-        function closeAllViews() { 
-            document.getElementById('mypage-view').style.display = 'none'; 
-            document.getElementById('product-detail-view').style.display = 'none'; 
-            document.getElementById('main-view').style.display = 'block'; 
-        }
-
         const products = { 'tee': { id:'tee', name:'LYXX Logo tee', price:69000, images:['./반팔티.png'], desc:'PREMIUM COTTON.' }, 'hoodie': { id:'hoodie', name:'LYXX layered tee', price:129000, images:['./후드티.png'], desc:'Y2K STYLE.' }, 'belt': { id:'belt', name:'STAR BELT', price:79000, images:['./벨트.png'], desc:'LEATHER.' }, 'cap': { id:'cap', name:'LYXX BALL CAP', price:49000, images:['./모자.png'], desc:'WASHED COTTON.' }, 'denim': { id:'denim', name:'RAW DENIM PANTS', price:159000, images:['./데님.png'], desc:'SELVEDGE.' } };
         function openProduct(k) { currentProductKey = k; const d = products[k]; document.getElementById('detail-name').innerText = d.name; document.getElementById('detail-price').innerText = `₩${d.price.toLocaleString()}`; document.getElementById('detail-desc').innerText = d.desc; const w = document.getElementById('detailSlider'); w.innerHTML = ''; (d.images.length > 0 ? d.images : ['data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=']).forEach(s => { w.innerHTML += `<img src="${s}">`; }); document.getElementById('main-view').style.display = 'none'; document.getElementById('mypage-view').style.display = 'none'; document.getElementById('product-detail-view').style.display = 'block'; window.scrollTo(0,0); }
         function moveSlide(n) { const max = document.getElementById('detailSlider').children.length || 1; currentSlide = (currentSlide + n + max) % max; document.getElementById('detailSlider').style.transform = `translateX(-${currentSlide * 100}%)`; }
@@ -258,8 +260,8 @@
         
         function updateNavUI() { 
             const nav = document.getElementById('main-nav'); 
-            let menu = `<li><button class="nav-btn" onclick="closeAllViews()">HOME</button></li><li><button class="nav-btn" onclick="closeAllViews(); document.getElementById('shop').scrollIntoView({behavior:'smooth'});">SHOP</button></li>`; 
-            if (isLoggedIn) menu += `<li><button class="nav-btn" onclick="openMypage()">MY PAGE</button></li><li><button class="nav-btn" onclick="isLoggedIn=false; currentUser=null; updateNavUI(); closeAllViews();">LOGOUT</button></li>`; 
+            let menu = `<li><button class="nav-btn" onclick="goHome()">HOME</button></li><li><button class="nav-btn" onclick="goShop()">SHOP</button></li>`; 
+            if (isLoggedIn) menu += `<li><button class="nav-btn" onclick="openMypage()">MY PAGE</button></li><li><button class="nav-btn" onclick="isLoggedIn=false; currentUser=null; updateNavUI(); goHome();">LOGOUT</button></li>`; 
             else menu += `<li><button class="nav-btn" onclick="openLogin()">LOGIN</button></li><li><button class="nav-btn" onclick="openSignup()">SIGNUP</button></li>`; 
             menu += `<li><button class="cart-trigger-btn cart-nav" onclick="toggleCart()">CART (${cart.reduce((a,b)=>a+b.quantity,0)})</button></li>`; 
             nav.innerHTML = menu; 
