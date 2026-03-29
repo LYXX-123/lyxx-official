@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LYXX Official</title>
     <style>
-        /* 1. 기본 스타일 (복구 완료) */
+        /* 기본 스타일 */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             background-color: #111; color: #eee;
@@ -28,86 +28,50 @@
         nav a:hover, .nav-btn:hover, .cart-trigger-btn:hover { opacity: 1; }
         .cart-nav { border: 1px solid rgba(255,255,255,0.3); padding: 5px 12px; border-radius: 20px; }
 
-        /* 메인 홈 섹션 (로고 호버 효과 유지) */
+        /* 메인 홈 로고 */
         #home { width: 100vw; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; }
         .main-logo { font-size: 15vw; font-weight: 900; letter-spacing: -5px; text-transform: uppercase; background: linear-gradient(145deg, #fff, #bbb, #fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 8px rgba(255,255,255,0.4)); transition: 0.5s cubic-bezier(0.19, 1, 0.22, 1); user-select: none; display: inline-block; padding: 0 0.1em; cursor: pointer; margin: 0; line-height: 1; }
         .main-logo:hover { filter: drop-shadow(0 0 25px rgba(255,255,255,0.9)); transform: scale(1.05); letter-spacing: 15px; }
         .slogan { font-size: 14px; font-weight: 300; text-transform: uppercase; letter-spacing: 5px; margin-top: 20px; opacity: 0.6; transition: transform 0.5s ease-out; }
 
-        /* 상품 카드 리빌 효과 유지 */
+        /* 상품 카드 리빌 */
         .product-card { background-color: #1a1a1a; border: 1px solid #222; padding: 20px; text-align: left; cursor: pointer; opacity: 0; transform: translateY(60px); transition: all 1s cubic-bezier(0.23, 1, 0.32, 1); }
         .product-card.visible { opacity: 1; transform: translateY(0); }
         .product-card:hover { border-color: #eee; transform: translateY(-10px) !important; }
 
-        /* ✨ [복구 완료] 모달창 공통 스타일 (로그인/회원가입/마이페이지 다시 중앙으로!) */
-        .auth-modal { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: rgba(0,0,0,0.95); z-index: 5000; 
-            display: none; justify-content: center; align-items: center; /* 중앙 정렬 핵심 */
-            backdrop-filter: blur(10px); 
-        }
-        .auth-box { 
-            width: 400px; padding: 60px 40px; border: 1px solid #222; background: #111; 
-            text-align: center; position: relative; 
-            filter: drop-shadow(0 0 15px rgba(0,0,0,0.5));
-        }
+        /* 모달 스타일 */
+        .auth-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 5000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(10px); }
+        .auth-box { width: 400px; padding: 60px 40px; border: 1px solid #222; background: #111; text-align: center; position: relative; }
         .auth-box h2 { font-size: 22px; font-weight: 900; margin-bottom: 35px; letter-spacing: 2px; text-transform: uppercase; }
-        .auth-box input { 
-            width: 100%; padding: 15px; margin-bottom: 15px; 
-            background: #1a1a1a; border: 1px solid #333; color: #fff; 
-            font-size: 12px; outline: none; transition: 0.3s;
-        }
-        .auth-box input:focus { border-color: #eee; }
-        .auth-submit { 
-            width: 100%; padding: 15px; background: #eee; color: #111; 
-            border: none; font-weight: 900; margin-top: 10px; 
-            text-transform: uppercase; cursor: pointer; transition: 0.3s;
-        }
-        .auth-submit:hover { background: #fff; }
+        .auth-box input { width: 100%; padding: 15px; margin-bottom: 15px; background: #1a1a1a; border: 1px solid #333; color: #fff; font-size: 12px; outline: none; }
+        .auth-submit { width: 100%; padding: 15px; background: #eee; color: #111; border: none; font-weight: 900; margin-top: 10px; text-transform: uppercase; cursor: pointer; }
         .auth-close { position: absolute; top: 20px; right: 20px; font-size: 20px; color: #fff; background: none; border: none; cursor: pointer; }
         .forgot-btn { background: none; border: none; color: #888; font-size: 11px; margin-top: 15px; text-decoration: underline; cursor: pointer; }
 
-        /* ✨ [복구 완료] 장바구니 사이드바 스타일 (5번째 사진 쌩HTML 문제 해결) */
-        .cart-sidebar { 
-            position: fixed; top: 0; right: -400px; width: 400px; height: 100%; 
-            background: #111; border-left: 1px solid #333; z-index: 4000; 
-            padding: 40px; transition: right 0.5s cubic-bezier(0.77, 0, 0.175, 1); 
-            display: flex; flex-direction: column; 
-        }
+        /* 장바구니 */
+        .cart-sidebar { position: fixed; top: 0; right: -400px; width: 400px; height: 100%; background: #111; border-left: 1px solid #333; z-index: 4000; padding: 40px; transition: right 0.5s cubic-bezier(0.77, 0, 0.175, 1); display: flex; flex-direction: column; }
         .cart-sidebar.active { right: 0; }
         .cart-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
-        .cart-header h3 { font-size: 18px; text-transform: uppercase; letter-spacing: 2px; }
         .close-cart { background: none; border: none; color: #fff; font-size: 24px; cursor: pointer; }
-        
         .cart-items-container { flex-grow: 1; overflow-y: auto; border-top: 1px solid #222; padding-top: 20px; }
-        /* 장바구니 내부 아이템 스타일 정의 */
         .cart-item { display: flex; gap: 15px; margin-bottom: 25px; align-items: center; }
         .cart-item-img { width: 60px; height: 60px; background: #222; object-fit: cover; border: 1px solid #333; }
         .qty-control { display: flex; align-items: center; gap: 10px; margin-top: 8px; }
         .qty-btn { background: none; border: 1px solid #444; color: #eee; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 12px; cursor: pointer; }
-        
         .cart-footer { border-top: 1px solid #222; padding-top: 20px; }
-        .cart-total { display: flex; justify-content: space-between; margin-bottom: 20px; font-weight: 700; font-size: 16px; text-transform: uppercase; }
-        .checkout-btn { 
-            width: 100%; padding: 15px; background: #eee; color: #111; 
-            border: none; font-weight: 900; text-transform: uppercase; 
-            letter-spacing: 2px; transition: 0.3s; cursor: pointer; 
-        }
-        .checkout-btn:hover { background: #fff; }
+        .cart-total { display: flex; justify-content: space-between; margin-bottom: 20px; font-weight: 700; }
+        .checkout-btn { width: 100%; padding: 15px; background: #eee; color: #111; border: none; font-weight: 900; text-transform: uppercase; letter-spacing: 2px; cursor: pointer; }
 
-        /* 상세페이지 이미지 슬라이더 스타일 (유지) */
+        /* 상품 상세 페이지 슬라이더 */
         #product-detail-view { display: none; padding-top: 80px; }
         #product-top { padding: 80px 5%; display: flex; gap: 60px; min-height: 80vh; align-items: flex-start; }
-        
         .slider-container { flex: 1.2; position: relative; border: 1px solid #222; overflow: hidden; background: #1a1a1a; aspect-ratio: 1/1; }
         .slider-wrapper { display: flex; transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1); height: 100%; }
         .slider-wrapper img { width: 100%; height: 100%; object-fit: cover; flex-shrink: 0; }
-        
         .slide-btn { position: absolute; top: 50%; transform: translateY(-50%); background: rgba(0,0,0,0.5); color: #fff; border: none; padding: 15px 10px; cursor: pointer; font-size: 20px; z-index: 10; opacity: 0; transition: 0.3s; }
         .slider-container:hover .slide-btn { opacity: 1; }
         .prev-btn { left: 0; }
         .next-btn { right: 0; }
-        
         .slider-dots { position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 11; }
         .dot { width: 6px; height: 6px; border-radius: 50%; background: rgba(255,255,255,0.3); cursor: pointer; transition: 0.3s; }
         .dot.active { background: #fff; width: 20px; border-radius: 10px; }
@@ -115,6 +79,7 @@
         .action-btn { flex: 1; padding: 20px; font-weight: 700; text-transform: uppercase; letter-spacing: 3px; border: 1px solid #444; color: #888; background: none; transition: 0.3s; cursor: pointer; }
         .buy-btn { background-color: #eee; color: #111; border: none; }
 
+        /* 상품 그리드 */
         #shop { padding: 150px 5% 100px; width: 100%; }
         #shop h2 { font-size: 40px; font-weight: 700; text-transform: uppercase; margin-bottom: 80px; text-align: center; letter-spacing: 10px; }
         .product-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; max-width: 1200px; margin: 0 auto; }
@@ -128,51 +93,15 @@
 
     <div id="intro-overlay"><div class="intro-logo">LYXX</div></div>
 
-    <div class="auth-modal" id="loginModal">
-        <div class="auth-box">
-            <button class="auth-close" onclick="closeModals()">×</button>
-            <h2>Login</h2>
-            <input type="text" id="loginId" placeholder="ID">
-            <input type="password" id="loginPw" placeholder="PASSWORD" onkeyup="if(window.event.keyCode==13){handleLogin()}">
-            <button class="auth-submit" onclick="handleLogin()">Enter</button>
-            <button class="forgot-btn" onclick="openFindPw()">Forgot Password?</button>
-        </div>
-    </div>
-
-    <div class="auth-modal" id="findPwModal">
-        <div class="auth-box">
-            <button class="auth-close" onclick="closeModals()">×</button>
-            <h2>Find Password</h2>
-            <input type="text" id="findId" placeholder="ENTER YOUR ID">
-            <input type="email" id="findEmail" placeholder="ENTER YOUR EMAIL" onkeyup="if(window.event.keyCode==13){handleFindPassword()}">
-            <button class="auth-submit" onclick="handleFindPassword()">Send Password to Mail</button>
-        </div>
-    </div>
-
-    <div class="auth-modal" id="signupModal">
-        <div class="auth-box">
-            <button class="auth-close" onclick="closeModals()">×</button>
-            <h2>Sign Up</h2>
-            <input type="text" id="signupName" placeholder="NAME">
-            <input type="text" id="signupId" placeholder="ID">
-            <input type="password" id="signupPw" placeholder="PASSWORD">
-            <input type="email" id="signupEmail" placeholder="EMAIL" onkeyup="if(window.event.keyCode==13){handleSignup()}">
-            <button class="auth-submit" onclick="handleSignup()">Create Account</button>
-        </div>
-    </div>
+    <div class="auth-modal" id="loginModal"><div class="auth-box"><button class="auth-close" onclick="closeModals()">×</button><h2>Login</h2><input type="text" id="loginId" placeholder="ID"><input type="password" id="loginPw" placeholder="PASSWORD" onkeyup="if(window.event.keyCode==13){handleLogin()}"><button class="auth-submit" onclick="handleLogin()">Enter</button><button class="forgot-btn" onclick="openFindPw()">Forgot Password?</button></div></div>
+    <div class="auth-modal" id="findPwModal"><div class="auth-box"><button class="auth-close" onclick="closeModals()">×</button><h2>Find Password</h2><input type="text" id="findId" placeholder="ENTER YOUR ID"><input type="email" id="findEmail" placeholder="ENTER YOUR EMAIL" onkeyup="if(window.event.keyCode==13){handleFindPassword()}"><button class="auth-submit" onclick="handleFindPassword()">Send Password to Mail</button></div></div>
+    <div class="auth-modal" id="signupModal"><div class="auth-box"><button class="auth-close" onclick="closeModals()">×</button><h2>Sign Up</h2><input type="text" id="signupName" placeholder="NAME"><input type="text" id="signupId" placeholder="ID"><input type="password" id="signupPw" placeholder="PASSWORD"><input type="email" id="signupEmail" placeholder="EMAIL" onkeyup="if(window.event.keyCode==13){handleSignup()}"><button class="auth-submit" onclick="handleSignup()">Create Account</button></div></div>
 
     <div class="cart-sidebar" id="cartSidebar">
-        <div class="cart-header">
-            <h3>CART</h3>
-            <button class="close-cart" onclick="toggleCart()">×</button>
-        </div>
-        <div id="cartItemsList" class="cart-items-container">
-            </div>
+        <div class="cart-header"><h3>CART</h3><button class="close-cart" onclick="toggleCart()">×</button></div>
+        <div id="cartItemsList" class="cart-items-container"></div>
         <div class="cart-footer">
-            <div class="cart-total">
-                <span>TOTAL</span>
-                <span id="cartTotalText">₩0</span>
-            </div>
+            <div class="cart-total"><span>TOTAL</span><span id="cartTotalText">₩0</span></div>
             <button class="checkout-btn" onclick="alert('주문 기능은 준비 중입니다!')">CHECKOUT</button>
         </div>
     </div>
@@ -184,8 +113,8 @@
         <section id="shop">
             <h2>SHOP</h2>
             <div class="product-grid">
-                <div class="product-card" onclick="openProduct('tee')"><div class="img-box"><img src="./반팔티.jpg"></div><p>LYXX Crop tee</p><p style="opacity:0.5;">₩69,000</p></div>
-                <div class="product-card" onclick="openProduct('hoodie')"><div class="img-box"><p style="opacity:0.1;">IMAGE</p></div><p>CONCRETE HOODIE</p><p style="opacity:0.5;">₩129,000</p></div>
+                <div class="product-card" onclick="openProduct('tee')"><div class="img-box"><img src="./반팔티.png"></div><p>LYXX Logo tee</p><p style="opacity:0.5;">₩69,000</p></div>
+                <div class="product-card" onclick="openProduct('hoodie')"><div class="img-box"><img src="./후드티.png"></div><p>LYXX layered tee</p><p style="opacity:0.5;">₩129,000</p></div>
                 <div class="product-card" onclick="openProduct('belt')"><div class="img-box"><p style="opacity:0.1;">IMAGE</p></div><p>STAR BELT</p><p style="opacity:0.5;">₩79,000</p></div>
             </div>
         </section>
@@ -213,24 +142,13 @@
     </div>
 
     <script>
-        // 자바스크립트 로직 (기존과 동일, 복구된 HTML 구조에 맞춰 작동함)
-        window.addEventListener('load', () => {
-            setTimeout(() => {
-                document.getElementById('intro-overlay').classList.add('fade-out');
-                initScrollObserver();
-            }, 2500);
-        });
-
+        window.addEventListener('load', () => { setTimeout(() => { document.getElementById('intro-overlay').classList.add('fade-out'); initScrollObserver(); }, 2500); });
         function initScrollObserver() {
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); });
-            }, { threshold: 0.1 });
+            const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); }); }, { threshold: 0.1 });
             document.querySelectorAll('.product-card').forEach(card => observer.observe(card));
         }
-
         window.addEventListener('scroll', () => {
-            const scrollPos = window.pageYOffset;
-            const slogan = document.getElementById('mainSlogan');
+            const scrollPos = window.pageYOffset; const slogan = document.getElementById('mainSlogan');
             if(scrollPos < 800) { slogan.style.transform = `translateY(${scrollPos * 0.2}px)`; slogan.style.opacity = 0.6 - (scrollPos / 1000); }
         });
 
@@ -238,9 +156,10 @@
         const API_URL = 'https://lyxx-official.onrender.com';
         
         const products = {
-            'tee': { id: 'tee', name: 'LYXX Crop tee', price: 69000, images: ['./반팔티.jpg', './디테일1.jpg', './디테일2.jpg'], desc: 'PREMIUM COTTON.<br>SIGNATURE CROPPED FIT.' },
-            'hoodie': { id: 'hoodie', name: 'CONCRETE HOODIE', price: 129000, images: [], desc: 'HEAVYWEIGHT OVERSIZED FIT.' },
-            'belt': { id: 'belt', name: 'STAR BELT', price: 79000, images: [], desc: 'GENUINE LEATHER.<br>STAR BUCKLE DETAIL.' }
+            // ✅ 상세페이지용 경로도 .png로 수정했습니다
+            'tee': { id: 'tee', name: 'LYXX Logo tee', price: 69000, images: ['./반팔티.png'], desc: 'PREMIUM COTTON.<br>SIGNATURE SLIM FIT.' },
+            'hoodie': { id: 'hoodie', name: 'LYXX layered tee', price: 129000, images: ['./후드티.png'], desc: 'Y2K STYLE LAYERED DESIGN.' },
+            'belt': { id: 'belt', name: 'STAR BELT', price: 79000, images: [], desc: 'GENUINE LEATHER.' }
         };
 
         const closeModals = () => document.querySelectorAll('.auth-modal').forEach(m => m.style.display = 'none');
@@ -250,44 +169,30 @@
         const toggleCart = () => document.getElementById('cartSidebar').classList.toggle('active');
 
         function openProduct(key) {
-            currentProductKey = key; const data = products[key];
-            currentSlide = 0;
+            currentProductKey = key; const data = products[key]; currentSlide = 0;
             document.getElementById('detail-name').innerText = data.name;
             document.getElementById('detail-price').innerText = `₩${data.price.toLocaleString()}`;
             document.getElementById('detail-desc').innerHTML = data.desc;
-            
             const wrapper = document.getElementById('detailSlider');
             const dots = document.getElementById('sliderDots');
             wrapper.innerHTML = ''; dots.innerHTML = '';
-            
             const imgs = data.images.length > 0 ? data.images : ['data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII='];
-            
             imgs.forEach((src, i) => {
                 wrapper.innerHTML += `<img src="${src}">`;
                 dots.innerHTML += `<div class="dot ${i===0?'active':''}" onclick="goToSlide(${i})"></div>`;
             });
-            
             updateSlide();
             document.getElementById('main-view').style.display = 'none';
             document.getElementById('product-detail-view').style.display = 'block';
             window.scrollTo(0,0);
         }
 
-        function moveSlide(n) {
-            const data = products[currentProductKey];
-            const max = data.images.length > 0 ? data.images.length : 1;
-            currentSlide = (currentSlide + n + max) % max;
-            updateSlide();
-        }
-
+        function moveSlide(n) { const max = products[currentProductKey].images.length || 1; currentSlide = (currentSlide + n + max) % max; updateSlide(); }
         function goToSlide(n) { currentSlide = n; updateSlide(); }
-
         function updateSlide() {
             const wrapper = document.getElementById('detailSlider');
             wrapper.style.transform = `translateX(-${currentSlide * 100}%)`;
-            document.querySelectorAll('.dot').forEach((dot, i) => {
-                dot.classList.toggle('active', i === currentSlide);
-            });
+            document.querySelectorAll('.dot').forEach((dot, i) => { dot.classList.toggle('active', i === currentSlide); });
         }
 
         async function handleLogin() {
@@ -296,23 +201,6 @@
                 const res = await fetch(`${API_URL}/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: id, password: pw }) });
                 const data = await res.json();
                 if (data.success) { isLoggedIn = true; currentUser = data.name; updateNavUI(); closeModals(); alert(`Welcome!`); } else alert(data.message);
-            } catch(e) { alert("Server Error"); }
-        }
-
-        async function handleFindPassword() {
-            const id = document.getElementById('findId').value, email = document.getElementById('findEmail').value;
-            if(!id || !email) return alert("빈칸을 채워주세요.");
-            try {
-                const res = await fetch(`${API_URL}/find-password`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: id, email: email }) });
-                const data = await res.json(); alert(data.message); if(data.success) closeModals();
-            } catch(e) { alert("비밀번호 찾기 실패"); }
-        }
-
-        async function handleSignup() {
-            const name = document.getElementById('signupName').value, id = document.getElementById('signupId').value, pw = document.getElementById('signupPw').value, email = document.getElementById('signupEmail').value;
-            try {
-                const res = await fetch(`${API_URL}/signup`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: id, password: pw, name, email }) });
-                const data = await res.json(); alert(data.message); if (data.success) closeModals();
             } catch(e) { alert("Server Error"); }
         }
 
@@ -346,14 +234,11 @@
         }
 
         function changeQty(i, d) { cart[i].quantity += d; if(cart[i].quantity < 1) cart.splice(i,1); updateCartUI(); }
-
         document.getElementById('addToCartBtn').onclick = () => {
-            const data = products[currentProductKey];
-            const item = cart.find(i => i.id === data.id);
+            const data = products[currentProductKey]; const item = cart.find(i => i.id === data.id);
             if(item) item.quantity++; else cart.push({...data, quantity: 1});
             updateCartUI(); toggleCart();
         };
-
         updateNavUI();
     </script>
 </body>
