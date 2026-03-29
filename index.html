@@ -178,13 +178,10 @@
                 const res = await fetch(`${API_URL}/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: id, password: pw }) }); 
                 const data = await res.json(); 
                 if (data.success) { 
-                    isLoggedIn = true; 
-                    currentUser = data.user; 
-                    updateNavUI(); 
-                    closeModals(); 
-                    // 로그인 성공 알림 제거
+                    isLoggedIn = true; currentUser = data.user; 
+                    updateNavUI(); closeModals(); 
                 } else alert(data.message); 
-            } catch(e) { /* 에러 알림 제거 */ } 
+            } catch(e) {} 
         }
 
         async function handleSignup() { 
@@ -240,8 +237,19 @@
         function addToCart() { const d = products[currentProductKey]; const item = cart.find(i => i.id === d.id); if(item) item.quantity++; else cart.push({...d, quantity:1}); updateCartUI(); toggleCart(); }
         function changeQty(i, d) { cart[i].quantity += d; if(cart[i].quantity < 1) cart.splice(i,1); updateCartUI(); }
         function updateCartUI() { const l = document.getElementById('cartItemsList'); l.innerHTML = ''; let t = 0; cart.forEach((item, i) => { t += item.price * item.quantity; l.innerHTML += `<div style="display:flex; gap:15px; margin-bottom:20px;"><img src="${item.images[0]||''}" style="width:60px; height:60px; object-fit:cover;"><div style="flex:1;"><p style="font-size:12px;">${item.name}</p><p style="font-size:12px; opacity:0.5;">₩${(item.price * item.quantity).toLocaleString()}</p><div style="display:flex; align-items:center; gap:10px; margin-top:5px;"><button onclick="changeQty(${i},-1)" class="qty-btn">-</button><span>${item.quantity}</span><button onclick="changeQty(${i},1)" class="qty-btn">+</button></div></div></div>`; }); document.getElementById('cartTotalText').innerText = `₩${t.toLocaleString()}`; updateNavUI(); }
-        function updateNavUI() { const nav = document.getElementById('main-nav'); let menu = `<li><div class="nav-btn" onclick="closeAllViews()">HOME</div></li><li><div class="nav-btn" onclick="closeAllViews(); document.getElementById('shop').scrollIntoView({behavior:'smooth'});">SHOP</div></li>`; if (isLoggedIn) menu += `<li><button class="nav-btn" onclick="openMypage()">MY PAGE</button></li><li><button class="nav-btn" onclick="isLoggedIn=false; currentUser=null; updateNavUI(); closeAllViews();">LOGOUT</button></li>`; else menu += `<li><button class="nav-btn" onclick="openLogin()">LOGIN</button></li><li><button class="nav-btn" onclick="openSignup()">SIGNUP</button></li>`; menu += `<li><button class="cart-trigger-btn cart-nav" onclick="toggleCart()">CART (${cart.reduce((a,b)=>a+b.quantity,0)})</button></li>`; nav.innerHTML = menu; }
         
+        function updateNavUI() { 
+            const nav = document.getElementById('main-nav'); 
+            let menu = `<li><div class="nav-btn" onclick="closeAllViews()">HOME</div></li><li><div class="nav-btn" onclick="closeAllViews(); document.getElementById('shop').scrollIntoView({behavior:'smooth'});">SHOP</div></li>`; 
+            if (isLoggedIn) menu += `<li><button class="nav-btn" onclick="openMypage()">MY PAGE</button></li><li><button class="nav-btn" onclick="isLoggedIn=false; currentUser=null; updateNavUI(); closeAllViews();">LOGOUT</button></li>`; 
+            else menu += `<li><button class="nav-btn" onclick="openLogin()">LOGIN</button></li><li><button class="nav-btn" onclick="openSignup()">SIGNUP</button></li>`; 
+            menu += `<li><button class="cart-trigger-btn cart-nav" onclick="toggleCart()">CART (${cart.reduce((a,b)=>a+b.quantity,0)})</button></li>`; 
+            nav.innerHTML = menu; 
+        }
+        
+        const legalData = { privacy: { title: "개인정보 처리방침", content: "수집: 이름, 이메일, 주소. 보유: 탈퇴 시까지." }, refund: { title: "교환 및 환불 규정", content: "7일 이내 반품 가능." }, terms: { title: "이용약관", content: "사이트 이용 약관입니다." } };
+        function showLegal(t) { document.getElementById('legalTitle').innerText = legalData[t].title; document.getElementById('legalContent').innerHTML = legalData[t].content; document.getElementById('legalPop').style.display = 'flex'; }
+        function closeLegal() { document.getElementById('legalPop').style.display = 'none'; }
         window.addEventListener('load', () => { setTimeout(() => { document.getElementById('intro-overlay').classList.add('fade-out'); initScrollObserver(); }, 2500); });
         function initScrollObserver() { const obs = new IntersectionObserver((es) => { es.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }); }, { threshold: 0.1 }); document.querySelectorAll('.product-card').forEach(c => obs.observe(c)); }
         updateNavUI();
