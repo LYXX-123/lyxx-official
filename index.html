@@ -31,12 +31,7 @@
         .cart-nav { border: 1px solid rgba(255,255,255,0.3); padding: 5px 12px; border-radius: 20px; }
 
         #home { width: 100vw; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; background: transparent; z-index: 20; }
-        .main-logo { 
-            font-size: 15vw; font-weight: 900; letter-spacing: -5px; text-transform: uppercase; 
-            background: linear-gradient(145deg, #fff, #bbb, #fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
-            filter: drop-shadow(0 0 10px rgba(255,255,255,0.5)); text-shadow: 0 0 5px rgba(255,255,255,0.3); 
-            transition: 0.5s cubic-bezier(0.19, 1, 0.22, 1); user-select: none; line-height: 1; cursor: pointer; position: relative; z-index: 30;
-        }
+        .main-logo { font-size: 15vw; font-weight: 900; letter-spacing: -5px; text-transform: uppercase; background: linear-gradient(145deg, #fff, #bbb, #fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 10px rgba(255,255,255,0.5)); text-shadow: 0 0 5px rgba(255,255,255,0.3); transition: 0.5s cubic-bezier(0.19, 1, 0.22, 1); user-select: none; line-height: 1; cursor: pointer; position: relative; z-index: 30; }
         .main-logo:hover { filter: drop-shadow(0 0 20px rgba(255,255,255,0.8)); transform: scale(1.05); letter-spacing: 15px; }
         .slogan { font-size: 14px; font-weight: 300; text-transform: uppercase; letter-spacing: 5px; margin-top: 20px; opacity: 0.6; transition: transform 0.1s linear; position: relative; z-index: 30; }
 
@@ -60,7 +55,6 @@
 
         .cart-sidebar { position: fixed; top: 0; right: -400px; width: 400px; height: 100%; background: #111; border-left: 1px solid #333; z-index: 9000; padding: 40px; transition: right 0.5s cubic-bezier(0.77, 0, 0.175, 1); display: flex; flex-direction: column; }
         .cart-sidebar.active { right: 0; }
-        .qty-btn { background: none; border: 1px solid #444; color: #eee; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 12px; cursor: pointer; }
 
         .auth-modal, .legal-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 9999; display: none; justify-content: center; align-items: center; backdrop-filter: blur(10px); }
         .auth-box, .legal-box { width: 400px; padding: 60px 40px; border: 1px solid #333; background: #111; position: relative; text-align: center; }
@@ -78,7 +72,6 @@
         footer { padding: 80px 5% 50px; border-top: 1px solid #222; font-size: 11px; color: #666; line-height: 1.8; position: relative; z-index: 10; }
         .footer-links { display: flex; gap: 30px; margin-top: 25px; }
         .footer-links span { color: #888; cursor: pointer; transition: 0.3s; }
-        .footer-links span:hover { color: #eee; }
 
         #product-detail-view { display: none; padding-top: 80px; position: relative; z-index: 50; }
         #product-top { padding: 80px 5%; display: flex; gap: 60px; min-height: 80vh; align-items: flex-start; }
@@ -166,10 +159,15 @@
         const API_URL = 'https://lyxx-official.onrender.com';
         let isLoggedIn = false, currentUser = null, cart = [], currentProductKey = '', currentSlide = 0, shopIdx = 0;
 
-        function goHome() { document.getElementById('mypage-view').style.display = 'none'; document.getElementById('product-detail-view').style.display = 'none'; document.getElementById('main-view').style.display = 'block'; window.scrollTo(0,0); }
+        function goHome() { 
+            document.getElementById('mypage-view').style.display = 'none'; 
+            document.getElementById('product-detail-view').style.display = 'none'; 
+            document.getElementById('main-view').style.display = 'block'; 
+            window.scrollTo(0,0); 
+        }
         function goShop() { goHome(); setTimeout(() => { document.getElementById('shop').scrollIntoView({behavior:'smooth'}); }, 100); }
         
-        // ✅ [수정] 로그인 상태를 확실히 체크하여 마이페이지 노출
+        // ✅ [강화] 로그인 상태와 유저 데이터를 즉시 동기화하여 마이페이지 진입 보장
         function openMypage() {
             if(!isLoggedIn || !currentUser) { openLogin(); return; }
             document.getElementById('main-view').style.display = 'none';
@@ -205,8 +203,9 @@
                 const res = await fetch(`${API_URL}/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: id, password: pw }) }); 
                 const data = await res.json(); 
                 if (data.success) { 
+                    // ✅ 로그인 성공 즉시 전역 변수에 데이터 고정
                     isLoggedIn = true; 
-                    currentUser = data.user; // ✅ 유저 데이터 저장
+                    currentUser = data.user; 
                     updateNavUI(); 
                     closeModals(); 
                 } else alert(data.message); 
@@ -223,8 +222,26 @@
         }
 
         async function handleFindPassword() { const id = document.getElementById('findId').value, email = document.getElementById('findEmail').value; try { const res = await fetch(`${API_URL}/find-password`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: id, email }) }); const data = await res.json(); alert(data.message); if(data.success) closeModals(); } catch(e) { alert("Error"); } }
-        async function handleUpdateAddress(newAddr) { const detail = prompt("상세주소를 입력하세요:"); const fullAddr = newAddr + (detail ? " " + detail : ""); try { const res = await fetch(`${API_URL}/update-profile`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: currentUser.username, address: fullAddr }) }); const data = await res.json(); if(data.success) { currentUser.address = fullAddr; document.getElementById('mp-addr').innerText = fullAddr; alert("Address updated."); } } catch(e) { alert("Update failed."); } }
-        async function handleChangePassword() { const np = document.getElementById('newPw').value, cnp = document.getElementById('confirmNewPw').value; if(np !== cnp) return alert("Passwords do not match."); try { const res = await fetch(`${API_URL}/update-profile`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: currentUser.username, password: np }) }); const data = await res.json(); if(data.success) { alert("Password changed."); closeModals(); } } catch(e) { alert("Change failed."); } }
+
+        async function handleUpdateAddress(newAddr) {
+            const detail = prompt("상세주소를 입력하세요:");
+            const fullAddr = newAddr + (detail ? " " + detail : "");
+            try {
+                const res = await fetch(`${API_URL}/update-profile`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: currentUser.username, address: fullAddr }) });
+                const data = await res.json();
+                if(data.success) { currentUser.address = fullAddr; document.getElementById('mp-addr').innerText = fullAddr; alert("Address updated."); }
+            } catch(e) { alert("Update failed."); }
+        }
+
+        async function handleChangePassword() {
+            const np = document.getElementById('newPw').value, cnp = document.getElementById('confirmNewPw').value;
+            if(np !== cnp) return alert("Passwords do not match.");
+            try {
+                const res = await fetch(`${API_URL}/update-profile`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: currentUser.username, password: np }) });
+                const data = await res.json();
+                if(data.success) { alert("Password changed."); closeModals(); }
+            } catch(e) { alert("Change failed."); }
+        }
 
         const products = { 'tee': { id:'tee', name:'LYXX Logo tee', price:69000, images:['./반팔티.png'], desc:'PREMIUM COTTON.' }, 'hoodie': { id:'hoodie', name:'LYXX layered tee', price:129000, images:['./후드티.png'], desc:'Y2K STYLE.' }, 'belt': { id:'belt', name:'STAR BELT', price:79000, images:['./벨트.png'], desc:'LEATHER.' }, 'cap': { id:'cap', name:'LYXX BALL CAP', price:49000, images:['./모자.png'], desc:'WASHED COTTON.' }, 'denim': { id:'denim', name:'RAW DENIM PANTS', price:159000, images:['./데님.png'], desc:'SELVEDGE.' } };
         function openProduct(k) { currentProductKey = k; const d = products[k]; document.getElementById('detail-name').innerText = d.name; document.getElementById('detail-price').innerText = `₩${d.price.toLocaleString()}`; document.getElementById('detail-desc').innerText = d.desc; const w = document.getElementById('detailSlider'); w.innerHTML = ''; (d.images.length > 0 ? d.images : ['data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=']).forEach(s => { w.innerHTML += `<img src="${s}">`; }); document.getElementById('main-view').style.display = 'none'; document.getElementById('mypage-view').style.display = 'none'; document.getElementById('product-detail-view').style.display = 'block'; window.scrollTo(0,0); }
