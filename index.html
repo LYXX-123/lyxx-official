@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LYXX Official</title>
     <style>
-        /* 1. 기본 스타일 */
+        /* 기본 스타일 및 애니메이션 (기존 유지) */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             background-color: #111; color: #eee;
@@ -14,13 +14,11 @@
             background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAADIAAAAyCAMAAAAp4WsUAAAABlBMVEUAAAAAAAClZ7nPAAAAAXRSTlMAQObYZgAAADRJREFUeNoNglESwCAMwjr//7vG6b3XQJ4gAgj7A6VqI5iI4P6u4nQ80y4gB16oAn6l2mYvPgD2A/c5h64NAAAAAElFTkSuQmCC');
         }
 
-        /* 인트로 애니메이션 */
         #intro-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #000; z-index: 9999; display: flex; justify-content: center; align-items: center; transition: opacity 1s ease-in-out; }
         .intro-logo { font-size: 8vw; font-weight: 900; letter-spacing: 50px; color: #fff; opacity: 0; animation: introAnim 2.5s cubic-bezier(0.19, 1, 0.22, 1) forwards; }
         @keyframes introAnim { 0% { opacity: 0; letter-spacing: 50px; filter: blur(10px); } 50% { opacity: 1; filter: blur(0); } 100% { opacity: 1; letter-spacing: 10px; } }
         .fade-out { opacity: 0 !important; pointer-events: none; }
 
-        /* 헤더 */
         header { width: 100%; height: 80px; display: flex; justify-content: space-between; align-items: center; padding: 0 5%; position: fixed; top: 0; left: 0; z-index: 1000; background: rgba(17, 17, 17, 0.8); backdrop-filter: blur(5px); }
         .logo { font-size: 24px; font-weight: 900; letter-spacing: -1px; text-decoration: none; color: inherit; }
         nav ul { display: flex; gap: 20px; list-style: none; align-items: center; }
@@ -28,37 +26,17 @@
         nav a:hover, .nav-btn:hover, .cart-trigger-btn:hover { opacity: 1; }
         .cart-nav { border: 1px solid rgba(255,255,255,0.3); padding: 5px 12px; border-radius: 20px; }
 
-        /* 메인 홈 */
         #home { width: 100vw; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; }
         .main-logo { font-size: 15vw; font-weight: 900; letter-spacing: -5px; text-transform: uppercase; background: linear-gradient(145deg, #fff, #bbb, #fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 8px rgba(255,255,255,0.4)); transition: 0.5s cubic-bezier(0.19, 1, 0.22, 1); user-select: none; display: inline-block; padding: 0 0.1em; cursor: pointer; margin: 0; line-height: 1; }
         .main-logo:hover { filter: drop-shadow(0 0 25px rgba(255,255,255,0.9)); transform: scale(1.05); letter-spacing: 15px; }
-        
-        /* ✨ 슬로건 패럴렉스 준비 */
-        .slogan { 
-            font-size: 14px; font-weight: 300; text-transform: uppercase; letter-spacing: 5px; 
-            margin-top: 20px; opacity: 0.6; 
-            transition: transform 0.1s linear; /* 부드러운 움직임을 위해 짧은 트랜지션 */
-        }
+        .slogan { font-size: 14px; font-weight: 300; text-transform: uppercase; letter-spacing: 5px; margin-top: 20px; opacity: 0.6; transition: transform 0.1s linear; }
 
-        /* SHOP 섹션 (짤림 방지 최적화) */
         #shop { padding: 150px 0 100px; width: 100%; position: relative; overflow: hidden; }
         #shop h2 { font-size: 40px; font-weight: 700; text-transform: uppercase; margin-bottom: 80px; text-align: center; letter-spacing: 10px; }
-        
         .shop-outer { width: 100%; padding: 0 8%; position: relative; }
         .shop-inner { width: 100%; overflow: visible; }
-        
-        .product-carousel { 
-            display: flex; gap: 40px; 
-            transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
-            width: 100%;
-        }
-        
-        .product-card { 
-            min-width: calc((100% - 80px) / 3); 
-            background-color: #1a1a1a; border: 1px solid #222; padding: 20px; 
-            text-align: left; opacity: 0; transform: translateY(60px); 
-            transition: all 1s cubic-bezier(0.23, 1, 0.32, 1);
-        }
+        .product-carousel { display: flex; gap: 40px; transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1); width: 100%; }
+        .product-card { min-width: calc((100% - 80px) / 3); background-color: #1a1a1a; border: 1px solid #222; padding: 20px; text-align: left; opacity: 0; transform: translateY(60px); transition: all 1s cubic-bezier(0.23, 1, 0.32, 1); cursor: pointer; }
         .product-card.visible { opacity: 1; transform: translateY(0); }
         .product-card:hover { border-color: #eee; transform: translateY(-10px) !important; }
 
@@ -70,12 +48,18 @@
         .scroll-bar-container { width: 200px; height: 2px; background: rgba(255,255,255,0.1); margin: 80px auto 0; position: relative; overflow: hidden; border-radius: 2px; }
         .scroll-bar-fill { position: absolute; top: 0; left: 0; width: 33.33%; height: 100%; background: #eee; transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1); }
 
-        /* 푸터 스타일 */
+        /* 푸터 및 법적 모달 스타일 */
         footer { padding: 80px 5% 50px; border-top: 1px solid #222; font-size: 11px; color: #666; line-height: 1.8; }
+        .footer-links a { color: #888; text-decoration: none; margin-right: 15px; cursor: pointer; transition: 0.3s; }
+        .footer-links a:hover { color: #eee; }
 
-        /* 기타 스타일 유지 */
-        .img-box { width: 100%; aspect-ratio: 1/1; background-color: #222; display: flex; justify-content: center; align-items: center; overflow: hidden; margin-bottom: 20px; border: 1px solid #333; }
-        .img-box img { width: 100%; height: 100%; object-fit: cover; }
+        .legal-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.9); z-index: 6000; display: none; justify-content: center; align-items: center; padding: 20px; }
+        .legal-box { width: 100%; max-width: 600px; max-height: 80vh; background: #111; border: 1px solid #333; padding: 40px; overflow-y: auto; position: relative; }
+        .legal-box h3 { margin-bottom: 25px; color: #eee; letter-spacing: 2px; }
+        .legal-box p, .legal-box li { color: #888; font-size: 12px; line-height: 1.8; margin-bottom: 15px; }
+        .legal-box b { color: #ccc; }
+
+        /* 기존 모달 및 상세뷰 유지 */
         .auth-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 5000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(10px); }
         .auth-box { width: 400px; padding: 60px 40px; border: 1px solid #222; background: #111; text-align: center; position: relative; }
         .auth-box input { width: 100%; padding: 15px; margin-bottom: 15px; background: #1a1a1a; border: 1px solid #333; color: #fff; font-size: 12px; outline: none; }
@@ -96,14 +80,34 @@
 
     <div id="intro-overlay"><div class="intro-logo">LYXX</div></div>
 
-    <div class="auth-modal" id="loginModal"><div class="auth-box"><button class="auth-close" onclick="closeModals()">×</button><h2>Login</h2><input type="text" id="loginId" placeholder="ID"><input type="password" id="loginPw" placeholder="PASSWORD" onkeyup="if(window.event.keyCode==13){handleLogin()}"><button class="auth-submit" onclick="handleLogin()">Enter</button><button class="forgot-btn" onclick="openFindPw()" style="background:none; border:none; color:#666; font-size:10px; margin-top:15px; cursor:pointer; text-decoration:underline;">Forgot Password?</button></div></div>
-    <div class="auth-modal" id="findPwModal"><div class="auth-box"><button class="auth-close" onclick="closeModals()">×</button><h2>Find Password</h2><input type="text" id="findId" placeholder="ENTER YOUR ID"><input type="email" id="findEmail" placeholder="ENTER YOUR EMAIL" onkeyup="if(window.event.keyCode==13){handleFindPassword()}"><button class="auth-submit" onclick="handleFindPassword()">Send Password to Mail</button></div></div>
+    <div class="legal-modal" id="privacyModal">
+        <div class="legal-box">
+            <button class="auth-close" onclick="closeLegal()">×</button>
+            <h3>개인정보 처리방침</h3>
+            <p><b>1. 수집하는 개인정보 항목</b><br>LYXX는 회원가입, 원활한 고객상담, 각종 서비스의 제공을 위해 아래와 같은 개인정보를 수집하고 있습니다.<br>- 필수항목: 이름, 아이디, 비밀번호, 이메일</p>
+            <p><b>2. 개인정보의 수집 및 이용 목적</b><br>- 서비스 제공에 관한 계약 이행 및 서비스 제공에 따른 요금정산<br>- 회원제 서비스 이용에 따른 본인확인, 개인 식별, 불량회원의 부정 이용 방지와 비인가 사용 방지</p>
+            <p><b>3. 개인정보의 보유 및 이용기간</b><br>이용자의 개인정보는 원칙적으로 개인정보의 수집 및 이용목적이 달성되면 지체 없이 파기합니다. 단, 전자상거래 등에서의 소비자보호에 관한 법률 등 관계법령의 규정에 의하여 보존할 필요가 있는 경우 관계법령에서 정한 일정 기간 동안 회원정보를 보관합니다.</p>
+        </div>
+    </div>
+
+    <div class="legal-modal" id="refundModal">
+        <div class="legal-box">
+            <button class="auth-close" onclick="closeLegal()">×</button>
+            <h3>청약철회 및 환불 규정</h3>
+            <p><b>1. 교환 및 반품 주소</b><br>- 서울특별시 동대문구 회기동 [상세주소]</p>
+            <p><b>2. 교환 및 반품이 가능한 경우</b><br>- 계약내용에 관한 서면을 받은 날부터 7일. 단, 그 서면을 받은 때보다 재화 등의 공급이 늦게 이루어진 경우에는 재화 등을 공급받거나 재화 등의 공급이 시작된 날부터 7일 이내</p>
+            <p><b>3. 교환 및 반품이 불가능한 경우</b><br>- 이용자에게 책임 있는 사유로 재화 등이 멸실 또는 훼손된 경우<br>- 이용자의 사용 또는 일부 소비에 의하여 재화 등의 가치가 현저히 감소한 경우<br>- 복제가 가능한 재화 등의 포장을 훼손한 경우</p>
+            <p><b>4. 환불 처리</b><br>- 반품 확인 여부를 확인한 후 3영업일 이내에 결제 금액을 환불해 드립니다. 신용카드로 결제하신 경우 신용카드 승인을 취소하여 결제 대금이 청구되지 않게 합니다.</p>
+        </div>
+    </div>
+
+    <div class="auth-modal" id="loginModal"><div class="auth-box"><button class="auth-close" onclick="closeModals()">×</button><h2>Login</h2><input type="text" id="loginId" placeholder="ID"><input type="password" id="loginPw" placeholder="PASSWORD"><button class="auth-submit" onclick="handleLogin()">Enter</button></div></div>
     <div class="auth-modal" id="signupModal">
-        <div class="auth-box" style="width: 450px;">
+        <div class="auth-box">
             <button class="auth-close" onclick="closeModals()">×</button>
             <h2>Sign Up</h2>
             <input type="text" id="signupName" placeholder="NAME"><input type="text" id="signupId" placeholder="ID"><input type="password" id="signupPw" placeholder="PASSWORD"><input type="email" id="signupEmail" placeholder="EMAIL">
-            <div style="text-align: left; margin: 15px 0; font-size: 10px; color: #666;"><input type="checkbox" id="agreeCheck" style="width:auto; cursor:pointer;"> [필수] 개인정보 수집 및 이용 동의<div style="background:#1a1a1a; padding:10px; height:50px; overflow-y:auto; border:1px solid #333; margin-top:5px;">수집 목적: 회원 가입 및 서비스 제공<br>보유 기간: 서비스 탈퇴 시까지 보관</div></div>
+            <div style="text-align: left; margin: 15px 0; font-size: 10px; color: #666;"><input type="checkbox" id="agreeCheck" style="width:auto; cursor:pointer;"> [필수] <a onclick="openLegal('privacy')" style="text-decoration:underline; cursor:pointer;">개인정보 처리방침</a>에 동의합니다.</div>
             <button class="auth-submit" onclick="handleSignup()">Create Account</button>
         </div>
     </div>
@@ -133,26 +137,21 @@
                         <div class="product-card" onclick="openProduct('tee')"><div class="img-box"><img src="./반팔티.png"></div><p>LYXX Logo tee</p><p style="opacity:0.5;">₩69,000</p></div>
                         <div class="product-card" onclick="openProduct('hoodie')"><div class="img-box"><img src="./후드티.png"></div><p>LYXX layered tee</p><p style="opacity:0.5;">₩129,000</p></div>
                         <div class="product-card" onclick="openProduct('belt')"><div class="img-box"><p style="opacity:0.1;">IMAGE</p></div><p>STAR BELT</p><p style="opacity:0.5;">₩79,000</p></div>
-                        <div class="product-card" onclick="alert('준비 중!')"><div class="img-box"><p style="opacity:0.1;">IMAGE</p></div><p>NEW ITEM 04</p><p style="opacity:0.5;">₩0</p></div>
-                        <div class="product-card" onclick="alert('준비 중!')"><div class="img-box"><p style="opacity:0.1;">IMAGE</p></div><p>NEW ITEM 05</p><p style="opacity:0.5;">₩0</p></div>
-                        <div class="product-card" onclick="alert('준비 중!')"><div class="img-box"><p style="opacity:0.1;">IMAGE</p></div><p>NEW ITEM 06</p><p style="opacity:0.5;">₩0</p></div>
-                        <div class="product-card" onclick="alert('준비 중!')"><div class="img-box"><p style="opacity:0.1;">IMAGE</p></div><p>NEW ITEM 07</p><p style="opacity:0.5;">₩0</p></div>
-                        <div class="product-card" onclick="alert('준비 중!')"><div class="img-box"><p style="opacity:0.1;">IMAGE</p></div><p>NEW ITEM 08</p><p style="opacity:0.5;">₩0</p></div>
-                        <div class="product-card" onclick="alert('준비 중!')"><div class="img-box"><p style="opacity:0.1;">IMAGE</p></div><p>NEW ITEM 09</p><p style="opacity:0.5;">₩0</p></div>
+                        <div class="product-card" onclick="alert('준비 중!')"><div class="img-box"></div><p>NEW ITEM 04</p><p style="opacity:0.5;">₩0</p></div>
+                        <div class="product-card" onclick="alert('준비 중!')"><div class="img-box"></div><p>NEW ITEM 05</p><p style="opacity:0.5;">₩0</p></div>
+                        <div class="product-card" onclick="alert('준비 중!')"><div class="img-box"></div><p>NEW ITEM 06</p><p style="opacity:0.5;">₩0</p></div>
+                        <div class="product-card" onclick="alert('준비 중!')"><div class="img-box"></div><p>NEW ITEM 07</p><p style="opacity:0.5;">₩0</p></div>
+                        <div class="product-card" onclick="alert('준비 중!')"><div class="img-box"></div><p>NEW ITEM 08</p><p style="opacity:0.5;">₩0</p></div>
+                        <div class="product-card" onclick="alert('준비 중!')"><div class="img-box"></div><p>NEW ITEM 09</p><p style="opacity:0.5;">₩0</p></div>
                     </div>
                 </div>
-                <div class="carousel-nav">
-                    <div class="nav-btn-container">
-                        <button class="c-btn" onclick="moveCarousel(-1)">❮</button>
-                        <button class="c-btn" onclick="moveCarousel(1)">❯</button>
-                    </div>
-                </div>
+                <div class="carousel-nav"><div class="nav-btn-container"><button class="c-btn" onclick="moveCarousel(-1)">❮</button><button class="c-btn" onclick="moveCarousel(1)">❯</button></div></div>
             </div>
             <div class="scroll-bar-container"><div class="scroll-bar-fill" id="scrollFill"></div></div>
         </section>
 
         <footer>
-            <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 40px;">
+            <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 40px; margin-bottom: 40px;">
                 <div>
                     <p style="color: #eee; font-weight: 700; margin-bottom: 10px;">LYXX OFFICIAL</p>
                     <p>CEO. 용준 지환 | Business License. [준비중]</p>
@@ -161,67 +160,62 @@
                 </div>
                 <div style="text-align: right;"><p>&copy; 2026 LYXX. ALL RIGHTS RESERVED.</p></div>
             </div>
+            <div class="footer-links">
+                <a onclick="openLegal('privacy')">개인정보 처리방침</a>
+                <a onclick="openLegal('refund')">교환 및 환불 규정</a>
+                <a href="#">이용약관</a>
+            </div>
         </footer>
     </div>
 
     <div id="product-detail-view">
         <section id="product-top">
-            <div class="slider-container">
-                <div class="slider-wrapper" id="detailSlider"></div>
-                <button class="slide-btn prev-btn" onclick="moveSlide(-1)" style="position:absolute; left:20px; top:50%; background:none; border:none; color:#fff; font-size:24px; cursor:pointer;">❮</button>
-                <button class="slide-btn next-btn" onclick="moveSlide(1)" style="position:absolute; right:20px; top:50%; background:none; border:none; color:#fff; font-size:24px; cursor:pointer;">❯</button>
-                <div id="sliderDots" style="position:absolute; bottom:20px; width:100%; display:flex; justify-content:center; gap:10px;"></div>
-            </div>
+            <div class="slider-container"><div class="slider-wrapper" id="detailSlider"></div></div>
             <div style="flex:1;">
                 <h2 id="detail-name" style="font-size:42px; margin-bottom:15px;">NAME</h2>
                 <p id="detail-price" style="font-size:22px; margin-bottom:40px; opacity:0.8;">PRICE</p>
-                <div style="display:flex; gap:15px; margin-bottom:50px;">
-                    <button class="action-btn" id="addToCartBtn">ADD TO CART</button>
-                    <button class="action-btn buy-btn">BUY NOW</button>
-                </div>
+                <div style="display:flex; gap:15px; margin-bottom:50px;"><button class="action-btn" id="addToCartBtn">ADD TO CART</button><button class="action-btn buy-btn">BUY NOW</button></div>
                 <p id="detail-desc" style="font-size:12px; opacity:0.4; line-height:2;"></p>
             </div>
         </section>
     </div>
 
     <script>
-        // ✨ [복구] 스크롤 패럴렉스 로직
+        // 스크롤 패럴렉스
         window.addEventListener('scroll', () => {
             const scrollPos = window.pageYOffset;
             const slogan = document.getElementById('mainSlogan');
             if(slogan && scrollPos < 800) {
-                // 스크롤 속도의 20%만큼 아래로 이동, 점점 투명해짐
                 slogan.style.transform = `translateY(${scrollPos * 0.2}px)`;
                 slogan.style.opacity = 0.6 - (scrollPos / 1000);
             }
         });
 
+        // ✨ 법적 모달 제어 함수
+        function openLegal(type) {
+            if(type === 'privacy') document.getElementById('privacyModal').style.display = 'flex';
+            else if(type === 'refund') document.getElementById('refundModal').style.display = 'flex';
+        }
+        function closeLegal() { document.querySelectorAll('.legal-modal').forEach(m => m.style.display = 'none'); }
+
+        // 나머지 기존 JS 로직 유지
         let shopIdx = 0;
         function moveCarousel(dir) {
             shopIdx += dir;
-            if(shopIdx < 0) shopIdx = 2; 
-            if(shopIdx > 2) shopIdx = 0;
+            if(shopIdx < 0) shopIdx = 2; if(shopIdx > 2) shopIdx = 0;
             const carousel = document.getElementById('productCarousel');
             const fill = document.getElementById('scrollFill');
             carousel.style.transform = `translateX(-${shopIdx * 100}%)`;
             fill.style.transform = `translateX(${shopIdx * 100}%)`;
         }
 
-        window.addEventListener('load', () => { 
-            setTimeout(() => { 
-                document.getElementById('intro-overlay').classList.add('fade-out'); 
-                initScrollObserver(); 
-            }, 2500); 
-        });
-
+        window.addEventListener('load', () => { setTimeout(() => { document.getElementById('intro-overlay').classList.add('fade-out'); initScrollObserver(); }, 2500); });
         function initScrollObserver() {
-            const observer = new IntersectionObserver((entries) => { 
-                entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); }); 
-            }, { threshold: 0.1 });
+            const observer = new IntersectionObserver((entries) => { entries.forEach(entry => { if (entry.isIntersecting) entry.target.classList.add('visible'); }); }, { threshold: 0.1 });
             document.querySelectorAll('.product-card').forEach(card => observer.observe(card));
         }
 
-        let isLoggedIn = false, cart = [], currentProductKey = '', currentSlide = 0;
+        let isLoggedIn = false, cart = [], currentProductKey = '';
         const API_URL = 'https://lyxx-official.onrender.com';
         const products = {
             'tee': { id: 'tee', name: 'LYXX Logo tee', price: 69000, images: ['./반팔티.png'], desc: 'PREMIUM COTTON 100%.' },
@@ -232,7 +226,6 @@
         const closeModals = () => document.querySelectorAll('.auth-modal').forEach(m => m.style.display = 'none');
         const openLogin = () => document.getElementById('loginModal').style.display = 'flex';
         const openSignup = () => document.getElementById('signupModal').style.display = 'flex';
-        const openFindPw = () => { closeModals(); document.getElementById('findPwModal').style.display = 'flex'; };
         const toggleCart = () => document.getElementById('cartSidebar').classList.toggle('active');
 
         async function handleLogin() {
@@ -280,13 +273,12 @@
         };
 
         function openProduct(key) {
-            currentProductKey = key; const data = products[key]; currentSlide = 0;
+            currentProductKey = key; const data = products[key];
             document.getElementById('detail-name').innerText = data.name;
             document.getElementById('detail-price').innerText = `₩${data.price.toLocaleString()}`;
             document.getElementById('detail-desc').innerText = data.desc;
             const wrapper = document.getElementById('detailSlider');
-            wrapper.innerHTML = ''; 
-            data.images.forEach(src => { wrapper.innerHTML += `<img src="${src}">`; });
+            wrapper.innerHTML = ''; data.images.forEach(src => { wrapper.innerHTML += `<img src="${src}">`; });
             document.getElementById('main-view').style.display = 'none';
             document.getElementById('product-detail-view').style.display = 'block';
             window.scrollTo(0,0);
