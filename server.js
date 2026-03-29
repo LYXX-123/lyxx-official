@@ -5,36 +5,35 @@ const bodyParser = require('body-parser');
 
 const app = express();
 
-// ✅ CORS 설정 강화 (에러 방지)
-app.use(cors({
-    origin: '*', 
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type']
-}));
+// ✅ CORS 및 보안 설정
+app.use(cors());
 app.use(bodyParser.json());
 
-// ✅ 1. MongoDB 연결 (가장 중요!)
-// Render 대시보드 -> Settings -> Environment Variables에 MONGODB_URI를 등록하세요.
-// 만약 등록 안 했다면 아래 따옴표 안에 실제 몽고디비 주소를 넣으세요.
-const MONGO_URI = process.env.MONGODB_URI || "여기에_실제_몽고디비_주소를_꼭_넣으세요";
+// ✅ 1. MongoDB 연결 (중요!)
+// ⚠️ 아래 'MONGO_URI'에 실제 MongoDB 주소를 넣으셨는지 꼭 확인하세요.
+// 예: "mongodb+srv://유저ID:비번@cluster.mongodb.net/데이터베이스이름"
+const MONGO_URI = process.env.MONGODB_URI || "여기에_실제_몽고디비_주소를_넣어주세요";
 
 mongoose.connect(MONGO_URI)
-    .then(() => console.log("✅ MongoDB 연결 성공"))
-    .catch(err => console.error("❌ MongoDB 연결 실패:", err));
+    .then(() => console.log("✅ MongoDB Connected Successful"))
+    .catch(err => console.log("❌ MongoDB Connection Error:", err));
 
-// ✅ 2. 유저 스키마 (장바구니 포함)
+// ✅ 2. 유저 스키마 (장바구니 필드 포함)
 const userSchema = new mongoose.Schema({
     username: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     name: String,
     email: String,
     address: String,
-    cart: { type: Array, default: [] } 
+    cart: { type: Array, default: [] }
 });
 
 const User = mongoose.model('User', userSchema);
 
-// ✅ 3. API 경로
+// ✅ 3. API 라우트
+
+// [메인 접속 확인]
+app.get('/', (req, res) => { res.send("LYXX Server is Online!"); });
 
 // [로그인]
 app.post('/login', async (req, res) => {
@@ -47,8 +46,8 @@ app.post('/login', async (req, res) => {
             res.json({ success: false, message: "아이디 또는 비밀번호가 틀렸습니다." });
         }
     } catch (e) {
-        console.error(e);
-        res.status(500).json({ success: false, message: "서버 내부 에러" });
+        console.error("Login Error:", e);
+        res.status(500).json({ success: false, message: "로그인 중 서버 내부 에러" });
     }
 });
 
@@ -58,23 +57,9 @@ app.post('/signup', async (req, res) => {
     try {
         const newUser = new User({ username, password, name, email, address });
         await newUser.save();
-        res.json({ success: true, message: "회원가입 완료!" });
+        res.json({ success: true, message: "회원가입이 완료되었습니다." });
     } catch (e) {
-        res.json({ success: false, message: "이미 존재하는 아이디입니다." });
-    }
-});
-
-// [프로필 수정]
-app.post('/update-profile', async (req, res) => {
-    const { username, address, password } = req.body;
-    try {
-        let updateData = {};
-        if (address) updateData.address = address;
-        if (password) updateData.password = password;
-        await User.findOneAndUpdate({ username }, updateData);
-        res.json({ success: true });
-    } catch (e) {
-        res.json({ success: false });
+        res.json({ success: false, message: "이미 사용 중인 아이디입니다." });
     }
 });
 
@@ -82,7 +67,7 @@ app.post('/update-profile', async (req, res) => {
 app.post('/save-cart', async (req, res) => {
     const { username, cart } = req.body;
     try {
-        await User.findOneAndUpdate({ username }, { cart });
+        await User.findOneAndUpdate({ username }, { cart: cart });
         res.json({ success: true });
     } catch (e) {
         res.status(500).json({ success: false });
@@ -100,7 +85,19 @@ app.get('/get-cart', async (req, res) => {
     }
 });
 
-app.get('/', (req, res) => { res.send("LYXX Server is Running!"); });
+// [정보 수정]
+app.post('/update-profile', async (req, res) => {
+    const { username, address, password } = req.body;
+    try {
+        const updateData = {};
+        if (address) updateData.address = address;
+        if (password) updateData.password = password;
+        await User.findOneAndUpdate({ username }, updateData);
+        res.json({ success: true });
+    } catch (e) {
+        res.json({ success: false, message: "수정 실패" });
+    }
+});
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
