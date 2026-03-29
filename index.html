@@ -41,15 +41,23 @@
 
         /* 모달 스타일 (동의창을 위해 높이 자동 조절) */
         .auth-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 5000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(10px); }
-        .auth-box { width: 400px; padding: 60px 40px; border: 1px solid #222; background: #111; text-align: center; position: relative; }
+        .auth-box { 
+            width: 400px; padding: 60px 40px; border: 1px solid #222; background: #111; 
+            text-align: center; position: relative; 
+            box-shadow: 0 0 30px rgba(0,0,0,0.5); /* 그림자 살짝 추가 */
+        }
         .auth-box input { width: 100%; padding: 15px; margin-bottom: 15px; background: #1a1a1a; border: 1px solid #333; color: #fff; font-size: 12px; outline: none; }
         .auth-submit { width: 100%; padding: 15px; background: #eee; color: #111; border: none; font-weight: 900; margin-top: 10px; text-transform: uppercase; cursor: pointer; }
         .auth-close { position: absolute; top: 20px; right: 20px; font-size: 20px; color: #fff; background: none; border: none; cursor: pointer; }
         .forgot-btn { background: none; border: none; color: #888; font-size: 11px; margin-top: 15px; text-decoration: underline; cursor: pointer; }
 
-        /* 개인정보 동의 박스 스타일 */
-        .agree-container { text-align: left; margin: 15px 0; font-size: 10px; color: #666; line-height: 1.5; }
-        .agree-box { background: #1a1a1a; padding: 10px; height: 50px; overflow-y: auto; border: 1px solid #333; margin-top: 8px; font-size: 9px; scrollbar-width: thin; }
+        /* ✨ [복구] 개인정보 동의 박스 스타일 (시원하게 정리) */
+        .agree-container { text-align: left; margin: 15px 0 25px; font-size: 11px; color: #888; line-height: 1.5; }
+        .agree-box { 
+            background: #1a1a1a; padding: 15px; height: 80px; /* 높이 살짝 늘림 */
+            overflow-y: auto; border: 1px solid #333; margin-top: 12px; 
+            font-size: 10px; color: #666; scrollbar-width: thin; 
+        }
 
         /* 장바구니 */
         .cart-sidebar { position: fixed; top: 0; right: -400px; width: 400px; height: 100%; background: #111; border-left: 1px solid #333; z-index: 4000; padding: 40px; transition: right 0.5s cubic-bezier(0.77, 0, 0.175, 1); display: flex; flex-direction: column; }
@@ -100,7 +108,7 @@
     <div class="auth-modal" id="findPwModal"><div class="auth-box"><button class="auth-close" onclick="closeModals()">×</button><h2>Find Password</h2><input type="text" id="findId" placeholder="ENTER YOUR ID"><input type="email" id="findEmail" placeholder="ENTER YOUR EMAIL" onkeyup="if(window.event.keyCode==13){handleFindPassword()}"><button class="auth-submit" onclick="handleFindPassword()">Send Password to Mail</button></div></div>
     
     <div class="auth-modal" id="signupModal">
-        <div class="auth-box">
+        <div class="auth-box" style="width: 450px;"> 
             <button class="auth-close" onclick="closeModals()">×</button>
             <h2>Sign Up</h2>
             <input type="text" id="signupName" placeholder="NAME">
@@ -110,12 +118,11 @@
             
             <div class="agree-container">
                 <input type="checkbox" id="agreeCheck" style="width: auto; margin-bottom: 0; cursor: pointer; vertical-align: middle;">
-                <label for="agreeCheck" style="cursor: pointer;"> [필수] 개인정보 수집 및 이용 동의</label>
+                <label for="agreeCheck" style="cursor: pointer; font-weight: 300;"> [필수] 개인정보 수집 및 이용 동의</label>
                 <div class="agree-box">
-                    수집 목적: 회원 식별 및 서비스 제공, 비밀번호 찾기 지원<br>
-                    수집 항목: 이름, 아이디, 비밀번호, 이메일 주소<br>
-                    보유 기간: 회원 탈퇴 시까지 또는 법정 보존 기간까지<br>
-                    * 동의를 거부할 수 있으나 가입이 불가능합니다.
+                    LYXX Official은 회원가입을 위해 이름, 아이디, 비밀번호, 이메일 주소를 수집하며, 수집된 정보는 회원 식별, 서비스 제공, 비밀번호 찾기 지원 목적으로만 사용됩니다.<br><br>
+                    수집된 개인정보는 회원 탈퇴 시까지 또는 관련 법령에 따른 보존 기간까지 안전하게 보관 후 파기됩니다.<br><br>
+                    동의를 거부할 권리가 있으나, 거부 시 LYXX Official의 회원가입 및 서비스 이용이 불가능합니다.
                 </div>
             </div>
 
@@ -195,12 +202,9 @@
 
         async function handleSignup() {
             const name = document.getElementById('signupName').value, id = document.getElementById('signupId').value, pw = document.getElementById('signupPw').value, email = document.getElementById('signupEmail').value;
-            
-            // ✨ [추가] 체크박스 동의 확인
             if(!document.getElementById('agreeCheck').checked) {
                 return alert("개인정보 수집 및 이용에 동의해주세요.");
             }
-
             try {
                 const res = await fetch(`${API_URL}/signup`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: id, password: pw, name, email }) });
                 const data = await res.json(); alert(data.message); if (data.success) closeModals();
