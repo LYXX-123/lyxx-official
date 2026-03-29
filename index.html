@@ -30,7 +30,6 @@
         .nav-btn:hover, .cart-trigger-btn:hover { opacity: 1; }
         .cart-nav { border: 1px solid rgba(255,255,255,0.3); padding: 5px 12px; border-radius: 20px; }
 
-        /* ✅ 배경 잔상 완전 박멸 및 z-index 조정 */
         #home { width: 100vw; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; background: transparent; z-index: 20; }
         .main-logo { 
             font-size: 15vw; font-weight: 900; letter-spacing: -5px; text-transform: uppercase; 
@@ -63,13 +62,11 @@
         .cart-sidebar.active { right: 0; }
         .qty-btn { background: none; border: 1px solid #444; color: #eee; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 12px; cursor: pointer; }
 
-        /* ✅ 모달 및 마이페이지 z-index를 최상단으로 설정 */
         .auth-modal, .legal-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 9999; display: none; justify-content: center; align-items: center; backdrop-filter: blur(10px); }
         .auth-box, .legal-box { width: 400px; padding: 60px 40px; border: 1px solid #333; background: #111; position: relative; text-align: center; }
         .legal-box { max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto; text-align: left; }
         .auth-box input { width: 100%; padding: 15px; margin-bottom: 15px; background: #1a1a1a; border: 1px solid #333; color: #fff; font-size: 12px; outline: none; }
 
-        /* ✅ 마이페이지 뷰를 확실하게 최상단에 뜨도록 설정 */
         #mypage-view { display: none; padding: 150px 10%; min-height: 80vh; position: relative; z-index: 100; background-color: #111; }
         .mypage-container { max-width: 600px; margin: 0 auto; }
         .mp-row { display: flex; justify-content: space-between; align-items: center; padding: 25px 0; border-bottom: 1px solid #222; }
@@ -79,7 +76,6 @@
         .mp-edit-btn:hover { border-color: #eee; color: #eee; }
 
         footer { padding: 80px 5% 50px; border-top: 1px solid #222; font-size: 11px; color: #666; line-height: 1.8; position: relative; z-index: 10; }
-        /* ✅ 푸터 간격 확실히 벌리기 */
         .footer-links { display: flex; gap: 30px; margin-top: 25px; }
         .footer-links span { color: #888; cursor: pointer; transition: 0.3s; }
         .footer-links span:hover { color: #eee; }
@@ -170,17 +166,12 @@
         const API_URL = 'https://lyxx-official.onrender.com';
         let isLoggedIn = false, currentUser = null, cart = [], currentProductKey = '', currentSlide = 0, shopIdx = 0;
 
-        // ✅ 화면 전환 마스터 로직
-        function goHome() {
-            document.getElementById('mypage-view').style.display = 'none';
-            document.getElementById('product-detail-view').style.display = 'none';
-            document.getElementById('main-view').style.display = 'block';
-            window.scrollTo(0,0);
-        }
+        function goHome() { document.getElementById('mypage-view').style.display = 'none'; document.getElementById('product-detail-view').style.display = 'none'; document.getElementById('main-view').style.display = 'block'; window.scrollTo(0,0); }
         function goShop() { goHome(); setTimeout(() => { document.getElementById('shop').scrollIntoView({behavior:'smooth'}); }, 100); }
         
+        // ✅ [수정] 로그인 상태를 확실히 체크하여 마이페이지 노출
         function openMypage() {
-            if(!currentUser) { openLogin(); return; }
+            if(!isLoggedIn || !currentUser) { openLogin(); return; }
             document.getElementById('main-view').style.display = 'none';
             document.getElementById('product-detail-view').style.display = 'none';
             document.getElementById('mypage-view').style.display = 'block';
@@ -213,7 +204,12 @@
             try { 
                 const res = await fetch(`${API_URL}/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: id, password: pw }) }); 
                 const data = await res.json(); 
-                if (data.success) { isLoggedIn = true; currentUser = data.user; updateNavUI(); closeModals(); } else alert(data.message); 
+                if (data.success) { 
+                    isLoggedIn = true; 
+                    currentUser = data.user; // ✅ 유저 데이터 저장
+                    updateNavUI(); 
+                    closeModals(); 
+                } else alert(data.message); 
             } catch(e) {} 
         }
 
@@ -227,26 +223,8 @@
         }
 
         async function handleFindPassword() { const id = document.getElementById('findId').value, email = document.getElementById('findEmail').value; try { const res = await fetch(`${API_URL}/find-password`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: id, email }) }); const data = await res.json(); alert(data.message); if(data.success) closeModals(); } catch(e) { alert("Error"); } }
-
-        async function handleUpdateAddress(newAddr) {
-            const detail = prompt("상세주소를 입력하세요:");
-            const fullAddr = newAddr + (detail ? " " + detail : "");
-            try {
-                const res = await fetch(`${API_URL}/update-profile`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: currentUser.username, address: fullAddr }) });
-                const data = await res.json();
-                if(data.success) { currentUser.address = fullAddr; document.getElementById('mp-addr').innerText = fullAddr; alert("Address updated."); }
-            } catch(e) { alert("Update failed."); }
-        }
-
-        async function handleChangePassword() {
-            const np = document.getElementById('newPw').value, cnp = document.getElementById('confirmNewPw').value;
-            if(np !== cnp) return alert("Passwords do not match.");
-            try {
-                const res = await fetch(`${API_URL}/update-profile`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: currentUser.username, password: np }) });
-                const data = await res.json();
-                if(data.success) { alert("Password changed."); closeModals(); }
-            } catch(e) { alert("Change failed."); }
-        }
+        async function handleUpdateAddress(newAddr) { const detail = prompt("상세주소를 입력하세요:"); const fullAddr = newAddr + (detail ? " " + detail : ""); try { const res = await fetch(`${API_URL}/update-profile`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: currentUser.username, address: fullAddr }) }); const data = await res.json(); if(data.success) { currentUser.address = fullAddr; document.getElementById('mp-addr').innerText = fullAddr; alert("Address updated."); } } catch(e) { alert("Update failed."); } }
+        async function handleChangePassword() { const np = document.getElementById('newPw').value, cnp = document.getElementById('confirmNewPw').value; if(np !== cnp) return alert("Passwords do not match."); try { const res = await fetch(`${API_URL}/update-profile`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: currentUser.username, password: np }) }); const data = await res.json(); if(data.success) { alert("Password changed."); closeModals(); } } catch(e) { alert("Change failed."); } }
 
         const products = { 'tee': { id:'tee', name:'LYXX Logo tee', price:69000, images:['./반팔티.png'], desc:'PREMIUM COTTON.' }, 'hoodie': { id:'hoodie', name:'LYXX layered tee', price:129000, images:['./후드티.png'], desc:'Y2K STYLE.' }, 'belt': { id:'belt', name:'STAR BELT', price:79000, images:['./벨트.png'], desc:'LEATHER.' }, 'cap': { id:'cap', name:'LYXX BALL CAP', price:49000, images:['./모자.png'], desc:'WASHED COTTON.' }, 'denim': { id:'denim', name:'RAW DENIM PANTS', price:159000, images:['./데님.png'], desc:'SELVEDGE.' } };
         function openProduct(k) { currentProductKey = k; const d = products[k]; document.getElementById('detail-name').innerText = d.name; document.getElementById('detail-price').innerText = `₩${d.price.toLocaleString()}`; document.getElementById('detail-desc').innerText = d.desc; const w = document.getElementById('detailSlider'); w.innerHTML = ''; (d.images.length > 0 ? d.images : ['data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=']).forEach(s => { w.innerHTML += `<img src="${s}">`; }); document.getElementById('main-view').style.display = 'none'; document.getElementById('mypage-view').style.display = 'none'; document.getElementById('product-detail-view').style.display = 'block'; window.scrollTo(0,0); }
@@ -264,11 +242,10 @@
             nav.innerHTML = menu; 
         }
         
-        // ✅ 상세 법적 고지 내용
         const legalData = { 
-            privacy: { title: "개인정보 처리방침", content: "LYXX는 고객님의 소중한 개인정보를 보호합니다.<br><br>1. 수집 항목: 이름, 이메일, 주소, 연락처.<br>2. 수집 목적: 주문 이행 및 고객 상담.<br>3. 보유 기간: 회원 탈퇴 시 혹은 법정 의무 보존 기간까지 보관됩니다.<br>4. LYXX는 수집된 정보를 제3자에게 무단 제공하지 않습니다." }, 
-            refund: { title: "교환 및 환불 규정", content: "상품 수령 후 7일 이내에 교환 및 반품 신청이 가능합니다.<br><br>1. 사용 흔적, 세탁, 태그 제거 등 상품 가치가 훼손된 경우 환불이 불가합니다.<br>2. 고객 단순 변심에 의한 반품 비용은 고객 부담입니다.<br>3. 상품 불량이나 오배송의 경우 LYXX에서 왕복 배송비를 부담합니다." }, 
-            terms: { title: "이용약관", content: "본 약관은 LYXX 온라인 스토어 서비스 이용에 관한 권리와 의무를 규정합니다.<br><br>1. 회원은 서비스 이용 시 관련 법령과 약관을 준수해야 합니다.<br>2. 사이트 내 모든 저작물에 대한 권리는 LYXX에 있습니다.<br>3. 본 서비스 이용 시 허위 정보 등록을 금지합니다." } 
+            privacy: { title: "개인정보 처리방침", content: "LYXX는 고객님의 소중한 개인정보를 보호합니다.<br><br>1. 수집 항목: 이름, 이메일, 주소, 연락처.<br>2. 수집 목적: 주문 이행 및 고객 상담.<br>3. 보유 기간: 회원 탈퇴 시 혹은 법정 의무 보존 기간까지 보관됩니다." }, 
+            refund: { title: "교환 및 환불 규정", content: "상품 수령 후 7일 이내에 교환 및 반품 신청이 가능합니다.<br><br>1. 사용 흔적, 세탁, 태그 제거 등 상품 가치가 훼손된 경우 환불이 불가합니다.<br>2. 고객 단순 변심에 의한 반품 비용은 고객 부담입니다." }, 
+            terms: { title: "이용약관", content: "본 약관은 LYXX 온라인 스토어 서비스 이용에 관한 권리와 의무를 규정합니다.<br><br>1. 회원은 서비스 이용 시 관련 법령과 약관을 준수해야 합니다.<br>2. 사이트 내 모든 저작물에 대한 권리는 LYXX에 있습니다." } 
         };
         function showLegal(t) { document.getElementById('legalTitle').innerHTML = legalData[t].title; document.getElementById('legalContent').innerHTML = legalData[t].content; document.getElementById('legalPop').style.display = 'flex'; }
         function closeLegal() { document.getElementById('legalPop').style.display = 'none'; }
