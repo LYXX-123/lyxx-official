@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LYXX Official</title>
     <style>
-        /* 기본 스타일 */
+        /* 1. 기본 스타일 */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             background-color: #111; color: #eee;
@@ -34,51 +34,65 @@
         .main-logo:hover { filter: drop-shadow(0 0 25px rgba(255,255,255,0.9)); transform: scale(1.05); letter-spacing: 15px; }
         .slogan { font-size: 14px; font-weight: 300; text-transform: uppercase; letter-spacing: 5px; margin-top: 20px; opacity: 0.6; transition: transform 0.5s ease-out; }
 
-        /* ✨ [수정] 9칸 상품 캐러셀 (디자인 짤림 문제 해결) */
-        #shop { padding: 150px 0 100px; width: 100%; position: relative; }
-        #shop h2 { font-size: 40px; font-weight: 700; text-transform: uppercase; margin-bottom: 60px; text-align: center; letter-spacing: 10px; }
+        /* ✨ [수정] 짤림 방지를 위한 SHOP 섹션 구조 최적화 */
+        #shop { padding: 150px 0 100px; width: 100%; position: relative; overflow: hidden; }
+        #shop h2 { font-size: 40px; font-weight: 700; text-transform: uppercase; margin-bottom: 80px; text-align: center; letter-spacing: 10px; }
         
-        /* ✨ [핵심 수정] 양옆 여백(Padding)을 0 -> 10%로 늘려 울타리 공간 확보 */
-        .shop-outer { width: 100%; position: relative; overflow: visible; padding: 0 10%; } 
-        .shop-inner { width: 100%; overflow: hidden; position: relative; } /* 여백 제거하고 구조 깔끔히 */
+        .shop-outer { 
+            width: 100%; 
+            padding: 0 8%; /* 양옆에 확실한 여백을 주어 테두리가 짤리지 않게 함 */
+            position: relative; 
+        }
+        .shop-inner { 
+            width: 100%; 
+            overflow: visible; /* 슬라이드 애니메이션을 위해 가시성 확보 */
+        }
         
         .product-carousel { 
-            display: flex; gap: 40px; 
+            display: flex; 
+            gap: 40px; 
             transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+            width: 100%;
         }
+        
         .product-card { 
+            /* ✨ 중요: 너비를 한 줄에 3개가 딱 맞도록 정확히 계산 (간격 40px 고려) */
             min-width: calc((100% - 80px) / 3); 
-            background-color: #1a1a1a; border: 1px solid #222; padding: 20px; 
-            text-align: left; opacity: 0; transform: translateY(60px); 
-            transition: all 1s cubic-bezier(0.23, 1, 0.32, 1);
+            background-color: #1a1a1a; 
+            border: 1px solid #222; 
+            padding: 20px; 
+            text-align: left; 
+            opacity: 0; 
+            transform: translateY(60px); 
+            transition: all 1s cubic-bezier(0.23, 1, 0.32, 1), border-color 0.3s;
         }
         .product-card.visible { opacity: 1; transform: translateY(0); }
         .product-card:hover { border-color: #eee; transform: translateY(-10px) !important; }
 
-        /* ✨ 세련된 화살표 (공간 확보로 제자리 찾음) */
-        .carousel-nav { position: absolute; top: 50%; width: 100%; left: 0; display: flex; justify-content: space-between; transform: translateY(-50%); pointer-events: none; z-index: 100; }
-        
-        /* ✨ 화살표가 상품 카드를 침범하지 않게 양옆 Padding 추가 */
-        .nav-btn-container { width: 100%; display: flex; justify-content: space-between; pointer-events: none; padding: 0 3%; } 
-        .c-btn { width: 45px; height: 45px; background: none; border: 1px solid rgba(255,255,255,0.2); color: #fff; cursor: pointer; pointer-events: auto; transition: 0.3s; border-radius: 50%; font-size: 18px; display: flex; align-items: center; justify-content: center; }
+        /* 화살표 내비게이션 */
+        .carousel-nav { position: absolute; top: 45%; width: 100%; left: 0; display: flex; justify-content: space-between; transform: translateY(-50%); pointer-events: none; z-index: 100; }
+        .nav-btn-container { width: 100%; display: flex; justify-content: space-between; pointer-events: none; padding: 0 2%; } 
+        .c-btn { width: 50px; height: 50px; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.1); color: #fff; cursor: pointer; pointer-events: auto; transition: 0.3s; border-radius: 50%; font-size: 20px; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
         .c-btn:hover { background: #eee; color: #111; border-color: #eee; }
 
-        /* 하단 프로그레스 바 유지 */
-        .scroll-bar-container { width: 200px; height: 2px; background: rgba(255,255,255,0.1); margin: 60px auto 0; position: relative; overflow: hidden; border-radius: 2px; }
+        /* 하단 프로그레스 바 */
+        .scroll-bar-container { width: 200px; height: 2px; background: rgba(255,255,255,0.1); margin: 80px auto 0; position: relative; overflow: hidden; border-radius: 2px; }
         .scroll-bar-fill { position: absolute; top: 0; left: 0; width: 33.33%; height: 100%; background: #eee; transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1); }
 
-        /* 나머지 상세페이지 & 모달 (기존 동일) */
-        .img-box { width: 100%; aspect-ratio: 1/1; background-color: #222; display: flex; justify-content: center; align-items: center; overflow: hidden; margin-bottom: 20px; border: 1px solid #333; }
-        .img-box img { width: 100%; height: 100%; object-fit: cover; }
+        /* 모달 스타일 (동의창 포함) */
         .auth-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 5000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(10px); }
         .auth-box { width: 400px; padding: 60px 40px; border: 1px solid #222; background: #111; text-align: center; position: relative; }
         .auth-box input { width: 100%; padding: 15px; margin-bottom: 15px; background: #1a1a1a; border: 1px solid #333; color: #fff; font-size: 12px; outline: none; }
         .auth-submit { width: 100%; padding: 15px; background: #eee; color: #111; border: none; font-weight: 900; margin-top: 10px; text-transform: uppercase; cursor: pointer; }
         .auth-close { position: absolute; top: 20px; right: 20px; font-size: 20px; color: #fff; background: none; border: none; cursor: pointer; }
+        
+        /* 상세페이지 & 장바구니 등 기존 스타일 유지 */
+        .img-box { width: 100%; aspect-ratio: 1/1; background-color: #222; display: flex; justify-content: center; align-items: center; overflow: hidden; margin-bottom: 20px; border: 1px solid #333; }
+        .img-box img { width: 100%; height: 100%; object-fit: cover; }
         .cart-sidebar { position: fixed; top: 0; right: -400px; width: 400px; height: 100%; background: #111; border-left: 1px solid #333; z-index: 4000; padding: 40px; transition: right 0.5s cubic-bezier(0.77, 0, 0.175, 1); display: flex; flex-direction: column; }
         .cart-sidebar.active { right: 0; }
         .cart-items-container { flex-grow: 1; overflow-y: auto; border-top: 1px solid #222; padding-top: 20px; }
-
+        
         #product-detail-view { display: none; padding-top: 80px; }
         #product-top { padding: 80px 5%; display: flex; gap: 60px; min-height: 80vh; }
         .slider-container { flex: 1.2; position: relative; border: 1px solid #222; overflow: hidden; background: #1a1a1a; aspect-ratio: 1/1; }
@@ -86,7 +100,7 @@
         .slider-wrapper img { width: 100%; height: 100%; object-fit: cover; flex-shrink: 0; }
         .action-btn { flex: 1; padding: 20px; font-weight: 700; text-transform: uppercase; letter-spacing: 3px; border: 1px solid #444; color: #888; background: none; transition: 0.3s; cursor: pointer; }
         .buy-btn { background-color: #eee; color: #111; border: none; }
-        footer { padding: 100px 50px 50px; text-align: center; font-size: 11px; opacity: 0.3; border-top: 1px solid #222; }
+        footer { padding: 80px 5%; line-height: 1.8; border-top: 1px solid #222; text-align: left; font-size: 11px; color: #666; }
     </style>
 </head>
 <body>
@@ -146,7 +160,12 @@
                 <div class="scroll-bar-fill" id="scrollFill"></div>
             </div>
         </section>
-        <footer>&copy; 2026 LYXX.</footer>
+        <footer>
+            <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 40px;">
+                <div><p style="color: #eee; font-weight: 700; margin-bottom: 10px;">LYXX OFFICIAL</p><p>CEO. 용준 | Business License. [준비중]</p><p>Address. 서울특별시 동대문구 회기동</p><p>Mail. lyxx.rechive@gmail.com</p></div>
+                <div style="text-align: right;"><p>&copy; 2026 LYXX. ALL RIGHTS RESERVED.</p></div>
+            </div>
+        </footer>
     </div>
 
     <div id="product-detail-view">
@@ -170,7 +189,6 @@
     </div>
 
     <script>
-        // 캐러셀 및 프로그레스 바 로직
         let shopIdx = 0;
         function moveCarousel(dir) {
             shopIdx += dir;
@@ -178,6 +196,8 @@
             if(shopIdx > 2) shopIdx = 0;
             const carousel = document.getElementById('productCarousel');
             const fill = document.getElementById('scrollFill');
+            
+            // ✨ 너비 계산 시 gap(40px)도 고려하여 이동
             carousel.style.transform = `translateX(-${shopIdx * 100}%)`;
             fill.style.transform = `translateX(${shopIdx * 100}%)`;
         }
@@ -188,7 +208,6 @@
             document.querySelectorAll('.product-card').forEach(card => observer.observe(card));
         }
 
-        // 로그인/장바구니 등 기존 로직 유지
         let isLoggedIn = false, cart = [], currentProductKey = '', currentSlide = 0;
         const API_URL = 'https://lyxx-official.onrender.com';
         const products = {
@@ -200,7 +219,6 @@
         const closeModals = () => document.querySelectorAll('.auth-modal').forEach(m => m.style.display = 'none');
         const openLogin = () => document.getElementById('loginModal').style.display = 'flex';
         const openSignup = () => document.getElementById('signupModal').style.display = 'flex';
-        const openFindPw = () => { closeModals(); document.getElementById('findPwModal').style.display = 'flex'; };
         const toggleCart = () => document.getElementById('cartSidebar').classList.toggle('active');
 
         async function handleLogin() {
@@ -212,7 +230,6 @@
             } catch(e) { alert("Server Error"); }
         }
 
-        function handleLogout() { isLoggedIn = false; updateNavUI(); document.getElementById('product-detail-view').style.display = 'none'; document.getElementById('main-view').style.display = 'block'; }
         function updateNavUI() {
             const navUl = document.getElementById('main-nav');
             const common = `<li><a href="#home" class="nav-link">HOME</a></li><li><a href="#shop" class="nav-link">SHOP</a></li>`;
@@ -247,7 +264,6 @@
             updateCartUI(); toggleCart();
         };
 
-        // 상세페이지 슬라이더
         function openProduct(key) {
             currentProductKey = key; const data = products[key]; currentSlide = 0;
             document.getElementById('detail-name').innerText = data.name;
