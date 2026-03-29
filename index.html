@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LYXX Official</title>
     <style>
-        /* 1. 기본 스타일 */
+        /* 기본 스타일 */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             background-color: #111; color: #eee;
@@ -28,18 +28,19 @@
         nav a:hover, .nav-btn:hover, .cart-trigger-btn:hover { opacity: 1; }
         .cart-nav { border: 1px solid rgba(255,255,255,0.3); padding: 5px 12px; border-radius: 20px; }
 
-        /* 메인 홈 */
+        /* 메인 홈 로고 */
         #home { width: 100vw; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; }
         .main-logo { font-size: 15vw; font-weight: 900; letter-spacing: -5px; text-transform: uppercase; background: linear-gradient(145deg, #fff, #bbb, #fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 8px rgba(255,255,255,0.4)); transition: 0.5s cubic-bezier(0.19, 1, 0.22, 1); user-select: none; display: inline-block; padding: 0 0.1em; cursor: pointer; margin: 0; line-height: 1; }
         .main-logo:hover { filter: drop-shadow(0 0 25px rgba(255,255,255,0.9)); transform: scale(1.05); letter-spacing: 15px; }
         .slogan { font-size: 14px; font-weight: 300; text-transform: uppercase; letter-spacing: 5px; margin-top: 20px; opacity: 0.6; transition: transform 0.5s ease-out; }
 
-        /* ✨ [수정] 9칸 상품 캐러셀 (화살표 짤림 해결 + 프로그레스 바) */
+        /* ✨ [수정] 9칸 상품 캐러셀 (디자인 짤림 문제 해결) */
         #shop { padding: 150px 0 100px; width: 100%; position: relative; }
         #shop h2 { font-size: 40px; font-weight: 700; text-transform: uppercase; margin-bottom: 60px; text-align: center; letter-spacing: 10px; }
         
-        .shop-outer { width: 90%; margin: 0 auto; position: relative; overflow: visible; }
-        .shop-inner { width: 100%; overflow: hidden; }
+        /* ✨ [핵심 수정] 양옆 여백(Padding)을 0 -> 10%로 늘려 울타리 공간 확보 */
+        .shop-outer { width: 100%; position: relative; overflow: visible; padding: 0 10%; } 
+        .shop-inner { width: 100%; overflow: hidden; position: relative; } /* 여백 제거하고 구조 깔끔히 */
         
         .product-carousel { 
             display: flex; gap: 40px; 
@@ -49,17 +50,20 @@
             min-width: calc((100% - 80px) / 3); 
             background-color: #1a1a1a; border: 1px solid #222; padding: 20px; 
             text-align: left; opacity: 0; transform: translateY(60px); 
-            transition: opacity 1s, transform 1s, border-color 0.3s;
+            transition: all 1s cubic-bezier(0.23, 1, 0.32, 1);
         }
         .product-card.visible { opacity: 1; transform: translateY(0); }
-        .product-card:hover { border-color: #eee; }
+        .product-card:hover { border-color: #eee; transform: translateY(-10px) !important; }
 
-        /* ✨ 세련된 화살표 (컨테이너 내부로 안착) */
-        .carousel-nav { position: absolute; top: 50%; width: 105%; left: -2.5%; display: flex; justify-content: space-between; transform: translateY(-50%); pointer-events: none; z-index: 100; }
-        .c-btn { width: 40px; height: 40px; background: none; border: 1px solid rgba(255,255,255,0.2); color: #fff; cursor: pointer; pointer-events: auto; transition: 0.3s; border-radius: 50%; font-size: 16px; display: flex; align-items: center; justify-content: center; }
+        /* ✨ 세련된 화살표 (공간 확보로 제자리 찾음) */
+        .carousel-nav { position: absolute; top: 50%; width: 100%; left: 0; display: flex; justify-content: space-between; transform: translateY(-50%); pointer-events: none; z-index: 100; }
+        
+        /* ✨ 화살표가 상품 카드를 침범하지 않게 양옆 Padding 추가 */
+        .nav-btn-container { width: 100%; display: flex; justify-content: space-between; pointer-events: none; padding: 0 3%; } 
+        .c-btn { width: 45px; height: 45px; background: none; border: 1px solid rgba(255,255,255,0.2); color: #fff; cursor: pointer; pointer-events: auto; transition: 0.3s; border-radius: 50%; font-size: 18px; display: flex; align-items: center; justify-content: center; }
         .c-btn:hover { background: #eee; color: #111; border-color: #eee; }
 
-        /* ✨ [추가] 하단 프로그레스 바 (가로 스크롤 인디케이터) */
+        /* 하단 프로그레스 바 유지 */
         .scroll-bar-container { width: 200px; height: 2px; background: rgba(255,255,255,0.1); margin: 60px auto 0; position: relative; overflow: hidden; border-radius: 2px; }
         .scroll-bar-fill { position: absolute; top: 0; left: 0; width: 33.33%; height: 100%; background: #eee; transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1); }
 
@@ -95,10 +99,7 @@
         <div class="auth-box" style="width: 450px;">
             <button class="auth-close" onclick="closeModals()">×</button>
             <h2>Sign Up</h2>
-            <input type="text" id="signupName" placeholder="NAME">
-            <input type="text" id="signupId" placeholder="ID">
-            <input type="password" id="signupPw" placeholder="PASSWORD">
-            <input type="email" id="signupEmail" placeholder="EMAIL">
+            <input type="text" id="signupName" placeholder="NAME"><input type="text" id="signupId" placeholder="ID"><input type="password" id="signupPw" placeholder="PASSWORD"><input type="email" id="signupEmail" placeholder="EMAIL">
             <div style="text-align: left; margin: 15px 0; font-size: 10px; color: #666;"><input type="checkbox" id="agreeCheck" style="width:auto; cursor:pointer;"> [필수] 개인정보 수집 동의<div style="background:#1a1a1a; padding:10px; height:50px; overflow-y:auto; border:1px solid #333; margin-top:5px;">수집 목적: 회원 가입 및 서비스 제공<br>보유 기간: 탈퇴 시까지</div></div>
             <button class="auth-submit" onclick="handleSignup()">Create Account</button>
         </div>
@@ -135,8 +136,10 @@
                     </div>
                 </div>
                 <div class="carousel-nav">
-                    <button class="c-btn" onclick="moveCarousel(-1)">❮</button>
-                    <button class="c-btn" onclick="moveCarousel(1)">❯</button>
+                    <div class="nav-btn-container">
+                        <button class="c-btn" onclick="moveCarousel(-1)">❮</button>
+                        <button class="c-btn" onclick="moveCarousel(1)">❯</button>
+                    </div>
                 </div>
             </div>
             <div class="scroll-bar-container">
@@ -167,18 +170,15 @@
     </div>
 
     <script>
-        // ✨ [수정] 캐러셀 및 프로그레스 바 로직
+        // 캐러셀 및 프로그레스 바 로직
         let shopIdx = 0;
         function moveCarousel(dir) {
             shopIdx += dir;
             if(shopIdx < 0) shopIdx = 2; 
             if(shopIdx > 2) shopIdx = 0;
-            
             const carousel = document.getElementById('productCarousel');
             const fill = document.getElementById('scrollFill');
-            
             carousel.style.transform = `translateX(-${shopIdx * 100}%)`;
-            // 프로그레스 바 이동 (33.3% 씩)
             fill.style.transform = `translateX(${shopIdx * 100}%)`;
         }
 
@@ -188,51 +188,27 @@
             document.querySelectorAll('.product-card').forEach(card => observer.observe(card));
         }
 
-        let isLoggedIn = false, currentUser = null, cart = [], currentProductKey = '', currentSlide = 0;
+        // 로그인/장바구니 등 기존 로직 유지
+        let isLoggedIn = false, cart = [], currentProductKey = '', currentSlide = 0;
         const API_URL = 'https://lyxx-official.onrender.com';
         const products = {
-            'tee': { id: 'tee', name: 'LYXX Logo tee', price: 69000, images: ['./반팔티.png'], desc: 'PREMIUM COTTON.<br>SIGNATURE SLIM FIT.' },
-            'hoodie': { id: 'hoodie', name: 'LYXX layered tee', price: 129000, images: ['./후드티.png'], desc: 'Y2K STYLE LAYERED DESIGN.' },
-            'belt': { id: 'belt', name: 'STAR BELT', price: 79000, images: [], desc: 'GENUINE LEATHER.' }
+            'tee': { id: 'tee', name: 'LYXX Logo tee', price: 69000, images: ['./반팔티.png'], desc: 'PREMIUM COTTON.' },
+            'hoodie': { id: 'hoodie', name: 'LYXX layered tee', price: 129000, images: ['./후드티.png'], desc: 'Y2K STYLE.' },
+            'belt': { id: 'belt', name: 'STAR BELT', price: 79000, images: [], desc: 'LEATHER.' }
         };
 
         const closeModals = () => document.querySelectorAll('.auth-modal').forEach(m => m.style.display = 'none');
         const openLogin = () => document.getElementById('loginModal').style.display = 'flex';
         const openSignup = () => document.getElementById('signupModal').style.display = 'flex';
+        const openFindPw = () => { closeModals(); document.getElementById('findPwModal').style.display = 'flex'; };
         const toggleCart = () => document.getElementById('cartSidebar').classList.toggle('active');
-
-        function openProduct(key) {
-            currentProductKey = key; const data = products[key]; currentSlide = 0;
-            document.getElementById('detail-name').innerText = data.name;
-            document.getElementById('detail-price').innerText = `₩${data.price.toLocaleString()}`;
-            document.getElementById('detail-desc').innerHTML = data.desc;
-            const wrapper = document.getElementById('detailSlider');
-            const dots = document.getElementById('sliderDots');
-            wrapper.innerHTML = ''; dots.innerHTML = '';
-            data.images.forEach((src, i) => {
-                wrapper.innerHTML += `<img src="${src}">`;
-                dots.innerHTML += `<div class="dot ${i===0?'active':''}" onclick="goToSlide(${i})"></div>`;
-            });
-            updateSlide();
-            document.getElementById('main-view').style.display = 'none';
-            document.getElementById('product-detail-view').style.display = 'block';
-            window.scrollTo(0,0);
-        }
-
-        function moveSlide(n) { const max = products[currentProductKey].images.length; currentSlide = (currentSlide + n + max) % max; updateSlide(); }
-        function goToSlide(n) { currentSlide = n; updateSlide(); }
-        function updateSlide() {
-            const wrapper = document.getElementById('detailSlider');
-            wrapper.style.transform = `translateX(-${currentSlide * 100}%)`;
-            document.querySelectorAll('.dot').forEach((dot, i) => { dot.classList.toggle('active', i === currentSlide); });
-        }
 
         async function handleLogin() {
             const id = document.getElementById('loginId').value, pw = document.getElementById('loginPw').value;
             try {
                 const res = await fetch(`${API_URL}/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: id, password: pw }) });
                 const data = await res.json();
-                if (data.success) { isLoggedIn = true; currentUser = data.name; updateNavUI(); closeModals(); alert(`Welcome!`); } else alert(data.message);
+                if (data.success) { isLoggedIn = true; updateNavUI(); closeModals(); alert(`Welcome!`); } else alert(data.message);
             } catch(e) { alert("Server Error"); }
         }
 
@@ -270,6 +246,26 @@
             if(item) item.quantity++; else cart.push({...data, quantity: 1});
             updateCartUI(); toggleCart();
         };
+
+        // 상세페이지 슬라이더
+        function openProduct(key) {
+            currentProductKey = key; const data = products[key]; currentSlide = 0;
+            document.getElementById('detail-name').innerText = data.name;
+            document.getElementById('detail-price').innerText = `₩${data.price.toLocaleString()}`;
+            document.getElementById('detail-desc').innerText = data.desc;
+            const wrapper = document.getElementById('detailSlider');
+            const dots = document.getElementById('sliderDots');
+            wrapper.innerHTML = ''; dots.innerHTML = '';
+            data.images.forEach((src, i) => { wrapper.innerHTML += `<img src="${src}">`; dots.innerHTML += `<div class="dot ${i===0?'active':''}" onclick="goToSlide(${i})"></div>`; });
+            updateSlide();
+            document.getElementById('main-view').style.display = 'none';
+            document.getElementById('product-detail-view').style.display = 'block';
+            window.scrollTo(0,0);
+        }
+        function moveSlide(n) { const max = products[currentProductKey].images.length; currentSlide = (currentSlide + n + max) % max; updateSlide(); }
+        function goToSlide(n) { currentSlide = n; updateSlide(); }
+        function updateSlide() { const wrapper = document.getElementById('detailSlider'); wrapper.style.transform = `translateX(-${currentSlide * 100}%)`; document.querySelectorAll('.dot').forEach((dot, i) => { dot.classList.toggle('active', i === currentSlide); }); }
+
         updateNavUI();
     </script>
 </body>
