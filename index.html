@@ -42,7 +42,6 @@
         .product-carousel { display: flex; gap: 40px; transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1); width: 100%; }
         .product-card { min-width: calc((100% - 80px) / 3); max-width: calc((100% - 80px) / 3); background-color: #1a1a1a; border: 1px solid #222; padding: 20px; text-align: left; opacity: 0; transform: translateY(60px); transition: all 1s cubic-bezier(0.23, 1, 0.32, 1); cursor: pointer; flex-shrink: 0; }
         .product-card.visible { opacity: 1; transform: translateY(0); }
-        .product-card:hover { border-color: #eee; transform: translateY(-10px) !important; }
         .card-img-box { width: 100%; aspect-ratio: 1/1; background:#222; overflow:hidden; margin-bottom:20px; border:1px solid #333; }
         .card-img-box img { width: 100%; height: 100%; object-fit: cover; }
 
@@ -55,29 +54,22 @@
 
         .cart-sidebar { position: fixed; top: 0; right: -400px; width: 400px; height: 100%; background: #111; border-left: 1px solid #333; z-index: 9000; padding: 40px; transition: right 0.5s cubic-bezier(0.77, 0, 0.175, 1); display: flex; flex-direction: column; }
         .cart-sidebar.active { right: 0; }
-        
-        /* ✅ [복구] 세련된 플러스 마이너스 버튼 디자인 */
         .qty-btn { background: none; border: 1px solid #444; color: #eee; width: 25px; height: 25px; display: flex; align-items: center; justify-content: center; font-size: 16px; cursor: pointer; transition: 0.2s; line-height: 1; }
-        .qty-btn:hover { border-color: #eee; color: #fff; }
 
         .auth-modal, .legal-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 9999; display: none; justify-content: center; align-items: center; backdrop-filter: blur(10px); }
         .auth-box, .legal-box { width: 400px; padding: 60px 40px; border: 1px solid #333; background: #111; position: relative; text-align: center; }
         .legal-box { max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto; text-align: left; }
         .auth-box input { width: 100%; padding: 15px; margin-bottom: 15px; background: #1a1a1a; border: 1px solid #333; color: #fff; font-size: 12px; outline: none; }
 
-        /* ✅ [고정] 마이페이지 뷰 최우선 순위 */
-        #mypage-view { display: none; padding: 150px 10%; min-height: 80vh; background-color: #111; position: relative; z-index: 200; }
-        .mypage-container { max-width: 600px; margin: 0 auto; }
+        #mypage-view { display: none; padding: 150px 10%; min-height: 80vh; position: relative; z-index: 100; background-color: #111; }
         .mp-row { display: flex; justify-content: space-between; align-items: center; padding: 25px 0; border-bottom: 1px solid #222; }
         .mp-label { color: #666; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
         .mp-value { font-size: 14px; font-weight: 300; }
         .mp-edit-btn { background: none; border: 1px solid #444; color: #888; padding: 6px 12px; font-size: 10px; cursor: pointer; transition: 0.3s; }
-        .mp-edit-btn:hover { border-color: #eee; color: #eee; }
 
         footer { padding: 80px 5% 50px; border-top: 1px solid #222; font-size: 11px; color: #666; line-height: 1.8; position: relative; z-index: 10; }
         .footer-links { display: flex; gap: 30px; margin-top: 25px; }
         .footer-links span { color: #888; cursor: pointer; transition: 0.3s; }
-        .footer-links span:hover { color: #eee; }
 
         #product-detail-view { display: none; padding-top: 80px; position: relative; z-index: 50; }
         #product-top { padding: 80px 5%; display: flex; gap: 60px; min-height: 80vh; align-items: flex-start; }
@@ -91,7 +83,7 @@
 
     <div id="intro-overlay"><div class="intro-logo">LYXX</div></div>
 
-    <div class="legal-modal" id="legalPop"><div class="legal-box"><button onclick="closeLegal()" style="position:absolute; top:20px; right:20px; background:none; border:none; color:#fff; font-size:24px; cursor:pointer;">×</button><h3 id="legalTitle" style="text-align:center; margin-bottom:30px;">TITLE</h3><div id="legalContent" style="color: #888; font-size: 12px; line-height: 2;">CONTENT</div></div></div>
+    <div class="legal-modal" id="legalPop"><div class="legal-box"><button onclick="closeLegal()" style="position:absolute; top:20px; right:20px; background:none; border:none; color:#fff; font-size:24px; cursor:pointer;">×</button><h3 id="legalTitle" style="text-align:center; margin-bottom:30px; letter-spacing:2px;">TITLE</h3><div id="legalContent" style="color: #888; font-size: 12px; line-height: 2;">CONTENT</div></div></div>
 
     <div class="auth-modal" id="changePwModal"><div class="auth-box"><button onclick="closeModals()" style="position:absolute; top:20px; right:20px; background:none; border:none; color:#fff; font-size:20px; cursor:pointer;">×</button><h2>Change Password</h2><input type="password" id="newPw" placeholder="NEW PASSWORD"><input type="password" id="confirmNewPw" placeholder="CONFIRM NEW PASSWORD"><button style="width:100%; padding:15px; background:#eee; color:#111; border:none; font-weight:900; margin-top:10px; cursor:pointer;" onclick="handleChangePassword()">Update Password</button></div></div>
 
@@ -159,7 +151,16 @@
         const API_URL = 'https://lyxx-official.onrender.com';
         let isLoggedIn = false, currentUser = null, cart = [], currentProductKey = '', currentSlide = 0, shopIdx = 0;
 
-        // ✅ [고정] 화면 전환 마스터 로직 - 최우선 순위
+        // ✅ [로그인 유지] 페이지 로드 시 세션 스토리지에서 유저 정보 복구
+        window.addEventListener('DOMContentLoaded', () => {
+            const savedUser = sessionStorage.getItem('lyxx_user');
+            if(savedUser) {
+                isLoggedIn = true;
+                currentUser = JSON.parse(savedUser);
+                updateNavUI();
+            }
+        });
+
         function goHome() { 
             document.getElementById('mypage-view').style.display = 'none'; 
             document.getElementById('product-detail-view').style.display = 'none'; 
@@ -168,8 +169,8 @@
         }
         function goShop() { goHome(); setTimeout(() => { document.getElementById('shop').scrollIntoView({behavior:'smooth'}); }, 100); }
         
-        // ✅ [복구] 마이페이지 강제 오픈 로직
-        function openMypage() {
+        // ✅ [마이페이지 진입 보장] 함수를 최상단 전역으로 확실하게 노출
+        window.openMypage = function() {
             if(!isLoggedIn || !currentUser) { openLogin(); return; }
             document.getElementById('main-view').style.display = 'none';
             document.getElementById('product-detail-view').style.display = 'none';
@@ -178,7 +179,7 @@
             document.getElementById('mp-email').innerText = currentUser.email || "-";
             document.getElementById('mp-addr').innerText = currentUser.address || "No address registered.";
             window.scrollTo(0,0);
-        }
+        };
 
         window.addEventListener('scroll', () => { 
             const s = document.getElementById('mainSlogan'); 
@@ -190,7 +191,6 @@
 
         function moveCarousel(d) { shopIdx += d; if(shopIdx < 0) shopIdx = 2; if(shopIdx > 2) shopIdx = 0; document.getElementById('productCarousel').style.transform = `translateX(-${shopIdx * 100}%)`; document.getElementById('scrollFill').style.transform = `translateX(${shopIdx * 100}%)`; }
         function execDaumPostcode(targetId) { new daum.Postcode({ oncomplete: function(data) { const addr = data.userSelectedType === 'R' ? data.roadAddress : data.jibunAddress; if(targetId === 'signupAddr') document.getElementById('signupAddr').value = addr; else handleUpdateAddress(addr); }}).open(); }
-        
         function closeModals() { document.querySelectorAll('.auth-modal, .legal-modal').forEach(m => m.style.display = 'none'); }
         function openLogin() { closeModals(); document.getElementById('loginModal').style.display = 'flex'; }
         function openSignup() { closeModals(); document.getElementById('signupModal').style.display = 'flex'; }
@@ -205,7 +205,9 @@
                 const data = await res.json(); 
                 if (data.success) { 
                     isLoggedIn = true; 
-                    currentUser = data.user; 
+                    currentUser = data.user;
+                    // ✅ [로그인 유지] 세션 스토리지에 유저 데이터 저장
+                    sessionStorage.setItem('lyxx_user', JSON.stringify(currentUser));
                     updateNavUI(); 
                     closeModals(); 
                 } else alert(data.message); 
@@ -229,7 +231,11 @@
             try {
                 const res = await fetch(`${API_URL}/update-profile`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: currentUser.username, address: fullAddr }) });
                 const data = await res.json();
-                if(data.success) { currentUser.address = fullAddr; document.getElementById('mp-addr').innerText = fullAddr; alert("Address updated."); }
+                if(data.success) { 
+                    currentUser.address = fullAddr; 
+                    sessionStorage.setItem('lyxx_user', JSON.stringify(currentUser));
+                    document.getElementById('mp-addr').innerText = fullAddr; alert("Address updated."); 
+                }
             } catch(e) { alert("Update failed."); }
         }
 
@@ -248,26 +254,12 @@
         function moveSlide(n) { const max = document.getElementById('detailSlider').children.length || 1; currentSlide = (currentSlide + n + max) % max; document.getElementById('detailSlider').style.transform = `translateX(-${currentSlide * 100}%)`; }
         function addToCart() { const d = products[currentProductKey]; const item = cart.find(i => i.id === d.id); if(item) item.quantity++; else cart.push({...d, quantity:1}); updateCartUI(); toggleCart(); }
         function changeQty(i, d) { cart[i].quantity += d; if(cart[i].quantity < 1) cart.splice(i,1); updateCartUI(); }
-        
-        // ✅ [디자인 복구] 예쁜 플러스 마이너스 버튼 UI
         function updateCartUI() { 
             const l = document.getElementById('cartItemsList'); 
             l.innerHTML = ''; let t = 0; 
             cart.forEach((item, i) => { 
                 t += item.price * item.quantity; 
-                l.innerHTML += `
-                    <div style="display:flex; gap:15px; margin-bottom:20px;">
-                        <img src="${item.images[0]||''}" style="width:60px; height:60px; object-fit:cover;">
-                        <div style="flex:1;">
-                            <p style="font-size:12px;">${item.name}</p>
-                            <p style="font-size:12px; opacity:0.5;">₩${(item.price * item.quantity).toLocaleString()}</p>
-                            <div style="display:flex; align-items:center; gap:10px; margin-top:5px;">
-                                <button onclick="changeQty(${i},-1)" class="qty-btn">-</button>
-                                <span style="font-size:13px; font-weight:700;">${item.quantity}</span>
-                                <button onclick="changeQty(${i},1)" class="qty-btn">+</button>
-                            </div>
-                        </div>
-                    </div>`; 
+                l.innerHTML += `<div style="display:flex; gap:15px; margin-bottom:20px;"><img src="${item.images[0]||''}" style="width:60px; height:60px; object-fit:cover;"><div style="flex:1;"><p style="font-size:12px;">${item.name}</p><p style="font-size:12px; opacity:0.5;">₩${(item.price * item.quantity).toLocaleString()}</p><div style="display:flex; align-items:center; gap:10px; margin-top:5px;"><button onclick="changeQty(${i},-1)" class="qty-btn">-</button><span style="font-size:13px; font-weight:700;">${item.quantity}</span><button onclick="changeQty(${i},1)" class="qty-btn">+</button></div></div></div>`; 
             }); 
             document.getElementById('cartTotalText').innerText = `₩${t.toLocaleString()}`; updateNavUI(); 
         }
@@ -275,7 +267,7 @@
         function updateNavUI() { 
             const nav = document.getElementById('main-nav'); 
             let menu = `<li><button class="nav-btn" onclick="goHome()">HOME</button></li><li><button class="nav-btn" onclick="goShop()">SHOP</button></li>`; 
-            if (isLoggedIn) menu += `<li><button class="nav-btn" onclick="openMypage()">MY PAGE</button></li><li><button class="nav-btn" onclick="isLoggedIn=false; currentUser=null; updateNavUI(); goHome();">LOGOUT</button></li>`; 
+            if (isLoggedIn) menu += `<li><button class="nav-btn" onclick="window.openMypage()">MY PAGE</button></li><li><button class="nav-btn" onclick="isLoggedIn=false; currentUser=null; sessionStorage.removeItem('lyxx_user'); updateNavUI(); goHome();">LOGOUT</button></li>`; 
             else menu += `<li><button class="nav-btn" onclick="openLogin()">LOGIN</button></li><li><button class="nav-btn" onclick="openSignup()">SIGNUP</button></li>`; 
             menu += `<li><button class="cart-trigger-btn cart-nav" onclick="toggleCart()">CART (${cart.reduce((a,b)=>a+b.quantity,0)})</button></li>`; 
             nav.innerHTML = menu; 
@@ -288,7 +280,6 @@
         };
         function showLegal(t) { document.getElementById('legalTitle').innerHTML = legalData[t].title; document.getElementById('legalContent').innerHTML = legalData[t].content; document.getElementById('legalPop').style.display = 'flex'; }
         function closeLegal() { document.getElementById('legalPop').style.display = 'none'; }
-
         window.addEventListener('load', () => { setTimeout(() => { document.getElementById('intro-overlay').classList.add('fade-out'); initScrollObserver(); }, 2500); });
         function initScrollObserver() { const obs = new IntersectionObserver((es) => { es.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }); }, { threshold: 0.1 }); document.querySelectorAll('.product-card').forEach(c => obs.observe(c)); }
         updateNavUI();
