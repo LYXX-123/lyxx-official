@@ -28,36 +28,42 @@
         nav a:hover, .nav-btn:hover, .cart-trigger-btn:hover { opacity: 1; }
         .cart-nav { border: 1px solid rgba(255,255,255,0.3); padding: 5px 12px; border-radius: 20px; }
 
-        /* 메인 홈 로고 */
+        /* 메인 홈 */
         #home { width: 100vw; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; }
         .main-logo { font-size: 15vw; font-weight: 900; letter-spacing: -5px; text-transform: uppercase; background: linear-gradient(145deg, #fff, #bbb, #fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 8px rgba(255,255,255,0.4)); transition: 0.5s cubic-bezier(0.19, 1, 0.22, 1); user-select: none; display: inline-block; padding: 0 0.1em; cursor: pointer; margin: 0; line-height: 1; }
         .main-logo:hover { filter: drop-shadow(0 0 25px rgba(255,255,255,0.9)); transform: scale(1.05); letter-spacing: 15px; }
         .slogan { font-size: 14px; font-weight: 300; text-transform: uppercase; letter-spacing: 5px; margin-top: 20px; opacity: 0.6; transition: transform 0.5s ease-out; }
 
-        /* ✨ [추가] 9칸 상품 캐러셀 스타일 */
-        #shop { padding: 150px 0 100px; width: 100%; overflow: hidden; position: relative; }
+        /* ✨ [수정] 9칸 상품 캐러셀 (화살표 짤림 해결 + 프로그레스 바) */
+        #shop { padding: 150px 0 100px; width: 100%; position: relative; }
         #shop h2 { font-size: 40px; font-weight: 700; text-transform: uppercase; margin-bottom: 60px; text-align: center; letter-spacing: 10px; }
         
-        .shop-container { width: 100%; padding: 0 5%; position: relative; }
+        .shop-outer { width: 90%; margin: 0 auto; position: relative; overflow: visible; }
+        .shop-inner { width: 100%; overflow: hidden; }
+        
         .product-carousel { 
             display: flex; gap: 40px; 
             transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1);
-            cursor: grab;
         }
         .product-card { 
-            min-width: calc((100% - 80px) / 3); /* 한 화면에 딱 3개씩 */
+            min-width: calc((100% - 80px) / 3); 
             background-color: #1a1a1a; border: 1px solid #222; padding: 20px; 
             text-align: left; opacity: 0; transform: translateY(60px); 
             transition: opacity 1s, transform 1s, border-color 0.3s;
         }
         .product-card.visible { opacity: 1; transform: translateY(0); }
         .product-card:hover { border-color: #eee; }
-        
-        .carousel-nav { position: absolute; top: 50%; width: 100%; display: flex; justify-content: space-between; transform: translateY(-50%); padding: 0 2%; pointer-events: none; }
-        .c-btn { width: 50px; height: 50px; background: rgba(0,0,0,0.5); border: 1px solid #333; color: #fff; cursor: pointer; pointer-events: auto; transition: 0.3s; border-radius: 50%; font-size: 20px; }
-        .c-btn:hover { background: #eee; color: #111; }
 
-        /* 상세페이지 & 모달 등 기존 스타일 유지 */
+        /* ✨ 세련된 화살표 (컨테이너 내부로 안착) */
+        .carousel-nav { position: absolute; top: 50%; width: 105%; left: -2.5%; display: flex; justify-content: space-between; transform: translateY(-50%); pointer-events: none; z-index: 100; }
+        .c-btn { width: 40px; height: 40px; background: none; border: 1px solid rgba(255,255,255,0.2); color: #fff; cursor: pointer; pointer-events: auto; transition: 0.3s; border-radius: 50%; font-size: 16px; display: flex; align-items: center; justify-content: center; }
+        .c-btn:hover { background: #eee; color: #111; border-color: #eee; }
+
+        /* ✨ [추가] 하단 프로그레스 바 (가로 스크롤 인디케이터) */
+        .scroll-bar-container { width: 200px; height: 2px; background: rgba(255,255,255,0.1); margin: 60px auto 0; position: relative; overflow: hidden; border-radius: 2px; }
+        .scroll-bar-fill { position: absolute; top: 0; left: 0; width: 33.33%; height: 100%; background: #eee; transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1); }
+
+        /* 나머지 상세페이지 & 모달 (기존 동일) */
         .img-box { width: 100%; aspect-ratio: 1/1; background-color: #222; display: flex; justify-content: center; align-items: center; overflow: hidden; margin-bottom: 20px; border: 1px solid #333; }
         .img-box img { width: 100%; height: 100%; object-fit: cover; }
         .auth-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 5000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(10px); }
@@ -68,7 +74,7 @@
         .cart-sidebar { position: fixed; top: 0; right: -400px; width: 400px; height: 100%; background: #111; border-left: 1px solid #333; z-index: 4000; padding: 40px; transition: right 0.5s cubic-bezier(0.77, 0, 0.175, 1); display: flex; flex-direction: column; }
         .cart-sidebar.active { right: 0; }
         .cart-items-container { flex-grow: 1; overflow-y: auto; border-top: 1px solid #222; padding-top: 20px; }
-        
+
         #product-detail-view { display: none; padding-top: 80px; }
         #product-top { padding: 80px 5%; display: flex; gap: 60px; min-height: 80vh; }
         .slider-container { flex: 1.2; position: relative; border: 1px solid #222; overflow: hidden; background: #1a1a1a; aspect-ratio: 1/1; }
@@ -114,22 +120,27 @@
         
         <section id="shop">
             <h2>SHOP</h2>
-            <div class="shop-container">
-                <div class="product-carousel" id="productCarousel">
-                    <div class="product-card" onclick="openProduct('tee')"><div class="img-box"><img src="./반팔티.png"></div><p>LYXX Logo tee</p><p style="opacity:0.5;">₩69,000</p></div>
-                    <div class="product-card" onclick="openProduct('hoodie')"><div class="img-box"><img src="./후드티.png"></div><p>LYXX layered tee</p><p style="opacity:0.5;">₩129,000</p></div>
-                    <div class="product-card" onclick="openProduct('belt')"><div class="img-box"><p style="opacity:0.1;">IMAGE</p></div><p>STAR BELT</p><p style="opacity:0.5;">₩79,000</p></div>
-                    <div class="product-card" onclick="alert('준비 중!')"><div class="img-box"><p style="opacity:0.1;">IMAGE</p></div><p>NEW ITEM 04</p><p style="opacity:0.5;">₩0</p></div>
-                    <div class="product-card" onclick="alert('준비 중!')"><div class="img-box"><p style="opacity:0.1;">IMAGE</p></div><p>NEW ITEM 05</p><p style="opacity:0.5;">₩0</p></div>
-                    <div class="product-card" onclick="alert('준비 중!')"><div class="img-box"><p style="opacity:0.1;">IMAGE</p></div><p>NEW ITEM 06</p><p style="opacity:0.5;">₩0</p></div>
-                    <div class="product-card" onclick="alert('준비 중!')"><div class="img-box"><p style="opacity:0.1;">IMAGE</p></div><p>NEW ITEM 07</p><p style="opacity:0.5;">₩0</p></div>
-                    <div class="product-card" onclick="alert('준비 중!')"><div class="img-box"><p style="opacity:0.1;">IMAGE</p></div><p>NEW ITEM 08</p><p style="opacity:0.5;">₩0</p></div>
-                    <div class="product-card" onclick="alert('준비 중!')"><div class="img-box"><p style="opacity:0.1;">IMAGE</p></div><p>NEW ITEM 09</p><p style="opacity:0.5;">₩0</p></div>
+            <div class="shop-outer">
+                <div class="shop-inner">
+                    <div class="product-carousel" id="productCarousel">
+                        <div class="product-card" onclick="openProduct('tee')"><div class="img-box"><img src="./반팔티.png"></div><p>LYXX Logo tee</p><p style="opacity:0.5;">₩69,000</p></div>
+                        <div class="product-card" onclick="openProduct('hoodie')"><div class="img-box"><img src="./후드티.png"></div><p>LYXX layered tee</p><p style="opacity:0.5;">₩129,000</p></div>
+                        <div class="product-card" onclick="openProduct('belt')"><div class="img-box"><p style="opacity:0.1;">IMAGE</p></div><p>STAR BELT</p><p style="opacity:0.5;">₩79,000</p></div>
+                        <div class="product-card" onclick="alert('준비 중!')"><div class="img-box"><p style="opacity:0.1;">IMAGE</p></div><p>NEW ITEM 04</p><p style="opacity:0.5;">₩0</p></div>
+                        <div class="product-card" onclick="alert('준비 중!')"><div class="img-box"><p style="opacity:0.1;">IMAGE</p></div><p>NEW ITEM 05</p><p style="opacity:0.5;">₩0</p></div>
+                        <div class="product-card" onclick="alert('준비 중!')"><div class="img-box"><p style="opacity:0.1;">IMAGE</p></div><p>NEW ITEM 06</p><p style="opacity:0.5;">₩0</p></div>
+                        <div class="product-card" onclick="alert('준비 중!')"><div class="img-box"><p style="opacity:0.1;">IMAGE</p></div><p>NEW ITEM 07</p><p style="opacity:0.5;">₩0</p></div>
+                        <div class="product-card" onclick="alert('준비 중!')"><div class="img-box"><p style="opacity:0.1;">IMAGE</p></div><p>NEW ITEM 08</p><p style="opacity:0.5;">₩0</p></div>
+                        <div class="product-card" onclick="alert('준비 중!')"><div class="img-box"><p style="opacity:0.1;">IMAGE</p></div><p>NEW ITEM 09</p><p style="opacity:0.5;">₩0</p></div>
+                    </div>
                 </div>
                 <div class="carousel-nav">
                     <button class="c-btn" onclick="moveCarousel(-1)">❮</button>
                     <button class="c-btn" onclick="moveCarousel(1)">❯</button>
                 </div>
+            </div>
+            <div class="scroll-bar-container">
+                <div class="scroll-bar-fill" id="scrollFill"></div>
             </div>
         </section>
         <footer>&copy; 2026 LYXX.</footer>
@@ -156,14 +167,19 @@
     </div>
 
     <script>
-        // ✨ [추가] 캐러셀 제어 변수
+        // ✨ [수정] 캐러셀 및 프로그레스 바 로직
         let shopIdx = 0;
         function moveCarousel(dir) {
             shopIdx += dir;
-            if(shopIdx < 0) shopIdx = 2; // 총 9개니 3개씩 3페이지
+            if(shopIdx < 0) shopIdx = 2; 
             if(shopIdx > 2) shopIdx = 0;
+            
             const carousel = document.getElementById('productCarousel');
+            const fill = document.getElementById('scrollFill');
+            
             carousel.style.transform = `translateX(-${shopIdx * 100}%)`;
+            // 프로그레스 바 이동 (33.3% 씩)
+            fill.style.transform = `translateX(${shopIdx * 100}%)`;
         }
 
         window.addEventListener('load', () => { setTimeout(() => { document.getElementById('intro-overlay').classList.add('fade-out'); initScrollObserver(); }, 2500); });
@@ -172,7 +188,6 @@
             document.querySelectorAll('.product-card').forEach(card => observer.observe(card));
         }
 
-        // 로그인/장바구니 로직 유지
         let isLoggedIn = false, currentUser = null, cart = [], currentProductKey = '', currentSlide = 0;
         const API_URL = 'https://lyxx-official.onrender.com';
         const products = {
@@ -185,11 +200,6 @@
         const openLogin = () => document.getElementById('loginModal').style.display = 'flex';
         const openSignup = () => document.getElementById('signupModal').style.display = 'flex';
         const toggleCart = () => document.getElementById('cartSidebar').classList.toggle('active');
-
-        async function handleSignup() {
-            if(!document.getElementById('agreeCheck').checked) return alert("동의해주세요.");
-            // 가입 로직...
-        }
 
         function openProduct(key) {
             currentProductKey = key; const data = products[key]; currentSlide = 0;
