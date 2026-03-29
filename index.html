@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>LYXX Official</title>
     <style>
-        /* 1. 기본 스타일 및 애니메이션 (유지) */
+        /* 1. 모든 스타일 (유지) */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
             background-color: #111; color: #eee;
@@ -31,7 +31,6 @@
         .main-logo:hover { filter: drop-shadow(0 0 25px rgba(255,255,255,0.9)); transform: scale(1.05); letter-spacing: 15px; }
         .slogan { font-size: 14px; font-weight: 300; text-transform: uppercase; letter-spacing: 5px; margin-top: 20px; opacity: 0.6; transition: transform 0.1s linear; }
 
-        /* 2. SHOP 섹션 (짤림 방지 유지) */
         #shop { padding: 150px 0 100px; width: 100%; position: relative; overflow: hidden; }
         #shop h2 { font-size: 40px; font-weight: 700; text-transform: uppercase; margin-bottom: 80px; text-align: center; letter-spacing: 10px; }
         .shop-outer { width: 100%; padding: 0 10%; position: relative; }
@@ -49,26 +48,22 @@
         .scroll-bar-container { width: 200px; height: 2px; background: rgba(255,255,255,0.1); margin: 80px auto 0; position: relative; overflow: hidden; border-radius: 2px; }
         .scroll-bar-fill { position: absolute; top: 0; left: 0; width: 33.33%; height: 100%; background: #eee; transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1); }
 
-        /* 3. 장바구니 수량 조절 버튼 스타일 복구 */
         .cart-sidebar { position: fixed; top: 0; right: -400px; width: 400px; height: 100%; background: #111; border-left: 1px solid #333; z-index: 4000; padding: 40px; transition: right 0.5s cubic-bezier(0.77, 0, 0.175, 1); display: flex; flex-direction: column; }
         .cart-sidebar.active { right: 0; }
         .qty-btn { background: none; border: 1px solid #444; color: #eee; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 12px; cursor: pointer; }
         .qty-btn:hover { border-color: #eee; }
 
-        /* 4. 상세페이지 및 버튼 디자인 복구 */
         #product-detail-view { display: none; padding-top: 80px; }
         #product-top { padding: 80px 5%; display: flex; gap: 60px; min-height: 80vh; align-items: flex-start; }
         .slider-container { flex: 1.2; position: relative; border: 1px solid #222; overflow: hidden; background: #1a1a1a; aspect-ratio: 1/1; max-width: 500px; }
         .slider-wrapper { display: flex; transition: transform 0.6s cubic-bezier(0.23, 1, 0.32, 1); height: 100%; width: 100%; }
         .slider-wrapper img { width: 100% !important; height: 100% !important; object-fit: cover !important; flex-shrink: 0; display: block; }
         
-        /* ✨ 버튼 디자인 복구 (깔끔한 테두리) */
         .action-btn { flex: 1; padding: 20px; font-weight: 700; text-transform: uppercase; letter-spacing: 3px; border: 1px solid #444; color: #888; background: none; transition: 0.3s; cursor: pointer; font-size: 13px; }
         .action-btn:hover { border-color: #eee; color: #eee; }
         .buy-btn { background-color: #eee; color: #111; border: none; }
         .buy-btn:hover { background-color: #fff; }
 
-        /* 모달 및 푸터 유지 */
         .auth-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 5000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(10px); }
         .auth-box { width: 400px; padding: 60px 40px; border: 1px solid #333; background: #111; position: relative; text-align: center; }
         .auth-box input { width: 100%; padding: 15px; margin-bottom: 15px; background: #1a1a1a; border: 1px solid #333; color: #fff; font-size: 12px; outline: none; }
@@ -90,18 +85,8 @@
     </div>
 
     <div class="auth-modal" id="loginModal"><div class="auth-box"><button onclick="closeModals()" style="position:absolute; top:20px; right:20px; background:none; border:none; color:#fff; font-size:20px; cursor:pointer;">×</button><h2>Login</h2><input type="text" id="loginId" placeholder="ID"><input type="password" id="loginPw" placeholder="PASSWORD" onkeyup="if(window.event.keyCode==13){handleLogin()}"><button style="width:100%; padding:15px; background:#eee; color:#111; border:none; font-weight:900; margin-top:10px; cursor:pointer;" onclick="handleLogin()">Enter</button><button onclick="openFindPw()" style="background:none; border:none; color:#666; font-size:10px; margin-top:15px; cursor:pointer; text-decoration:underline;">Forgot Password?</button></div></div>
-    
     <div class="auth-modal" id="findPwModal"><div class="auth-box"><button onclick="closeModals()" style="position:absolute; top:20px; right:20px; background:none; border:none; color:#fff; font-size:20px; cursor:pointer;">×</button><h2>Find Password</h2><input type="text" id="findId" placeholder="ENTER YOUR ID"><input type="email" id="findEmail" placeholder="ENTER YOUR EMAIL" onkeyup="if(window.event.keyCode==13){handleFindPassword()}"><button style="width:100%; padding:15px; background:#eee; color:#111; border:none; font-weight:900; margin-top:10px; cursor:pointer;" onclick="handleFindPassword()">Send Password</button></div></div>
-
-    <div class="auth-modal" id="signupModal">
-        <div class="auth-box" style="width:450px;">
-            <button onclick="closeModals()" style="position:absolute; top:20px; right:20px; background:none; border:none; color:#fff; font-size:20px; cursor:pointer;">×</button>
-            <h2>Sign Up</h2>
-            <input type="text" id="signupName" placeholder="NAME"><input type="text" id="signupId" placeholder="ID"><input type="password" id="signupPw" placeholder="PASSWORD"><input type="email" id="signupEmail" placeholder="EMAIL">
-            <div style="margin: 15px 0; font-size: 10px; color: #666; text-align: center;"><input type="checkbox" id="agreeCheck"> [필수] 개인정보 수집 및 이용 동의</div>
-            <button style="width:100%; padding:15px; background:#eee; color:#111; border:none; font-weight:900; cursor:pointer;" onclick="handleSignup()">Create Account</button>
-        </div>
-    </div>
+    <div class="auth-modal" id="signupModal"><div class="auth-box" style="width:450px;"><button onclick="closeModals()" style="position:absolute; top:20px; right:20px; background:none; border:none; color:#fff; font-size:20px; cursor:pointer;">×</button><h2>Sign Up</h2><input type="text" id="signupName" placeholder="NAME"><input type="text" id="signupId" placeholder="ID"><input type="password" id="signupPw" placeholder="PASSWORD"><input type="email" id="signupEmail" placeholder="EMAIL"><div style="margin: 15px 0; font-size: 10px; color: #666; text-align: center;"><input type="checkbox" id="agreeCheck"> [필수] 개인정보 수집 및 이용 동의</div><button style="width:100%; padding:15px; background:#eee; color:#111; border:none; font-weight:900; cursor:pointer;" onclick="handleSignup()">Create Account</button></div></div>
 
     <div class="cart-sidebar" id="cartSidebar">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:30px;"><h3>CART</h3><button onclick="toggleCart()" style="background:none; border:none; color:#fff; font-size:24px; cursor:pointer;">×</button></div>
@@ -130,35 +115,32 @@
         </section>
         <footer>
             <div style="display:flex; justify-content:space-between; margin-bottom:20px;">
-                <div><p>CEO. 용준 지환</p><p>서울특별시 동대문구 회기동</p><p>lyxx.rechive@gmail.com</p></div>
-                <div>&copy; 2026 LYXX. ALL RIGHTS RESERVED.</div>
+                <div><p style="color:#eee; font-weight:700; margin-bottom:5px;">LYXX OFFICIAL</p><p>CEO. 용준 지환 | Business License. [준비중]</p><p>Address. 서울특별시 동대문구 회기동</p><p>Mail. lyxx.rechive@gmail.com</p></div>
+                <div style="text-align:right;">&copy; 2026 LYXX. ALL RIGHTS RESERVED.</div>
             </div>
-            <div style="margin-top:20px; display:flex; gap:20px;"><span onclick="showLegal('privacy')" style="cursor:pointer; color:#888;">개인정보 처리방침</span><span onclick="showLegal('refund')" style="cursor:pointer; color:#888;">교환 및 환불 규정</span></div>
+            <div class="footer-links">
+                <span onclick="showLegal('privacy')" style="cursor:pointer; color:#888; margin-right:15px;">개인정보 처리방침</span>
+                <span onclick="showLegal('refund')" style="cursor:pointer; color:#888; margin-right:15px;">교환 및 환불 규정</span>
+                <span onclick="showLegal('terms')" style="cursor:pointer; color:#888;">이용약관</span>
+            </div>
         </footer>
     </div>
 
     <div id="product-detail-view">
         <section id="product-top">
-            <div class="slider-container">
-                <div class="slider-wrapper" id="detailSlider"></div>
-                <button onclick="moveSlide(-1)" style="position:absolute; left:10px; top:50%; transform:translateY(-50%); background:rgba(0,0,0,0.5); color:#fff; border:none; padding:10px; cursor:pointer; z-index:10;">❮</button>
-                <button onclick="moveSlide(1)" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); background:rgba(0,0,0,0.5); color:#fff; border:none; padding:10px; cursor:pointer; z-index:10;">❯</button>
-            </div>
-            <div style="flex:1;">
-                <h2 id="detail-name" style="font-size:42px; margin-bottom:15px;">NAME</h2>
-                <p id="detail-price" style="font-size:22px; margin-bottom:40px;">PRICE</p>
-                <div style="display:flex; gap:15px; margin-bottom:50px;">
-                    <button class="action-btn" onclick="addToCart()">ADD TO CART</button>
-                    <button class="action-btn buy-btn" onclick="alert('준비중')">BUY NOW</button>
-                </div>
-                <p id="detail-desc" style="font-size:12px; opacity:0.4; line-height:2;"></p>
-            </div>
+            <div class="slider-container"><div class="slider-wrapper" id="detailSlider"></div><button onclick="moveSlide(-1)" style="position:absolute; left:10px; top:50%; transform:translateY(-50%); background:rgba(0,0,0,0.5); color:#fff; border:none; padding:10px; cursor:pointer; z-index:10;">❮</button><button onclick="moveSlide(1)" style="position:absolute; right:10px; top:50%; transform:translateY(-50%); background:rgba(0,0,0,0.5); color:#fff; border:none; padding:10px; cursor:pointer; z-index:10;">❯</button></div>
+            <div style="flex:1;"><h2 id="detail-name" style="font-size:42px; margin-bottom:15px;">NAME</h2><p id="detail-price" style="font-size:22px; margin-bottom:40px;">PRICE</p><div style="display:flex; gap:15px; margin-bottom:50px;"><button class="action-btn" onclick="addToCart()">ADD TO CART</button><button class="action-btn buy-btn" onclick="alert('준비중')">BUY NOW</button></div><p id="detail-desc" style="font-size:12px; opacity:0.4; line-height:2;"></p></div>
         </section>
     </div>
 
     <script>
         const API_URL = 'https://lyxx-official.onrender.com';
-        const legalData = { privacy: { title: "개인정보 처리방침", content: "수집: 이름, 아이디, 이메일. 보유: 탈퇴 시까지." }, refund: { title: "교환 및 환불 규정", content: "7일 이내 반품 가능." } };
+        // ✨ 이용약관(terms) 데이터 추가
+        const legalData = { 
+            privacy: { title: "개인정보 처리방침", content: "수집항목: 이름, 아이디, 이메일. 보유기간: 회원 탈퇴 시까지." }, 
+            refund: { title: "교환 및 환불 규정", content: "단순 변심에 의한 교환/환불은 상품 수령 후 7일 이내에 가능합니다." },
+            terms: { title: "이용약관", content: "본 사이트에서 제공하는 모든 서비스의 이용 조건 및 절차에 관한 사항을 규정합니다." }
+        };
         function showLegal(t) { document.getElementById('legalTitle').innerText = legalData[t].title; document.getElementById('legalContent').innerText = legalData[t].content; document.getElementById('legalPop').style.display = 'flex'; }
         function closeLegal() { document.getElementById('legalPop').style.display = 'none'; }
         window.addEventListener('scroll', () => { const s = document.getElementById('mainSlogan'); if(s && window.pageYOffset < 800) { s.style.transform = `translateY(${window.pageYOffset * 0.2}px)`; s.style.opacity = 0.6 - (window.pageYOffset / 1000); } });
@@ -166,53 +148,22 @@
         function moveCarousel(d) { shopIdx += d; if(shopIdx < 0) shopIdx = 2; if(shopIdx > 2) shopIdx = 0; document.getElementById('productCarousel').style.transform = `translateX(-${shopIdx * 100}%)`; document.getElementById('scrollFill').style.transform = `translateX(${shopIdx * 100}%)`; }
         window.addEventListener('load', () => { setTimeout(() => { document.getElementById('intro-overlay').classList.add('fade-out'); initScrollObserver(); }, 2500); });
         function initScrollObserver() { const obs = new IntersectionObserver((es) => { es.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }); }, { threshold: 0.1 }); document.querySelectorAll('.product-card').forEach(c => obs.observe(c)); }
-
         let isLoggedIn = false, cart = [], currentProductKey = '', currentSlide = 0;
         const products = { 'tee': { id: 'tee', name: 'LYXX Logo tee', price: 69000, images: ['./반팔티.png'], desc: 'PREMIUM COTTON.' }, 'hoodie': { id: 'hoodie', name: 'LYXX layered tee', price: 129000, images: ['./후드티.png'], desc: 'Y2K STYLE.' }, 'belt': { id: 'belt', name: 'STAR BELT', price: 79000, images: [], desc: 'LEATHER.' } };
-
         const closeModals = () => document.querySelectorAll('.auth-modal').forEach(m => m.style.display = 'none');
         const openLogin = () => document.getElementById('loginModal').style.display = 'flex';
         const openSignup = () => document.getElementById('signupModal').style.display = 'flex';
         const openFindPw = () => { closeModals(); document.getElementById('findPwModal').style.display = 'flex'; };
         const toggleCart = () => document.getElementById('cartSidebar').classList.toggle('active');
-
-        async function handleLogin() {
-            const id = document.getElementById('loginId').value, pw = document.getElementById('loginPw').value;
-            try { const res = await fetch(`${API_URL}/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: id, password: pw }) }); const data = await res.json(); if (data.success) { isLoggedIn = true; updateNavUI(); closeModals(); alert(`Welcome!`); } else alert(data.message); } catch(e) { alert("Server Error"); }
-        }
-        async function handleSignup() {
-            if(!document.getElementById('agreeCheck').checked) return alert("동의해주세요.");
-            const n = document.getElementById('signupName').value, id = document.getElementById('signupId').value, pw = document.getElementById('signupPw').value, e = document.getElementById('signupEmail').value;
-            try { const res = await fetch(`${API_URL}/signup`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: id, password: pw, name: n, email: e }) }); const data = await res.json(); alert(data.message); if (data.success) closeModals(); } catch(e) { alert("Server Error"); }
-        }
-        async function handleFindPassword() {
-            const id = document.getElementById('findId').value, email = document.getElementById('findEmail').value;
-            try { const res = await fetch(`${API_URL}/find-password`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: id, email }) }); const data = await res.json(); alert(data.message); if(data.success) closeModals(); } catch(e) { alert("Error"); }
-        }
-
+        async function handleLogin() { const id = document.getElementById('loginId').value, pw = document.getElementById('loginPw').value; try { const res = await fetch(`${API_URL}/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: id, password: pw }) }); const data = await res.json(); if (data.success) { isLoggedIn = true; updateNavUI(); closeModals(); alert(`Welcome!`); } else alert(data.message); } catch(e) { alert("Server Error"); } }
+        async function handleSignup() { if(!document.getElementById('agreeCheck').checked) return alert("동의해주세요."); const n = document.getElementById('signupName').value, id = document.getElementById('signupId').value, pw = document.getElementById('signupPw').value, e = document.getElementById('signupEmail').value; try { const res = await fetch(`${API_URL}/signup`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: id, password: pw, name: n, email: e }) }); const data = await res.json(); alert(data.message); if (data.success) closeModals(); } catch(e) { alert("Server Error"); } }
+        async function handleFindPassword() { const id = document.getElementById('findId').value, email = document.getElementById('findEmail').value; try { const res = await fetch(`${API_URL}/find-password`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: id, email }) }); const data = await res.json(); alert(data.message); if(data.success) closeModals(); } catch(e) { alert("Error"); } }
         function openProduct(k) { currentProductKey = k; const d = products[k]; document.getElementById('detail-name').innerText = d.name; document.getElementById('detail-price').innerText = `₩${d.price.toLocaleString()}`; document.getElementById('detail-desc').innerText = d.desc; const w = document.getElementById('detailSlider'); w.innerHTML = ''; (d.images.length > 0 ? d.images : ['data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=']).forEach(s => { w.innerHTML += `<img src="${s}">`; }); document.getElementById('main-view').style.display = 'none'; document.getElementById('product-detail-view').style.display = 'block'; window.scrollTo(0,0); }
         function moveSlide(n) { const max = document.getElementById('detailSlider').children.length || 1; currentSlide = (currentSlide + n + max) % max; document.getElementById('detailSlider').style.transform = `translateX(-${currentSlide * 100}%)`; }
-        
-        // ✨ 장바구니 수량 조절 복구
         function addToCart() { const d = products[currentProductKey]; const item = cart.find(i => i.id === d.id); if(item) item.quantity++; else cart.push({...d, quantity:1}); updateCartUI(); toggleCart(); }
         function changeQty(i, d) { cart[i].quantity += d; if(cart[i].quantity < 1) cart.splice(i,1); updateCartUI(); }
-        function updateCartUI() { 
-            const l = document.getElementById('cartItemsList'); l.innerHTML = ''; let t = 0; 
-            cart.forEach((item, i) => { 
-                t += item.price * item.quantity; 
-                l.innerHTML += `<div style="display:flex; gap:15px; margin-bottom:20px;"><img src="${item.images[0]||''}" style="width:60px; height:60px; object-fit:cover;"><div style="flex:1;"><p style="font-size:12px;">${item.name}</p><p style="font-size:12px; opacity:0.5;">₩${(item.price * item.quantity).toLocaleString()}</p><div style="display:flex; align-items:center; gap:10px; margin-top:5px;"><button onclick="changeQty(${i},-1)" class="qty-btn">-</button><span>${item.quantity}</span><button onclick="changeQty(${i},1)" class="qty-btn">+</button></div></div></div>`; 
-            }); 
-            document.getElementById('cartTotalText').innerText = `₩${t.toLocaleString()}`; updateNavUI(); 
-        }
-
-        function updateNavUI() {
-            const nav = document.getElementById('main-nav'); let menu = `<li><a href="#home" class="nav-link">HOME</a></li><li><a href="#shop" class="nav-link">SHOP</a></li>`;
-            if (isLoggedIn) menu += `<li><button class="nav-btn">MY PAGE</button></li><li><button class="nav-btn" onclick="isLoggedIn=false;updateNavUI()">LOGOUT</button></li>`;
-            else menu += `<li><button class="nav-btn" onclick="openLogin()">LOGIN</button></li><li><button class="nav-btn" onclick="openSignup()">SIGNUP</button></li>`;
-            menu += `<li><button class="cart-trigger-btn cart-nav" onclick="toggleCart()">CART (${cart.reduce((a,b)=>a+b.quantity,0)})</button></li>`;
-            nav.innerHTML = menu;
-            document.querySelectorAll('.nav-link').forEach(link => { link.onclick = (e) => { e.preventDefault(); document.getElementById('product-detail-view').style.display = 'none'; document.getElementById('main-view').style.display = 'block'; const target = link.getAttribute('href'); document.querySelector(target).scrollIntoView({ behavior: 'smooth' }); }; });
-        }
+        function updateCartUI() { const l = document.getElementById('cartItemsList'); l.innerHTML = ''; let t = 0; cart.forEach((item, i) => { t += item.price * item.quantity; l.innerHTML += `<div style="display:flex; gap:15px; margin-bottom:20px;"><img src="${item.images[0]||''}" style="width:60px; height:60px; object-fit:cover;"><div style="flex:1;"><p style="font-size:12px;">${item.name}</p><p style="font-size:12px; opacity:0.5;">₩${(item.price * item.quantity).toLocaleString()}</p><div style="display:flex; align-items:center; gap:10px; margin-top:5px;"><button onclick="changeQty(${i},-1)" class="qty-btn">-</button><span>${item.quantity}</span><button onclick="changeQty(${i},1)" class="qty-btn">+</button></div></div></div>`; }); document.getElementById('cartTotalText').innerText = `₩${t.toLocaleString()}`; updateNavUI(); }
+        function updateNavUI() { const nav = document.getElementById('main-nav'); let menu = `<li><a href="#home" class="nav-link">HOME</a></li><li><a href="#shop" class="nav-link">SHOP</a></li>`; if (isLoggedIn) menu += `<li><button class="nav-btn">MY PAGE</button></li><li><button class="nav-btn" onclick="isLoggedIn=false;updateNavUI()">LOGOUT</button></li>`; else menu += `<li><button class="nav-btn" onclick="openLogin()">LOGIN</button></li><li><button class="nav-btn" onclick="openSignup()">SIGNUP</button></li>`; menu += `<li><button class="cart-trigger-btn cart-nav" onclick="toggleCart()">CART (${cart.reduce((a,b)=>a+b.quantity,0)})</button></li>`; nav.innerHTML = menu; document.querySelectorAll('.nav-link').forEach(link => { link.onclick = (e) => { e.preventDefault(); document.getElementById('product-detail-view').style.display = 'none'; document.getElementById('main-view').style.display = 'block'; const target = link.getAttribute('href'); document.querySelector(target).scrollIntoView({ behavior: 'smooth' }); }; }); }
         updateNavUI();
     </script>
 </body>
