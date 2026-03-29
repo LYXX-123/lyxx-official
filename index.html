@@ -30,18 +30,18 @@
         .nav-btn:hover, .cart-trigger-btn:hover { opacity: 1; }
         .cart-nav { border: 1px solid rgba(255,255,255,0.3); padding: 5px 12px; border-radius: 20px; }
 
-        /* ✅ 배경 잔상 완전 제거를 위한 z-index 조정 */
-        #home { width: 100vw; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; background: transparent; }
+        /* ✅ 배경 잔상 완전 박멸 및 z-index 조정 */
+        #home { width: 100vw; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; position: relative; background: transparent; z-index: 20; }
         .main-logo { 
             font-size: 15vw; font-weight: 900; letter-spacing: -5px; text-transform: uppercase; 
             background: linear-gradient(145deg, #fff, #bbb, #fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
             filter: drop-shadow(0 0 10px rgba(255,255,255,0.5)); text-shadow: 0 0 5px rgba(255,255,255,0.3); 
-            transition: 0.5s cubic-bezier(0.19, 1, 0.22, 1); user-select: none; line-height: 1; cursor: pointer; position: relative; z-index: 20;
+            transition: 0.5s cubic-bezier(0.19, 1, 0.22, 1); user-select: none; line-height: 1; cursor: pointer; position: relative; z-index: 30;
         }
         .main-logo:hover { filter: drop-shadow(0 0 20px rgba(255,255,255,0.8)); transform: scale(1.05); letter-spacing: 15px; }
-        .slogan { font-size: 14px; font-weight: 300; text-transform: uppercase; letter-spacing: 5px; margin-top: 20px; opacity: 0.6; transition: transform 0.1s linear; position: relative; z-index: 20; }
+        .slogan { font-size: 14px; font-weight: 300; text-transform: uppercase; letter-spacing: 5px; margin-top: 20px; opacity: 0.6; transition: transform 0.1s linear; position: relative; z-index: 30; }
 
-        #shop { padding: 150px 0 100px; width: 100%; position: relative; overflow: hidden; }
+        #shop { padding: 150px 0 100px; width: 100%; position: relative; overflow: hidden; z-index: 10; }
         #shop h2 { font-size: 40px; font-weight: 700; text-transform: uppercase; margin-bottom: 80px; text-align: center; letter-spacing: 10px; }
         .shop-outer { width: 100%; padding: 0 10%; position: relative; }
         .shop-inner { width: 100%; overflow: visible; } 
@@ -61,13 +61,16 @@
 
         .cart-sidebar { position: fixed; top: 0; right: -400px; width: 400px; height: 100%; background: #111; border-left: 1px solid #333; z-index: 9000; padding: 40px; transition: right 0.5s cubic-bezier(0.77, 0, 0.175, 1); display: flex; flex-direction: column; }
         .cart-sidebar.active { right: 0; }
+        .qty-btn { background: none; border: 1px solid #444; color: #eee; width: 22px; height: 22px; display: flex; align-items: center; justify-content: center; font-size: 12px; cursor: pointer; }
 
+        /* ✅ 모달 및 마이페이지 z-index를 최상단으로 설정 */
         .auth-modal, .legal-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 9999; display: none; justify-content: center; align-items: center; backdrop-filter: blur(10px); }
         .auth-box, .legal-box { width: 400px; padding: 60px 40px; border: 1px solid #333; background: #111; position: relative; text-align: center; }
         .legal-box { max-width: 600px; width: 90%; max-height: 80vh; overflow-y: auto; text-align: left; }
         .auth-box input { width: 100%; padding: 15px; margin-bottom: 15px; background: #1a1a1a; border: 1px solid #333; color: #fff; font-size: 12px; outline: none; }
 
-        #mypage-view { display: none; padding: 150px 10%; min-height: 80vh; position: relative; z-index: 30; }
+        /* ✅ 마이페이지 뷰를 확실하게 최상단에 뜨도록 설정 */
+        #mypage-view { display: none; padding: 150px 10%; min-height: 80vh; position: relative; z-index: 100; background-color: #111; }
         .mypage-container { max-width: 600px; margin: 0 auto; }
         .mp-row { display: flex; justify-content: space-between; align-items: center; padding: 25px 0; border-bottom: 1px solid #222; }
         .mp-label { color: #666; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; }
@@ -75,13 +78,13 @@
         .mp-edit-btn { background: none; border: 1px solid #444; color: #888; padding: 6px 12px; font-size: 10px; cursor: pointer; transition: 0.3s; }
         .mp-edit-btn:hover { border-color: #eee; color: #eee; }
 
-        footer { padding: 80px 5% 50px; border-top: 1px solid #222; font-size: 11px; color: #666; line-height: 1.8; }
+        footer { padding: 80px 5% 50px; border-top: 1px solid #222; font-size: 11px; color: #666; line-height: 1.8; position: relative; z-index: 10; }
         /* ✅ 푸터 간격 확실히 벌리기 */
         .footer-links { display: flex; gap: 30px; margin-top: 25px; }
         .footer-links span { color: #888; cursor: pointer; transition: 0.3s; }
         .footer-links span:hover { color: #eee; }
 
-        #product-detail-view { display: none; padding-top: 80px; }
+        #product-detail-view { display: none; padding-top: 80px; position: relative; z-index: 50; }
         #product-top { padding: 80px 5%; display: flex; gap: 60px; min-height: 80vh; align-items: flex-start; }
         .slider-container { flex: 1.2; position: relative; border: 1px solid #222; overflow: hidden; background: #1a1a1a; aspect-ratio: 1/1; max-width: 500px; }
         .slider-wrapper img { width: 100% !important; height: 100% !important; object-fit: cover !important; flex-shrink: 0; display: block; }
