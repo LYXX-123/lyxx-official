@@ -24,7 +24,7 @@
         .fade-out { opacity: 0 !important; pointer-events: none; }
 
         header { width: 100%; height: 80px; display: flex; justify-content: space-between; align-items: center; padding: 0 5%; position: fixed; top: 0; left: 0; z-index: 1000; background: rgba(17, 17, 17, 0.8); backdrop-filter: blur(5px); }
-        .logo { font-size: 24px; font-weight: 900; letter-spacing: -1px; text-decoration: none; color: inherit; }
+        .logo { font-size: 24px; font-weight: 900; letter-spacing: -1px; text-decoration: none; color: inherit; cursor: pointer; }
         nav ul { display: flex; gap: 20px; list-style: none; align-items: center; }
         nav a, .nav-btn, .cart-trigger-btn { font-size: 13px; text-transform: uppercase; font-weight: 300; text-decoration: none; color: inherit; background: none; border: none; transition: 0.3s; opacity: 0.6; cursor: pointer; }
         nav a:hover, .nav-btn:hover, .cart-trigger-btn:hover { opacity: 1; }
@@ -34,10 +34,10 @@
         .main-logo { 
             font-size: 15vw; font-weight: 900; letter-spacing: -5px; text-transform: uppercase; 
             background: linear-gradient(145deg, #fff, #bbb, #fff); -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
-            filter: drop-shadow(0 0 15px rgba(255,255,255,0.9)); text-shadow: 0 0 10px rgba(255,255,255,0.6); 
+            filter: drop-shadow(0 0 10px rgba(255,255,255,0.5)); text-shadow: 0 0 5px rgba(255,255,255,0.3); 
             transition: 0.5s cubic-bezier(0.19, 1, 0.22, 1); user-select: none; line-height: 1; cursor: pointer;
         }
-        .main-logo:hover { filter: drop-shadow(0 0 30px rgba(255,255,255,1)); transform: scale(1.05); letter-spacing: 15px; }
+        .main-logo:hover { filter: drop-shadow(0 0 20px rgba(255,255,255,0.8)); transform: scale(1.05); letter-spacing: 15px; }
         .slogan { font-size: 14px; font-weight: 300; text-transform: uppercase; letter-spacing: 5px; margin-top: 20px; opacity: 0.6; transition: transform 0.1s linear; }
 
         #shop { padding: 150px 0 100px; width: 100%; position: relative; overflow: hidden; }
@@ -51,9 +51,9 @@
         .card-img-box { width: 100%; aspect-ratio: 1/1; background:#222; overflow:hidden; margin-bottom:20px; border:1px solid #333; }
         .card-img-box img { width: 100%; height: 100%; object-fit: cover; }
 
-        .carousel-nav { position: absolute; top: 45%; width: 100%; left: 0; display: flex; justify-content: space-between; pointer-events: none; z-index: 100; padding: 0 2%; }
-        .c-btn { width: 50px; height: 50px; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.1); color: #fff; cursor: pointer; pointer-events: auto; transition: 0.3s; border-radius: 50%; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
-        .c-btn:hover { background: #eee; color: #111; border-color: #eee; }
+        .carousel-nav { position: absolute; top: 40%; width: 100%; left: 0; display: flex; justify-content: space-between; pointer-events: none; z-index: 100; padding: 0 2%; }
+        .c-btn { width: 50px; height: 50px; background: rgba(0,0,0,0.6); border: 1px solid rgba(255,255,255,0.2); color: #fff; cursor: pointer; pointer-events: auto; transition: 0.3s; border-radius: 50%; display: flex; align-items: center; justify-content: center; backdrop-filter: blur(5px); }
+        .c-btn:hover { background: #eee; color: #111; }
 
         .scroll-bar-container { width: 200px; height: 2px; background: rgba(255,255,255,0.1); margin: 80px auto 0; position: relative; overflow: hidden; border-radius: 2px; }
         .scroll-bar-fill { position: absolute; top: 0; left: 0; width: 33.33%; height: 100%; background: #eee; transition: transform 0.8s cubic-bezier(0.23, 1, 0.32, 1); }
@@ -65,8 +65,7 @@
         .auth-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 5000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(10px); }
         .auth-box { width: 400px; padding: 60px 40px; border: 1px solid #333; background: #111; position: relative; text-align: center; }
         .auth-box input { width: 100%; padding: 15px; margin-bottom: 15px; background: #1a1a1a; border: 1px solid #333; color: #fff; font-size: 12px; outline: none; }
-        
-        /* 마이페이지 스타일 */
+
         #mypage-view { display: none; padding: 150px 10%; min-height: 80vh; }
         .mypage-container { max-width: 600px; margin: 0 auto; }
         .mp-row { display: flex; justify-content: space-between; align-items: center; padding: 25px 0; border-bottom: 1px solid #222; }
@@ -106,7 +105,7 @@
         <div style="border-top:1px solid #222; padding-top:20px;"><div style="display:flex; justify-content:space-between; margin-bottom:20px; font-weight:700;"><span>TOTAL</span><span id="cartTotalText">₩0</span></div><button style="width:100%; padding:20px; background:#eee; color:#111; border:none; font-weight:900; cursor:pointer;" onclick="alert('준비중')">CHECKOUT</button></div>
     </div>
 
-    <header><a href="#home" class="logo" onclick="closeAllViews()">LYXX</a><nav><ul id="main-nav"></ul></nav></header>
+    <header><div class="logo" onclick="closeAllViews()">LYXX</div><nav><ul id="main-nav"></ul></nav></header>
 
     <div id="main-view">
         <section id="home"><h1 class="main-logo" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">LYXX</h1><p class="slogan" id="mainSlogan">WANT TO LYXX ME?</p></section>
@@ -137,9 +136,9 @@
     <div id="mypage-view">
         <h2 style="text-align:center; font-size:30px; margin-bottom:60px; letter-spacing:10px;">MY PAGE</h2>
         <div class="mypage-container">
-            <div class="mp-row"><span class="mp-label">Name</span><span class="mp-value" id="mp-name">Loading...</span></div>
-            <div class="mp-row"><span class="mp-label">Email</span><span class="mp-value" id="mp-email">Loading...</span></div>
-            <div class="mp-row"><span class="mp-label">Address</span><span class="mp-value" id="mp-addr">Loading...</span><button class="mp-edit-btn" onclick="execDaumPostcode('mp-addr-direct')">EDIT</button></div>
+            <div class="mp-row"><span class="mp-label">Name</span><span class="mp-value" id="mp-name">-</span></div>
+            <div class="mp-row"><span class="mp-label">Email</span><span class="mp-value" id="mp-email">-</span></div>
+            <div class="mp-row"><span class="mp-label">Address</span><span class="mp-value" id="mp-addr">-</span><button class="mp-edit-btn" onclick="execDaumPostcode('mp-addr-direct')">EDIT</button></div>
             <div class="mp-row"><span class="mp-label">Password</span><span class="mp-value">********</span><button class="mp-edit-btn" onclick="openChangePw()">CHANGE</button></div>
             <div style="margin-top:60px; text-align:center;"><p style="font-size:10px; opacity:0.3; letter-spacing:2px;">ORDER HISTORY IS EMPTY</p></div>
         </div>
@@ -178,8 +177,14 @@
             try { 
                 const res = await fetch(`${API_URL}/login`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: id, password: pw }) }); 
                 const data = await res.json(); 
-                if (data.success) { isLoggedIn = true; currentUser = data.user; updateNavUI(); closeModals(); alert(`Welcome, ${currentUser.name}`); } else alert(data.message); 
-            } catch(e) { alert("Server Error"); } 
+                if (data.success) { 
+                    isLoggedIn = true; 
+                    currentUser = data.user; 
+                    updateNavUI(); 
+                    closeModals(); 
+                    // 로그인 성공 알림 제거
+                } else alert(data.message); 
+            } catch(e) { /* 에러 알림 제거 */ } 
         }
 
         async function handleSignup() { 
@@ -196,7 +201,6 @@
             try { const res = await fetch(`${API_URL}/find-password`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: id, email }) }); const data = await res.json(); alert(data.message); if(data.success) closeModals(); } catch(e) { alert("Error"); } 
         }
 
-        /* ✨ 마이페이지: 주소 업데이트 */
         async function handleUpdateAddress(newAddr) {
             const detail = prompt("상세주소를 입력하세요:");
             const fullAddr = newAddr + (detail ? " " + detail : "");
@@ -207,7 +211,6 @@
             } catch(e) { alert("Update failed."); }
         }
 
-        /* ✨ 마이페이지: 비밀번호 변경 */
         async function handleChangePassword() {
             const np = document.getElementById('newPw').value, cnp = document.getElementById('confirmNewPw').value;
             if(np !== cnp) return alert("Passwords do not match.");
@@ -219,20 +222,17 @@
         }
 
         function openMypage() {
+            if(!currentUser) return;
             document.getElementById('main-view').style.display = 'none';
             document.getElementById('product-detail-view').style.display = 'none';
             document.getElementById('mypage-view').style.display = 'block';
-            document.getElementById('mp-name').innerText = currentUser.name;
-            document.getElementById('mp-email').innerText = currentUser.email;
+            document.getElementById('mp-name').innerText = currentUser.name || "-";
+            document.getElementById('mp-email').innerText = currentUser.email || "-";
             document.getElementById('mp-addr').innerText = currentUser.address || "No address registered.";
             window.scrollTo(0,0);
         }
 
-        function closeAllViews() {
-            document.getElementById('mypage-view').style.display = 'none';
-            document.getElementById('product-detail-view').style.display = 'none';
-            document.getElementById('main-view').style.display = 'block';
-        }
+        function closeAllViews() { document.getElementById('mypage-view').style.display = 'none'; document.getElementById('product-detail-view').style.display = 'none'; document.getElementById('main-view').style.display = 'block'; }
 
         const products = { 'tee': { id:'tee', name:'LYXX Logo tee', price:69000, images:['./반팔티.png'], desc:'PREMIUM COTTON.' }, 'hoodie': { id:'hoodie', name:'LYXX layered tee', price:129000, images:['./후드티.png'], desc:'Y2K STYLE.' }, 'belt': { id:'belt', name:'STAR BELT', price:79000, images:['./벨트.png'], desc:'LEATHER.' }, 'cap': { id:'cap', name:'LYXX BALL CAP', price:49000, images:['./모자.png'], desc:'WASHED COTTON.' }, 'denim': { id:'denim', name:'RAW DENIM PANTS', price:159000, images:['./데님.png'], desc:'SELVEDGE.' } };
         function openProduct(k) { currentProductKey = k; const d = products[k]; document.getElementById('detail-name').innerText = d.name; document.getElementById('detail-price').innerText = `₩${d.price.toLocaleString()}`; document.getElementById('detail-desc').innerText = d.desc; const w = document.getElementById('detailSlider'); w.innerHTML = ''; (d.images.length > 0 ? d.images : ['data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=']).forEach(s => { w.innerHTML += `<img src="${s}">`; }); document.getElementById('main-view').style.display = 'none'; document.getElementById('mypage-view').style.display = 'none'; document.getElementById('product-detail-view').style.display = 'block'; window.scrollTo(0,0); }
@@ -240,7 +240,7 @@
         function addToCart() { const d = products[currentProductKey]; const item = cart.find(i => i.id === d.id); if(item) item.quantity++; else cart.push({...d, quantity:1}); updateCartUI(); toggleCart(); }
         function changeQty(i, d) { cart[i].quantity += d; if(cart[i].quantity < 1) cart.splice(i,1); updateCartUI(); }
         function updateCartUI() { const l = document.getElementById('cartItemsList'); l.innerHTML = ''; let t = 0; cart.forEach((item, i) => { t += item.price * item.quantity; l.innerHTML += `<div style="display:flex; gap:15px; margin-bottom:20px;"><img src="${item.images[0]||''}" style="width:60px; height:60px; object-fit:cover;"><div style="flex:1;"><p style="font-size:12px;">${item.name}</p><p style="font-size:12px; opacity:0.5;">₩${(item.price * item.quantity).toLocaleString()}</p><div style="display:flex; align-items:center; gap:10px; margin-top:5px;"><button onclick="changeQty(${i},-1)" class="qty-btn">-</button><span>${item.quantity}</span><button onclick="changeQty(${i},1)" class="qty-btn">+</button></div></div></div>`; }); document.getElementById('cartTotalText').innerText = `₩${t.toLocaleString()}`; updateNavUI(); }
-        function updateNavUI() { const nav = document.getElementById('main-nav'); let menu = `<li><a href="#home" class="nav-link" onclick="closeAllViews()">HOME</a></li><li><a href="#shop" class="nav-link" onclick="closeAllViews()">SHOP</a></li>`; if (isLoggedIn) menu += `<li><button class="nav-btn" onclick="openMypage()">MY PAGE</button></li><li><button class="nav-btn" onclick="isLoggedIn=false;updateNavUI();closeAllViews();">LOGOUT</button></li>`; else menu += `<li><button class="nav-btn" onclick="openLogin()">LOGIN</button></li><li><button class="nav-btn" onclick="openSignup()">SIGNUP</button></li>`; menu += `<li><button class="cart-trigger-btn cart-nav" onclick="toggleCart()">CART (${cart.reduce((a,b)=>a+b.quantity,0)})</button></li>`; nav.innerHTML = menu; }
+        function updateNavUI() { const nav = document.getElementById('main-nav'); let menu = `<li><div class="nav-btn" onclick="closeAllViews()">HOME</div></li><li><div class="nav-btn" onclick="closeAllViews(); document.getElementById('shop').scrollIntoView({behavior:'smooth'});">SHOP</div></li>`; if (isLoggedIn) menu += `<li><button class="nav-btn" onclick="openMypage()">MY PAGE</button></li><li><button class="nav-btn" onclick="isLoggedIn=false; currentUser=null; updateNavUI(); closeAllViews();">LOGOUT</button></li>`; else menu += `<li><button class="nav-btn" onclick="openLogin()">LOGIN</button></li><li><button class="nav-btn" onclick="openSignup()">SIGNUP</button></li>`; menu += `<li><button class="cart-trigger-btn cart-nav" onclick="toggleCart()">CART (${cart.reduce((a,b)=>a+b.quantity,0)})</button></li>`; nav.innerHTML = menu; }
         
         window.addEventListener('load', () => { setTimeout(() => { document.getElementById('intro-overlay').classList.add('fade-out'); initScrollObserver(); }, 2500); });
         function initScrollObserver() { const obs = new IntersectionObserver((es) => { es.forEach(e => { if (e.isIntersecting) e.target.classList.add('visible'); }); }, { threshold: 0.1 }); document.querySelectorAll('.product-card').forEach(c => obs.observe(c)); }
