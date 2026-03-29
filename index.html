@@ -39,14 +39,17 @@
         .product-card.visible { opacity: 1; transform: translateY(0); }
         .product-card:hover { border-color: #eee; transform: translateY(-10px) !important; }
 
-        /* 모달 스타일 */
+        /* 모달 스타일 (동의창을 위해 높이 자동 조절) */
         .auth-modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.95); z-index: 5000; display: none; justify-content: center; align-items: center; backdrop-filter: blur(10px); }
         .auth-box { width: 400px; padding: 60px 40px; border: 1px solid #222; background: #111; text-align: center; position: relative; }
-        .auth-box h2 { font-size: 22px; font-weight: 900; margin-bottom: 35px; letter-spacing: 2px; text-transform: uppercase; }
         .auth-box input { width: 100%; padding: 15px; margin-bottom: 15px; background: #1a1a1a; border: 1px solid #333; color: #fff; font-size: 12px; outline: none; }
         .auth-submit { width: 100%; padding: 15px; background: #eee; color: #111; border: none; font-weight: 900; margin-top: 10px; text-transform: uppercase; cursor: pointer; }
         .auth-close { position: absolute; top: 20px; right: 20px; font-size: 20px; color: #fff; background: none; border: none; cursor: pointer; }
         .forgot-btn { background: none; border: none; color: #888; font-size: 11px; margin-top: 15px; text-decoration: underline; cursor: pointer; }
+
+        /* 개인정보 동의 박스 스타일 */
+        .agree-container { text-align: left; margin: 15px 0; font-size: 10px; color: #666; line-height: 1.5; }
+        .agree-box { background: #1a1a1a; padding: 10px; height: 50px; overflow-y: auto; border: 1px solid #333; margin-top: 8px; font-size: 9px; scrollbar-width: thin; }
 
         /* 장바구니 */
         .cart-sidebar { position: fixed; top: 0; right: -400px; width: 400px; height: 100%; background: #111; border-left: 1px solid #333; z-index: 4000; padding: 40px; transition: right 0.5s cubic-bezier(0.77, 0, 0.175, 1); display: flex; flex-direction: column; }
@@ -95,7 +98,30 @@
 
     <div class="auth-modal" id="loginModal"><div class="auth-box"><button class="auth-close" onclick="closeModals()">×</button><h2>Login</h2><input type="text" id="loginId" placeholder="ID"><input type="password" id="loginPw" placeholder="PASSWORD" onkeyup="if(window.event.keyCode==13){handleLogin()}"><button class="auth-submit" onclick="handleLogin()">Enter</button><button class="forgot-btn" onclick="openFindPw()">Forgot Password?</button></div></div>
     <div class="auth-modal" id="findPwModal"><div class="auth-box"><button class="auth-close" onclick="closeModals()">×</button><h2>Find Password</h2><input type="text" id="findId" placeholder="ENTER YOUR ID"><input type="email" id="findEmail" placeholder="ENTER YOUR EMAIL" onkeyup="if(window.event.keyCode==13){handleFindPassword()}"><button class="auth-submit" onclick="handleFindPassword()">Send Password to Mail</button></div></div>
-    <div class="auth-modal" id="signupModal"><div class="auth-box"><button class="auth-close" onclick="closeModals()">×</button><h2>Sign Up</h2><input type="text" id="signupName" placeholder="NAME"><input type="text" id="signupId" placeholder="ID"><input type="password" id="signupPw" placeholder="PASSWORD"><input type="email" id="signupEmail" placeholder="EMAIL" onkeyup="if(window.event.keyCode==13){handleSignup()}"><button class="auth-submit" onclick="handleSignup()">Create Account</button></div></div>
+    
+    <div class="auth-modal" id="signupModal">
+        <div class="auth-box">
+            <button class="auth-close" onclick="closeModals()">×</button>
+            <h2>Sign Up</h2>
+            <input type="text" id="signupName" placeholder="NAME">
+            <input type="text" id="signupId" placeholder="ID">
+            <input type="password" id="signupPw" placeholder="PASSWORD">
+            <input type="email" id="signupEmail" placeholder="EMAIL">
+            
+            <div class="agree-container">
+                <input type="checkbox" id="agreeCheck" style="width: auto; margin-bottom: 0; cursor: pointer; vertical-align: middle;">
+                <label for="agreeCheck" style="cursor: pointer;"> [필수] 개인정보 수집 및 이용 동의</label>
+                <div class="agree-box">
+                    수집 목적: 회원 식별 및 서비스 제공, 비밀번호 찾기 지원<br>
+                    수집 항목: 이름, 아이디, 비밀번호, 이메일 주소<br>
+                    보유 기간: 회원 탈퇴 시까지 또는 법정 보존 기간까지<br>
+                    * 동의를 거부할 수 있으나 가입이 불가능합니다.
+                </div>
+            </div>
+
+            <button class="auth-submit" onclick="handleSignup()">Create Account</button>
+        </div>
+    </div>
 
     <div class="cart-sidebar" id="cartSidebar">
         <div class="cart-header"><h3>CART</h3><button class="close-cart" onclick="toggleCart()">×</button></div>
@@ -156,7 +182,6 @@
         const API_URL = 'https://lyxx-official.onrender.com';
         
         const products = {
-            // ✅ 상세페이지용 경로도 .png로 수정했습니다
             'tee': { id: 'tee', name: 'LYXX Logo tee', price: 69000, images: ['./반팔티.png'], desc: 'PREMIUM COTTON.<br>SIGNATURE SLIM FIT.' },
             'hoodie': { id: 'hoodie', name: 'LYXX layered tee', price: 129000, images: ['./후드티.png'], desc: 'Y2K STYLE LAYERED DESIGN.' },
             'belt': { id: 'belt', name: 'STAR BELT', price: 79000, images: [], desc: 'GENUINE LEATHER.' }
@@ -167,6 +192,20 @@
         const openSignup = () => document.getElementById('signupModal').style.display = 'flex';
         const openFindPw = () => { closeModals(); document.getElementById('findPwModal').style.display = 'flex'; };
         const toggleCart = () => document.getElementById('cartSidebar').classList.toggle('active');
+
+        async function handleSignup() {
+            const name = document.getElementById('signupName').value, id = document.getElementById('signupId').value, pw = document.getElementById('signupPw').value, email = document.getElementById('signupEmail').value;
+            
+            // ✨ [추가] 체크박스 동의 확인
+            if(!document.getElementById('agreeCheck').checked) {
+                return alert("개인정보 수집 및 이용에 동의해주세요.");
+            }
+
+            try {
+                const res = await fetch(`${API_URL}/signup`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: id, password: pw, name, email }) });
+                const data = await res.json(); alert(data.message); if (data.success) closeModals();
+            } catch(e) { alert("Server Error"); }
+        }
 
         function openProduct(key) {
             currentProductKey = key; const data = products[key]; currentSlide = 0;
@@ -202,6 +241,15 @@
                 const data = await res.json();
                 if (data.success) { isLoggedIn = true; currentUser = data.name; updateNavUI(); closeModals(); alert(`Welcome!`); } else alert(data.message);
             } catch(e) { alert("Server Error"); }
+        }
+
+        async function handleFindPassword() {
+            const id = document.getElementById('findId').value, email = document.getElementById('findEmail').value;
+            if(!id || !email) return alert("빈칸을 채워주세요.");
+            try {
+                const res = await fetch(`${API_URL}/find-password`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username: id, email: email }) });
+                const data = await res.json(); alert(data.message); if(data.success) closeModals();
+            } catch(e) { alert("비밀번호 찾기 실패"); }
         }
 
         function handleLogout() { isLoggedIn = false; currentUser = null; updateNavUI(); document.getElementById('product-detail-view').style.display = 'none'; document.getElementById('main-view').style.display = 'block'; }
