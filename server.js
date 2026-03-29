@@ -1,74 +1,97 @@
 const express = require('express');
-const cors = require('cors');
 const mongoose = require('mongoose');
-const nodemailer = require('nodemailer');
+const cors = require('cors');
+const bodyParser = require('body-parser');
+
 const app = express();
-
-const PORT = process.env.PORT || 3000;
-
 app.use(cors());
-app.use(express.json());
+app.use(bodyParser.json());
 
-// 🔗 MongoDB 연결
-const MONGO_URI = "mongodb+srv://admin:lyxx1234@cluster0.ouxd6dx.mongodb.net/LYXX_DB?retryWrites=true&w=majority";
-mongoose.connect(MONGO_URI).then(() => console.log("✅ MongoDB 연결 성공")).catch(err => console.log("❌ DB 연결 에러:", err));
+// 1. MongoDB 연결 (용준님의 MongoDB URI를 넣어주세요)
+// Render 환경변수에 MONGODB_URI를 등록하는 것이 가장 안전합니다.
+const MONGO_URI = process.env.MONGODB_URI || "여기에_용준님의_몽고디비_주소를_넣으세요";
 
+mongoose.connect(MONGO_URI)
+    .then(() => console.log("MongoDB Connected..."))
+    .catch(err => console.log("MongoDB Connection Error:", err));
+
+// 2. 유저 스키마 정의 (장바구니 필드 'cart' 추가)
 const userSchema = new mongoose.Schema({
     username: { type: String, required: true, unique: true },
     password: { type: String, required: true },
-    name: { type: String, required: true },
-    email: { type: String, required: true }
+    name: String,
+    email: String,
+    address: String,
+    cart: { type: Array, default: [] } // ✅ 장바구니 영구 저장 공간
 });
+
 const User = mongoose.model('User', userSchema);
 
-// 📧 이메일 설정
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: 'lyxx.rechive@gmail.com',
-        pass: 'znga rtdq bcma hvqc'
+// 3. API 경로 설정
+
+// [회원가입]
+app.post('/signup', async (req, res) => {
+    const { username, password, name, email, address } = req.body;
+    try {
+        const newUser = new User({ username, password, name, email, address });
+        await newUser.save();
+        res.json({ success: true, message: "Sign up successful!" });
+    } catch (e) {
+        res.json({ success: false, message: "Username already exists or Error." });
     }
 });
 
-app.get('/', (req, res) => res.send('SERVER IS RUNNING!'));
-
-// 회원가입
-app.post('/signup', async (req, res) => {
-    const { username, password, name, email } = req.body;
-    try {
-        const exists = await User.findOne({ username });
-        if (exists) return res.status(200).json({ success: false, message: "이미 존재하는 아이디입니다." });
-        const newUser = new User({ username, password, name, email });
-        await newUser.save();
-        res.status(200).json({ success: true, message: "회원가입 완료!" });
-    } catch (e) { res.status(500).json({ success: false, message: "서버 에러" }); }
-});
-
-// 로그인
+// [로그인] - 유저 데이터를 통째로 넘겨 마이페이지 연동
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
     try {
         const user = await User.findOne({ username, password });
-        if (user) res.status(200).json({ success: true, name: user.name });
-        else res.status(200).json({ success: false, message: "정보가 틀렸습니다." });
-    } catch (e) { res.status(500).json({ success: false }); }
+        if (user) {
+            res.json({ success: true, user: user });
+        } else {
+            res.json({ success: false, message: "Invalid ID or Password." });
+        }
+    } catch (e) {
+        res.status(500).json({ success: false, message: "Server Error" });
+    }
 });
 
-// 비밀번호 찾기
-app.post('/find-password', async (req, res) => {
-    const { username, email } = req.body;
+// [프로필 업데이트] - 주소 및 비번 수정용
+app.post('/update-profile', async (req, res) => {
+    const { username, address, password } = req.body;
     try {
-        const user = await User.findOne({ username, email });
-        if (!user) return res.status(200).json({ success: false, message: "일치하는 정보가 없습니다." });
-        const mailOptions = {
-            from: 'lyxx.rechive@gmail.com',
-            to: user.email,
-            subject: '[LYXX Official] 비밀번호 찾기 결과입니다.',
-            text: `안녕하세요 ${user.name}님, 요청하신 비밀번호는 [ ${user.password} ] 입니다.`
-        };
-        await transporter.sendMail(mailOptions);
-        res.status(200).json({ success: true, message: "입력하신 이메일로 비밀번호를 보냈습니다!" });
-    } catch (e) { res.status(500).json({ success: false, message: "메일 발송 에러" }); }
+        const updateData = {};
+        if (address) updateData.address = address;
+        if (password) updateData.password = password;
+
+        const updatedUser = await User.findOneAndUpdate({ username }, updateData, { new: true });
+        res.json({ success: true, user: updatedUser });
+    } catch (e) {
+        res.json({ success: false, message: "Update failed." });
+    }
 });
 
-app.listen(PORT, () => console.log(`🚀 Server running on port ${PORT}`));
+// [장바구니 저장] ✅ 새로 추가
+app.post('/save-cart', async (req, res) => {
+    const { username, cart } = req.body;
+    try {
+        await User.findOneAndUpdate({ username }, { cart: cart });
+        res.json({ success: true });
+    } catch (e) {
+        res.status(500).json({ success: false });
+    }
+});
+
+// [장바구니 불러오기] ✅ 새로 추가
+app.get('/get-cart', async (req, res) => {
+    const { username } = req.query;
+    try {
+        const user = await User.findOne({ username });
+        res.json({ success: true, cart: user ? user.cart : [] });
+    } catch (e) {
+        res.status(500).json({ success: false });
+    }
+});
+
+const PORT = process.env.PORT || 3000;
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
